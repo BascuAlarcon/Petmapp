@@ -1,0 +1,73 @@
+Para poder ejecutar la app hay que cambiar:
+	en el backend, cambiar la contraseña para ingresar a la BD (archivo .env) 
+	en el frontend, poner la ip de nuestra computadora en la url del archivo Petmapp_provider.dart (si usamos dispositivo fisico).
+
+Para correr la app en nuestro dispositivo fisico, usar el comando: (Con la ip de nuestra computadora). Es necesario estar conetados a la misma
+red de internet.
+	php artisan serv --host 192.168.1.86   
+
+toDo: 
+	TABLES in BD / Controller / Model / CRUD -> tablas restantes
+	Reglas de validacion
+	Ocultar botones para usuarios no autorizados según perfil (front) / uso de gates (back)
+	
+	Crear Vista de Mostrar Mascota por Usuario (IGNORAR, LO INTENTARÉ HACER YO POR QUE ESTA MIERDA NO ME RESULTA)
+		1ra forma -> hacer un metodo que devuelva sólo las mascotas que coincidan con el rut del usuario logeado
+		2nda forma -> desde la APP CLIENTE; Donde se muestran las mascotas (listTile) aplicar un IF:
+			rut = sharedPreferences.getStringList('usuario')[0];
+			if (snapshot.data[index]['id'] == rut){
+				mostramos la data
+			}
+	Crear Vista de Editar Mascota
+	Crear función de Eliminar Mascota
+
+	CRUD para tabla Especies	-> BACKEND TERMINADO		-> FALTA APP CLIENTE
+	CRUD para tabla Hogares		-> BACKEND TERMINADO		-> FALTA APP CLIENTE
+
+	Los datos restantes del usuario en el Registrar Usuario añadirlos como nullables. Los modificaremos en el Editar Usuario que vendría a ser
+	una vista de Configurar Perfil.
+
+Maps
+	Agregar más de un marcador al Google Maps  
+	Ver el uso de Google Places para nuestra app
+ 
+Informe
+	Finalizar Informe TT
+		Normativa UFTSM
+
+Paquetes importantes en nuestra aplicación
+	http 			-> hacemos peticiones http (get mascotas(), por ejemplo) a nuestro servidor backend desde el frontend.		
+	shared preferences	-> guarda las preferencias del usuario para algunas configuraciones / datos, por ejemplo: guarda el dark mode para el usuario 4.
+					En nuestra app la usamos para guardar el estado del usuario, así aún si cierra la app, no tiene que volver a logear. También 
+					para guardar la información de la cuenta del usuario para poder usarla más fácil en otras pestañas. Ejemplo;
+						rut = sharedPrefereces('usuario', [0]), y tendremos el rut del usuario en todas las vistas
+	JWT  			-> Jason Web Token, sirve para enviar un token en formato json, que es necesario para conectarse y mantenerse conectado.
+	Google Maps 		-> en esta materia estoy verde xD
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
