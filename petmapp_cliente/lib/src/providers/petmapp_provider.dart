@@ -6,11 +6,10 @@ import 'package:petmapp_cliente/src/pages/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetmappProvider {
-  // PARA DISPOSISITOV VIRTUAL USAR 10.0.2.2
+  // PARA DISPOSISITO VIRTUAL USAR 10.0.2.2
   // final apiUrl = 'http://10.0.2.2:8000/api/';
   // DISPOSITIVO FISICO USAR LA IP DE NUESTRA COMPUTADORA
-  // final apiUrl = 'http://192.168.1.86:8000/api/';
-  final apiUrl = 'http://ACA VA LA IP:8000/api/';
+  final apiUrl = 'http://192.168.0.10:8000/api/';
 
   // RAZAS //
 
