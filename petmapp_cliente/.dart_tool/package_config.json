@@ -44,6 +44,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "curved_navigation_bar",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-0.3.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0",
       "packageUri": "lib/",
@@ -168,6 +174,12 @@
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "permission",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/permission-0.1.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
     },
     {
       "name": "platform",
@@ -302,7 +314,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-05-03T03:11:37.064647Z",
+  "generated": "2021-05-25T22:38:18.991807Z",
   "generator": "pub",
   "generatorVersion": "2.12.2"
 }

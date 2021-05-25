@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Bascu\\Desktop\\Proyectos Programacion\\Petmapp\\petmapp_cliente\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
+            "outputFile": "C:\\Users\\Isaac\\Documents\\GitHub\\Petmapp\\petmapp_cliente\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Bascu\\Desktop\\Proyectos Programacion\\Petmapp\\petmapp_cliente\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "C:\\Users\\Isaac\\Documents\\GitHub\\Petmapp\\petmapp_cliente\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

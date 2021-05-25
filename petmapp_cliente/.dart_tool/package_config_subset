@@ -1,7 +1,7 @@
 petmapp_cliente
 2.7
-file:///C:/Users/Bascu/Desktop/Proyectos%20Programacion/a/petmapp_cliente/
-file:///C:/Users/Bascu/Desktop/Proyectos%20Programacion/a/petmapp_cliente/lib/
+file:///C:/Users/Isaac/Documents/GitHub/Petmapp/petmapp_cliente/
+file:///C:/Users/Isaac/Documents/GitHub/Petmapp/petmapp_cliente/lib/
 async
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.5.0/
@@ -30,6 +30,10 @@ cupertino_icons
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.2/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.2/lib/
+curved_navigation_bar
+2.0
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-0.3.7/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/curved_navigation_bar-0.3.7/lib/
 fake_async
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/
@@ -102,6 +106,10 @@ pedantic
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/pedantic-1.11.0/lib/
+permission
+2.1
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/permission-0.1.7/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/permission-0.1.7/lib/
 platform
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/platform-3.0.0/
