@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cuidado;
+use App\Models\Tipo;
 use Illuminate\Http\Request;
 
-class CuidadoController extends Controller
+class TipoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class CuidadoController extends Controller
      */
     public function index()
     {
-        return Cuidado::all();  
+        return Tipo::all();
     }
 
     /**
@@ -26,41 +26,43 @@ class CuidadoController extends Controller
      */
     public function store(Request $request)
     {
-        $cuidado = new Cuidado();
-         
+        $tipo = new Tipo();
+        $tipo->tipo_negocio = $request->tipo_negocio ;
+        $tipo->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cuidado  $cuidado
+     * @param  \App\Models\Tipo  $tipo
      * @return \Illuminate\Http\Response
      */
-    public function show(Cuidado $cuidado)
+    public function show(Tipo $tipo)
     {
-        return $cuidado;
+        return $tipo;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cuidado  $cuidado
+     * @param  \App\Models\Tipo  $tipo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cuidado $cuidado)
+    public function update(Request $request, Tipo $tipo)
     {
-        //
+        $tipo->tipo_negocio = $request->tipo_negocio ;
+        $tipo->save();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cuidado  $cuidado
+     * @param  \App\Models\Tipo  $tipo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cuidado $cuidado)
+    public function destroy(Tipo $tipo)
     {
-        $cuidado->delete();
+        $tipo->delete();
     }
 }

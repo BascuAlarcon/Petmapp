@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Cuidado extends Model
+
+class Tipo extends Model
 {
-    protected $table = "cuidados";
-    use SoftDeletes;    
     use HasFactory;
+    protected $table = "tipos";
+    use SoftDeletes;
+
+    public function negocios(){
+        return $this->hasMany('App\Models\Negocio');
+    }
 }

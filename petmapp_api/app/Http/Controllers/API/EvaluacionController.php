@@ -26,7 +26,11 @@ class EvaluacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $evaluacion = new Evaluacion();
+        $evaluacion->nota = $request->nota;
+        $evaluacion->comentario = $request->comentario;        
+        $evaluacion->cuidado_id = $request->cuidado_id;
+        $evaluacion->save();
     }
 
     /**
@@ -49,7 +53,10 @@ class EvaluacionController extends Controller
      */
     public function update(Request $request, Evaluacion $evaluacion)
     {
-        //
+        $evaluacion->nota = $request->nota;
+        $evaluacion->comentario = $request->comentario;        
+        $evaluacion->cuidado_id = $request->cuidado_id;
+        $evaluacion->save();
     }
 
     /**

@@ -67,4 +67,16 @@ class Usuario extends Model
     public function mascotas(){
         return $this->hasMany('App\Models\Mascota', 'usuario_rut', 'rut');
     }
+
+    public function hogares(){
+        return $this->hasMany('App\Models\Hogar', 'usuario_rut', 'rut');
+    }
+
+    public function publicaciones(){
+        return $this->hasMany('App\Models\Publicacion', 'usuario_rut', 'rut');
+    }
+
+    public function peticiones(){
+        return $this->hasMany('App\Models\PeticionCuidado', 'usuario_rut', 'rut');
+    }
 }

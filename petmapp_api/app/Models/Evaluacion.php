@@ -10,4 +10,8 @@ class Evaluacion extends Model
     protected $table = "evaluaciones";
     use SoftDeletes;  
     use HasFactory;
+
+    public function cuidado(){
+        return $this->belongsTo('App\Models\PeticionCuidado');
+    }
 }

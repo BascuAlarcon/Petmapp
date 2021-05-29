@@ -26,7 +26,13 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $servicio = new Servicio();
+        $servicio->comentario = $request->comentario;
+        $servicio->foto = $request->foto;
+        $servicio->monto = $request->monto;
+        $servicio->fecha = $request->fecha;
+        $servicio->cuidado_id = $request->cuidado_id;
+        $servicio->save();
     }
 
     /**
@@ -49,7 +55,12 @@ class ServicioController extends Controller
      */
     public function update(Request $request, Servicio $servicio)
     {
-        //
+        $servicio->comentario = $request->comentario;
+        $servicio->foto = $request->foto;
+        $servicio->monto = $request->monto;
+        $servicio->fecha = $request->fecha;
+        $servicio->cuidado_id = $request->cuidado_id;
+        $servicio->save();
     }
 
     /**

@@ -26,7 +26,10 @@ class PerfilController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $perfil = new Perfil();
+        $perfil->cod_perfil = $request->cod_perfil;
+        $perfil->nombre = $request->nombre;
+        $perfil->save();
     }
 
     /**
@@ -49,7 +52,9 @@ class PerfilController extends Controller
      */
     public function update(Request $request, Perfil $perfil)
     {
-        //
+        $perfil->cod_perfil = $request->cod_perfil;
+        $perfil->nombre = $request->nombre;
+        $perfil->save();
     }
 
     /**

@@ -26,7 +26,15 @@ class PeticionCuidadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $peticionCuidado = new PeticionCuidado(); 
+        $peticionCuidado->fecha_inicio = $request->fecha_inicio;
+        $peticionCuidado->fecha_fin = $request->fecha_fin;
+        $peticionCuidado->precio_total = $request->precio_total;
+        $peticionCuidado->estado = $request->estado;
+        $peticionCuidado->publicacion_id = $request->publicacion_id;
+        $peticionCuidado->usuario_rut = $request->usuario_rut;
+        $peticionCuidado->boleta = $request->boleta;
+        $peticionCuidado->save();
     }
 
     /**
@@ -49,7 +57,14 @@ class PeticionCuidadoController extends Controller
      */
     public function update(Request $request, PeticionCuidado $peticionCuidado)
     {
-        //
+        $peticionCuidado->fecha_inicio = $request->fecha_inicio;
+        $peticionCuidado->fecha_fin = $request->fecha_fin;
+        $peticionCuidado->precio_total = $request->precio_total;
+        $peticionCuidado->estado = $request->estado;
+        $peticionCuidado->publicacion_id = $request->publicacion_id;
+        $peticionCuidado->usuario_rut = $request->usuario_rut;
+        $peticionCuidado->boleta = $request->boleta;
+        $peticionCuidado->save();
     }
 
     /**

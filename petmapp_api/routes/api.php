@@ -27,7 +27,6 @@ use App\Http\Controllers\AuthController;
 // rutas //
 Route::apiResource('/razas', 'App\Http\Controllers\API\RazaController')->parameters(['razas'=>'raza']);
 Route::apiResource('/mascotas', 'App\Http\Controllers\API\MascotaController')->parameters(['mascotas'=>'mascota']);
-Route::apiResource('/cuidados', 'App\Http\Controllers\API\CuidadoController')->parameters(['cuidados'=>'cuidado']);
 Route::apiResource('/especies', 'App\Http\Controllers\API\EspecieController')->parameters(['especies'=>'especie']); 
 Route::apiResource('/evaluaciones', 'App\Http\Controllers\API\EvaluacionController')->parameters(['evaluaciones'=>'evaluacion']);
 Route::apiResource('/hogares', 'App\Http\Controllers\API\HogarController')->parameters(['hogares'=>'hogar']);
@@ -35,6 +34,14 @@ Route::apiResource('/perfiles', 'App\Http\Controllers\API\PerfilController')->pa
 Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionCuidadoController')->parameters(['peticiones'=>'peticion']);
 Route::apiResource('/publicaciones', 'App\Http\Controllers\API\PublicacionController')->parameters(['publicaciones'=>'publicacion']);
 Route::apiResource('/servicios', 'App\Http\Controllers\API\ServicioController')->parameters(['servicios'=>'servicio']); 
+
+Route::apiResource('/alertas', 'App\Http\Controllers\API\AlertaController')->parameters(['alertas'=>'alerta']); 
+Route::apiResource('/negocios', 'App\Http\Controllers\API\NegocioController')->parameters(['negocios'=>'negocio']); 
+Route::apiResource('/ubicaciones', 'App\Http\Controllers\API\UbicacionController')->parameters(['ubicaciones'=>'ubicacion']); 
+Route::apiResource('/tipos', 'App\Http\Controllers\API\TipoController')->parameters(['tipos'=>'tipo']); 
+Route::apiResource('/comentariosAlerta', 'App\Http\Controllers\API\ComentarioAlertaController')->parameters(['comentariosAlerta'=>'comentarioAlerta']); 
+Route::apiResource('/comentariosNegocio', 'App\Http\Controllers\API\ComentarioNegocioController')->parameters(['comentariosNegocio'=>'comentarioNegocio']); 
+Route::apiResource('/comentariosUbicacion', 'App\Http\Controllers\API\ComentarioUbicacionController')->parameters(['comentariosUbicacion'=>'comentarioUbicacion']); 
 
 // Listar por id // 
 Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');  

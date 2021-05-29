@@ -71,4 +71,20 @@ class User extends Authenticatable implements JWTSubject
     public function hogares(){
         return $this->hasMany('App\Models\Hogar', 'usuario_rut', 'rut');
     }
+
+    public function alertas (){
+        return $this->hasMany('App\Models\Alerta', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioAlerta (){
+        return $this->hasMany('App\Models\ComentarioAlerta', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioNegocio (){
+        return $this->hasMany('App\Models\ComentarioNegocio', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioUbicacion (){
+        return $this->hasMany('App\Models\ComentarioUbicacion', 'usuario_rut', 'rut');
+    }
 }

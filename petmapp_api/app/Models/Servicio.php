@@ -10,4 +10,8 @@ class Servicio extends Model
     use HasFactory;
     protected $table = "servicios";
     use SoftDeletes;  
+
+    public function cuidado(){
+        return $this->belongsTo('App\Models\PeticionCuidado');
+    }
 }

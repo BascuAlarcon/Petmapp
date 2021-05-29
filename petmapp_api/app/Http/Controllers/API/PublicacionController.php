@@ -26,7 +26,11 @@ class PublicacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $publicacion = new Publicacion();
+        $publicacion->descripcion = $request->descripcion;
+        $publicacion->tarifa = $request->tarifa;
+        $publicacion->usuario_rut = $request->usuario_rut;
+        $publicacion->save();
     }
 
     /**
@@ -49,7 +53,10 @@ class PublicacionController extends Controller
      */
     public function update(Request $request, Publicacion $publicacion)
     {
-        //
+        $publicacion->descripcion = $request->descripcion;
+        $publicacion->tarifa = $request->tarifa;
+        $publicacion->usuario_rut = $request->usuario_rut;
+        $publicacion->save();
     }
 
     /**
