@@ -42,7 +42,7 @@ class MascotaController extends Controller
      */
     public function show(Mascota $mascota)
     {
-        return $mascota;
+        return $mascota; 
     }
 
     /**

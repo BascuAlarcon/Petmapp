@@ -60,8 +60,7 @@ class HogarController extends Controller
         $hogar->disponibilidad_patio = $request->disponibilidad_patio;
         $hogar->direccion = $request->direccion;
         $hogar->descripcion = $request->descripcion;
-        $hogar->foto = $request->foto;
-        $hogar->usuario_rut = $request->usuario_rut;
+        $hogar->foto = $request->foto; 
         $hogar->save();
     }
 

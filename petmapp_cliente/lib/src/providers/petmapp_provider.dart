@@ -1,17 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:petmapp_cliente/src/pages/main_page.dart';
+import 'package:petmapp_cliente/src/providers/url_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetmappProvider {
-  // PARA DISPOSISITOV VIRTUAL USAR 10.0.2.2
-  // final apiUrl = 'http://10.0.2.2:8000/api/';
-  // DISPOSITIVO FISICO USAR LA IP DE NUESTRA COMPUTADORA
-  // final apiUrl = 'http://192.168.1.86:8000/api/';
-  final apiUrl = 'http://ACA VA LA IP:8000/api/';
-
+  var apiUrl = new UrlProvider().url();
   // RAZAS //
 
   // OBTENER RAZAS //
@@ -100,10 +95,8 @@ class PetmappProvider {
       "name": nombre
     });
     if (response.statusCode == 200) {
-      print('Funciono');
       return json.decode(response.body);
     } else {
-      print(response.statusCode);
       return new LinkedHashMap<String, dynamic>();
     }
   }
@@ -115,9 +108,9 @@ class PetmappProvider {
     var response = await http.post(Uri.parse(urlRequest),
         body: {"email": email, "password": password});
     if (response.statusCode == 200) {
+      print(response.body);
       return json.decode(response.body);
     } else {
-      print(response.statusCode);
       return new LinkedHashMap<String, dynamic>();
     }
   }

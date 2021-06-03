@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/example/petmapp_cliente/BuildConfig.java
+ com.example.petmapp_cliente.BuildConfig

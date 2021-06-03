@@ -16,6 +16,6 @@ class Publicacion extends Model
     }
 
     public function peticiones(){
-        return $this->hasMany('App\Models\PeticionCuidado');
+        return $this->hasMany('App\Models\Peticion', 'publicacion_id', 'id');
     }
 }

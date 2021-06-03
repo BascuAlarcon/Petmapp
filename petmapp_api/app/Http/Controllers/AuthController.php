@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index','login', 'me', 'register', 'logout' , 'mascotas']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login', 'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones']]);
     }
 
     /**
@@ -29,12 +29,10 @@ class AuthController extends Controller
     }
     
     public function me(User $user)
-    {
-        // return response()->json(auth()->user());
-        $user = auth()->user(); 
+    { 
+        $user = Auth::user();
         return $user;
     }
-
 
     public function login()
     {
@@ -85,10 +83,35 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => Auth::factory()->getTTL() * 60
         ]);
+    } 
+
+    public function perfil(User $user){
+        $user = Auth::user();
+        $perfil = $user->perfil;
+        return $perfil;
     }
   
     public function mascotas(User $user){
-        $user->load('mascotas');
-        return $user;
+        $user = Auth::user();
+        $mascotas = $user->mascotas;
+        return $mascotas;
+    }
+
+    public function hogares(User $user){
+        $user = Auth::user();
+        $hogares = $user->hogares;
+        return $hogares;
+    }
+
+    public function publicaciones(User $user){ 
+        $user = Auth::user();
+        $publicaciones = $user->publicaciones;
+        return $publicaciones;
+    }
+
+    public function peticiones(User $user){
+        $user = Auth::user();
+        $peticiones = $user->peticiones;
+        return $peticiones;
     }
 }

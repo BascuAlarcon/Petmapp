@@ -12,6 +12,6 @@ class Especie extends Model
     use HasFactory;
 
     public function razas(){
-        return $this->hasMany('App/Models/Raza');
+        return $this->hasMany('App\Models\Raza', 'especie_id','id');
     }
-}
+} 

@@ -4,8 +4,10 @@
         android:label="petmapp_cliente"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+        <!-- <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyCQGdcwFflG11DX8aXvXj4jM4wAoXOCnLk"/> -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyCQGdcwFflG11DX8aXvXj4jM4wAoXOCnLk"/>
+               android:value="AIzaSyBMmrmZgl13qldBX5yjZHVCpb8rMQ6BGvM"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

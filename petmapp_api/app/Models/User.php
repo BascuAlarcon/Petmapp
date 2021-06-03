@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;   
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
@@ -87,4 +87,13 @@ class User extends Authenticatable implements JWTSubject
     public function comentarioUbicacion (){
         return $this->hasMany('App\Models\ComentarioUbicacion', 'usuario_rut', 'rut');
     }
+
+    public function publicaciones (){
+        return $this->hasMany('App\Models\Publicacion', 'usuario_rut', 'rut');
+    }
+
+    public function peticiones (){
+        return $this->hasMany('App\Models\Peticion', 'usuario_rut', 'rut');
+    }
+
 }

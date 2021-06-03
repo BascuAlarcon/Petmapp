@@ -25,16 +25,14 @@ use App\Http\Controllers\AuthController;
 // todas las rutas de el archivo de routes api.php, llevan un prefijo API en el navegador // 
   
 // rutas //
-Route::apiResource('/razas', 'App\Http\Controllers\API\RazaController')->parameters(['razas'=>'raza']);
-Route::apiResource('/mascotas', 'App\Http\Controllers\API\MascotaController')->parameters(['mascotas'=>'mascota']);
-Route::apiResource('/especies', 'App\Http\Controllers\API\EspecieController')->parameters(['especies'=>'especie']); 
+Route::apiResource('/razas',        'App\Http\Controllers\API\RazaController')->parameters(['razas'=>'raza']);
+Route::apiResource('/mascotas',     'App\Http\Controllers\API\MascotaController')->parameters(['mascotas'=>'mascota']);
+Route::apiResource('/especies',     'App\Http\Controllers\API\EspecieController')->parameters(['especies'=>'especie']); 
 Route::apiResource('/evaluaciones', 'App\Http\Controllers\API\EvaluacionController')->parameters(['evaluaciones'=>'evaluacion']);
-Route::apiResource('/hogares', 'App\Http\Controllers\API\HogarController')->parameters(['hogares'=>'hogar']);
-Route::apiResource('/perfiles', 'App\Http\Controllers\API\PerfilController')->parameters(['perfiles'=>'perfil']);
-Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionCuidadoController')->parameters(['peticiones'=>'peticion']);
+Route::apiResource('/hogares',      'App\Http\Controllers\API\HogarController')->parameters(['hogares'=>'hogar']);
+Route::apiResource('/perfiles',     'App\Http\Controllers\API\PerfilController')->parameters(['perfiles'=>'perfil']); 
 Route::apiResource('/publicaciones', 'App\Http\Controllers\API\PublicacionController')->parameters(['publicaciones'=>'publicacion']);
-Route::apiResource('/servicios', 'App\Http\Controllers\API\ServicioController')->parameters(['servicios'=>'servicio']); 
-
+Route::apiResource('/servicios',    'App\Http\Controllers\API\ServicioController')->parameters(['servicios'=>'servicio']); 
 Route::apiResource('/alertas', 'App\Http\Controllers\API\AlertaController')->parameters(['alertas'=>'alerta']); 
 Route::apiResource('/negocios', 'App\Http\Controllers\API\NegocioController')->parameters(['negocios'=>'negocio']); 
 Route::apiResource('/ubicaciones', 'App\Http\Controllers\API\UbicacionController')->parameters(['ubicaciones'=>'ubicacion']); 
@@ -42,20 +40,27 @@ Route::apiResource('/tipos', 'App\Http\Controllers\API\TipoController')->paramet
 Route::apiResource('/comentariosAlerta', 'App\Http\Controllers\API\ComentarioAlertaController')->parameters(['comentariosAlerta'=>'comentarioAlerta']); 
 Route::apiResource('/comentariosNegocio', 'App\Http\Controllers\API\ComentarioNegocioController')->parameters(['comentariosNegocio'=>'comentarioNegocio']); 
 Route::apiResource('/comentariosUbicacion', 'App\Http\Controllers\API\ComentarioUbicacionController')->parameters(['comentariosUbicacion'=>'comentarioUbicacion']); 
+Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionController')->parameters(['peticiones'=>'peticion']);
 
 // Listar por id // 
-Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');  
+Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');   
+Route::get('especies/{especie}/razas', 'App\Http\Controllers\API\EspecieController@razas');
+Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones'); 
 
 // USUARIO // 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth', 
 ], function () {
-
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('logout', [AuthController::class, 'logout']); 
     Route::post('register', [AuthController::class, 'register']);  
     Route::get('index', [AuthController::class, 'index']); 
-    Route::get('{usuario}/mascotas', [AuthController::class, 'mascotas']);  
-    Route::post('me', [AuthController::class, 'me']); 
+    Route::get('index/{usuario}', [AuthController::class, 'show']);      
+    Route::post('me', [AuthController::class, 'me']);
+    Route::get('me/publicaciones', [AuthController::class, 'publicaciones']);
+    Route::get('me/peticiones', [AuthController::class, 'peticiones']);
+    Route::get('me/mascotas', [AuthController::class, 'mascotas']);
+    Route::get('me/perfil', [AuthController::class, 'perfil']);
+    Route::get('me/hogares', [AuthController::class, 'hogares']);
 });

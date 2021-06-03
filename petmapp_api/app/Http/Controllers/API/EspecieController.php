@@ -67,4 +67,9 @@ class EspecieController extends Controller
     {
         $especie->delete();
     }
+
+    public function razas(Especie $especie){
+        $especie->load('razas');
+        return $especie;
+    }
 }

@@ -54,8 +54,7 @@ class PublicacionController extends Controller
     public function update(Request $request, Publicacion $publicacion)
     {
         $publicacion->descripcion = $request->descripcion;
-        $publicacion->tarifa = $request->tarifa;
-        $publicacion->usuario_rut = $request->usuario_rut;
+        $publicacion->tarifa = $request->tarifa; 
         $publicacion->save();
     }
 
@@ -68,5 +67,10 @@ class PublicacionController extends Controller
     public function destroy(Publicacion $publicacion)
     {
         $publicacion->delete();
+    }
+
+    public function peticiones(Publicacion $publicacion){ 
+        $publicacion->load('peticiones');
+        return $publicacion;
     }
 }
