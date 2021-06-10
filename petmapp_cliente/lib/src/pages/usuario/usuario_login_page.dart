@@ -15,6 +15,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Validaciones //
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
   bool _isLoading = false;
@@ -23,31 +26,34 @@ class _LoginPageState extends State<LoginPage> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(statusBarColor: Colors.transparent));
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(84, 101, 255, 1.0),
-            Color.fromRGBO(120, 139, 255, 1.0)
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+      body: Form(
+        key: _formKey,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(84, 101, 255, 1.0),
+              Color.fromRGBO(120, 139, 255, 1.0)
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          ),
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : ListView(
+                  children: <Widget>[
+                    headerSection(),
+                    textSection(),
+                    buttonSection(),
+                    buttonRegistrar(),
+                    Container(height: 90),
+                    FadeInImage(
+                      image: NetworkImage(
+                          'http://pa1.narvii.com/6997/545275f0f9d104509ca7db0f7763b956ca00bbear1-270-165_00.gif'),
+                      placeholder: AssetImage('assets/jar-loading.gif'),
+                      height: 60,
+                      width: 60,
+                    ),
+                  ],
+                ),
         ),
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ListView(
-                children: <Widget>[
-                  headerSection(),
-                  textSection(),
-                  buttonSection(),
-                  buttonRegistrar(),
-                  Container(height: 90),
-                  FadeInImage(
-                    image: NetworkImage(
-                        'http://pa1.narvii.com/6997/545275f0f9d104509ca7db0f7763b956ca00bbear1-270-165_00.gif'),
-                    placeholder: AssetImage('assets/jar-loading.gif'),
-                    height: 60,
-                    width: 60,
-                  ),
-                ],
-              ),
       ),
     );
   }
@@ -73,6 +79,12 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: <Widget>[
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingrese su correo';
+              }
+              return null;
+            },
             controller: emailController,
             cursorColor: Colors.white,
             style: TextStyle(color: Colors.white70),
@@ -90,6 +102,12 @@ class _LoginPageState extends State<LoginPage> {
           ),
           SizedBox(height: 30.0),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingrese su contraseña';
+              }
+              return null;
+            },
             controller: passwordController,
             cursorColor: Colors.white,
             obscureText: true,
@@ -185,42 +203,47 @@ class _LoginPageState extends State<LoginPage> {
   } */
 
   loginUsuario(String email, String password) async {
-    setState(() {
-      _isLoading = true;
-    });
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var provider = UsuarioProvider();
-    var respuesta = await provider.login(email, password);
-    // en caso de que este todo OK, respuesta debería tener un access_token
-    if (respuesta['access_token'] == null) {
-      print('no hay access_token');
-    } else {
+    if (_formKey.currentState.validate()) {
       setState(() {
-        _isLoading = false;
+        _isLoading = true;
       });
-      // TRAER A TODOS LOS USUARIOS //
-      var usuarios = await provider.getUsuarios();
-      // COMPARAR EMAIL DE LISTA CON USUARIO CON EL USUARIO DEL CONTROLLER
-      var rut;
-      var correo;
-      var nombre;
-      var token;
-      for (var usuario in usuarios) {
-        if (usuario['email'] == email) {
-          // GUARDAR LOS DATOS CON SHARED PREFERENCES //
-          rut = usuario['rut'];
-          correo = usuario['email'];
-          nombre = usuario['name'];
-          token = respuesta['access_token'];
-          rut = rut.toString();
-          sharedPreferences
-              .setStringList("usuario", [rut, correo, nombre, token]);
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      var provider = UsuarioProvider();
+      var respuesta = await provider.login(email, password);
+      // en caso de que este todo OK, respuesta debería tener un access_token
+      if (respuesta['access_token'] == null) {
+        print('no hay access_token');
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        // TRAER A TODOS LOS USUARIOS //
+        var usuarios = await provider.getUsuarios();
+        // COMPARAR EMAIL DE LISTA CON USUARIO CON EL USUARIO DEL CONTROLLER
+        var rut;
+        var correo;
+        var nombre;
+        var token;
+        var perfil;
+        for (var usuario in usuarios) {
+          if (usuario['email'] == email) {
+            // GUARDAR LOS DATOS CON SHARED PREFERENCES //
+            rut = usuario['rut'];
+            correo = usuario['email'];
+            nombre = usuario['name'];
+            perfil = usuario['perfil_id'];
+            token = respuesta['access_token'];
+            rut = rut.toString();
+            sharedPreferences.setStringList(
+                "usuario", [rut, correo, nombre, perfil.toString(), token]);
+          }
         }
-      }
 
-      sharedPreferences.setString("token", respuesta['access_token']);
-      var route = new MaterialPageRoute(builder: (context) => MainPage());
-      Navigator.push(context, route);
+        sharedPreferences.setString("token", respuesta['access_token']);
+        var route = new MaterialPageRoute(builder: (context) => MainPage());
+        Navigator.push(context, route);
+      }
     }
   }
 }
