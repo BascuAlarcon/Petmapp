@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\SoftDeletes;   
+use Illuminate\Database\Eloquent\SoftDeletes;  
+ 
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
-    protected $primaryKey = "rut";
     protected $table= "usuarios"; 
+    protected $primaryKey = "rut";
     use SoftDeletes;  
 
     /**

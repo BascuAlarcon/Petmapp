@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 29, 2021 at 04:56 PM
+-- Generation Time: Jun 10, 2021 at 12:30 AM
 -- Server version: 8.0.22
 -- PHP Version: 7.4.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `petmapp2`
+-- Database: `petmapp`
 --
 
 -- --------------------------------------------------------
@@ -41,13 +41,6 @@ CREATE TABLE `alertas` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `alertas`
---
-
-INSERT INTO `alertas` (`id`, `tipo_alerta`, `foto`, `descripcion`, `direccion`, `habilitado`, `ultima_actividad`, `usuario_rut`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Photo', 'Description Two', 'Testing Direction', 1, '2021-05-28 16:53:37', 116214377, '2021-05-29 16:27:35', '2021-05-29 16:28:52', '2021-05-29 16:28:52');
-
 -- --------------------------------------------------------
 
 --
@@ -65,13 +58,6 @@ CREATE TABLE `comentarios_alertas` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `comentarios_alertas`
---
-
-INSERT INTO `comentarios_alertas` (`id`, `descripcion`, `fecha_emision`, `foto`, `alerta_id`, `usuario_rut`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Se ha encontrado un animal', '2021-05-28 16:53:37', 'foto', 1, 116214377, '2021-05-29 16:37:57', '2021-05-29 16:38:34', '2021-05-29 16:38:34');
 
 -- --------------------------------------------------------
 
@@ -91,13 +77,6 @@ CREATE TABLE `comentarios_negocios` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `comentarios_negocios`
---
-
-INSERT INTO `comentarios_negocios` (`id`, `descripcion`, `fecha_emision`, `foto`, `usuario_rut`, `negocio_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Muy buen local, me atendieron bien', '2021-05-28 16:53:37', 'foto', 116214377, 1, '2021-05-29 16:42:38', '2021-05-29 16:43:16', '2021-05-29 16:43:16');
-
 -- --------------------------------------------------------
 
 --
@@ -115,13 +94,6 @@ CREATE TABLE `comentarios_ubicaciones` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `comentarios_ubicaciones`
---
-
-INSERT INTO `comentarios_ubicaciones` (`id`, `descripcion`, `fecha_emision`, `foto`, `ubicacion_id`, `usuario_rut`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Excelente plaza, con muchas mascotas', '2021-05-28 16:53:37', 'foto', 1, 116214377, '2021-05-29 16:44:30', '2021-05-29 16:44:59', '2021-05-29 16:44:59');
 
 -- --------------------------------------------------------
 
@@ -143,11 +115,8 @@ CREATE TABLE `especies` (
 --
 
 INSERT INTO `especies` (`id`, `nombre`, `descripcion`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(3, 'Perro', 'El perro, ​​​ llamado perro doméstico o can, ​ y en algunos lugares coloquialmente llamado chucho, ​ tuso, ​ choco, ​ entre otros; es un mamífero carnívoro de la familia de los cánidos, que constituye una especie del género Canis.', NULL, NULL, NULL),
-(4, 'Gato', 'El gato doméstico​​, llamado popularmente gato, y de forma coloquial minino, ​ michino, ​ michi, ​ micho, ​ mizo, ​ miz, ​ morroño​ o morrongo, ​ entre otros nombres, es un mamífero carnívoro de la familia Felidae. ', NULL, NULL, NULL),
-(5, 'Pescado', 'Animal que puede nadar', '2021-05-08 15:10:29', '2021-05-08 15:20:01', '2021-05-08 15:20:01'),
-(6, NULL, 'Casa grande', '2021-05-21 16:13:29', '2021-05-21 16:13:29', NULL),
-(7, 'Testing Update', 'Put method', '2021-05-28 15:05:42', '2021-05-28 15:06:31', '2021-05-28 15:06:31');
+(1, 'Perro', 'Perro es una especie del can', '2021-05-31 18:41:38', '2021-05-31 18:41:38', NULL),
+(2, 'Gato', 'Gato es una especie felina domestica', '2021-05-31 18:41:57', '2021-05-31 18:41:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -162,15 +131,8 @@ CREATE TABLE `evaluaciones` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `peticion_cuidado_id` int NOT NULL
+  `peticion_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `evaluaciones`
---
-
-INSERT INTO `evaluaciones` (`id`, `nota`, `comentario`, `created_at`, `updated_at`, `deleted_at`, `peticion_cuidado_id`) VALUES
-(1, 8, 'Excelente cuidado, mi mascota llego feliz', '2021-05-28 17:52:43', '2021-05-28 17:53:27', '2021-05-28 17:53:27', 0);
 
 -- --------------------------------------------------------
 
@@ -196,10 +158,10 @@ CREATE TABLE `hogares` (
 --
 
 INSERT INTO `hogares` (`id`, `tipo_hogar`, `disponibilidad_patio`, `direccion`, `descripcion`, `foto`, `usuario_rut`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Berlin 411', 'Casa grande, afuera hay una plaza', 'Foto', 116214377, '2021-05-08 15:19:37', '2021-05-08 15:17:13', '2021-05-08 15:19:37'),
-(2, 1, 1, 'Berlin 411', 'Casa grande', 'Foto', 116214377, NULL, '2021-05-13 15:43:49', '2021-05-13 15:43:49'),
-(3, 1, 1, 'Berlin 411', 'Casa grande', 'Foto', 116214377, NULL, '2021-05-21 16:12:50', '2021-05-21 16:12:50'),
-(4, 1, 1, 'Testing Two', 'Testing Two', 'Foto', 116214377, '2021-05-28 15:31:19', '2021-05-28 15:29:50', '2021-05-28 15:31:19');
+(1, 1, 1, 'Berlin 411', 'Casa de dos pisos, cuento con patio grande', 'foto', 123123123, NULL, NULL, '2021-06-03 14:09:53'),
+(2, 2, 2, 'Los carreras 342', 'Departamento donde vivo solo', 'foto', 123123123, '2021-06-03 14:04:42', NULL, '2021-06-03 14:04:42'),
+(3, 1, 1, '15 norte', 'asd', 'foto', 196656359, NULL, '2021-06-03 13:55:04', '2021-06-03 13:55:04'),
+(4, 1, 1, 'Avenida Vespucio 231', 'Casa grande, cuento con patio amplio', NULL, 123123123, NULL, '2021-06-03 14:08:33', '2021-06-03 14:08:33');
 
 -- --------------------------------------------------------
 
@@ -215,24 +177,22 @@ CREATE TABLE `mascotas` (
   `usuario_rut` int NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `estirilizacion` int DEFAULT NULL,
+  `fecha_nacimiento` timestamp NULL DEFAULT NULL,
+  `condicion_medica` varchar(255) DEFAULT NULL,
+  `microchip` int DEFAULT NULL,
+  `alimentos` varchar(255) DEFAULT NULL,
+  `personalidad` varchar(255) DEFAULT NULL,
+  `foto` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `mascotas`
 --
 
-INSERT INTO `mascotas` (`id`, `nombre`, `sexo`, `raza_id`, `usuario_rut`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(5, 'dogO', 1, 3, 1, NULL, '2021-05-05 21:50:44', '2021-05-05 21:50:44'),
-(6, 'Kimmy', 2, 3, 1, NULL, NULL, NULL),
-(7, 'h3', 1, 3, 1, NULL, '2021-05-06 16:05:56', '2021-05-06 16:05:56'),
-(8, 'kiki', 1, 3, 1, NULL, '2021-05-06 16:18:14', '2021-05-06 16:18:14'),
-(9, 'rucio', 1, 3, 116214377, NULL, '2021-05-06 16:25:34', '2021-05-06 16:25:34'),
-(10, 'negro', 1, 3, 116214377, NULL, '2021-05-06 16:25:58', '2021-05-06 16:25:58'),
-(11, 'yoyo', 1, 3, 116214377, NULL, '2021-05-06 16:33:05', '2021-05-06 16:33:05'),
-(12, 'miki', 1, 8, 116214377, NULL, '2021-05-06 16:36:16', '2021-05-06 16:36:16'),
-(13, 'beno', 1, 7, 116214377, NULL, '2021-05-06 16:47:43', '2021-05-06 16:47:43'),
-(14, 'PetTesting', 1, 3, 116214377, '2021-05-28 15:16:54', '2021-05-28 15:15:00', '2021-05-28 15:16:54');
+INSERT INTO `mascotas` (`id`, `nombre`, `sexo`, `raza_id`, `usuario_rut`, `deleted_at`, `created_at`, `updated_at`, `estirilizacion`, `fecha_nacimiento`, `condicion_medica`, `microchip`, `alimentos`, `personalidad`, `foto`) VALUES
+(1, 'popo', 1, 5, 196656359, NULL, '2021-06-03 01:49:30', '2021-06-03 01:49:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -252,13 +212,6 @@ CREATE TABLE `negocios` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `negocios`
---
-
-INSERT INTO `negocios` (`id`, `nombre`, `descripcion`, `horario`, `direccion`, `foto`, `tipo_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Doña Maria', 'MiniMarket', '2021-05-28 16:53:37', NULL, 'foto', 2, '2021-05-29 16:33:17', '2021-05-29 16:34:06', '2021-05-29 16:34:06');
 
 -- --------------------------------------------------------
 
@@ -280,17 +233,16 @@ CREATE TABLE `perfiles` (
 --
 
 INSERT INTO `perfiles` (`id`, `cod_perfil`, `nombre`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Usuario', NULL, '0000-00-00 00:00:00', NULL),
-(2, 2, 'Administrador', NULL, '0000-00-00 00:00:00', NULL),
-(3, 3, 'Banned', '2021-05-28 15:54:05', '2021-05-28 15:52:45', '2021-05-28 15:54:05');
+(1, 1, 'Usuario', NULL, NULL, NULL),
+(2, 2, 'Administrador', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `peticion_cuidado`
+-- Table structure for table `peticiones`
 --
 
-CREATE TABLE `peticion_cuidado` (
+CREATE TABLE `peticiones` (
   `id` int NOT NULL,
   `fecha_inicio` timestamp NULL DEFAULT NULL,
   `fecha_fin` timestamp NULL DEFAULT NULL,
@@ -305,13 +257,29 @@ CREATE TABLE `peticion_cuidado` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `peticion_cuidado`
+-- Dumping data for table `peticiones`
 --
 
-INSERT INTO `peticion_cuidado` (`id`, `fecha_inicio`, `fecha_fin`, `precio_total`, `estado`, `created_at`, `usuario_rut`, `publicacion_id`, `updated_at`, `deleted_at`, `boleta`) VALUES
-(1, '2021-05-05 21:50:44', '2021-05-05 21:50:44', 20000, 1, '2021-05-28 16:53:37', 0, 0, '2021-05-28 16:53:37', NULL, NULL),
-(2, '2021-05-05 21:50:44', '2021-05-05 21:50:44', 15000, 2, '2021-05-28 16:58:58', 0, 0, '2021-05-28 16:58:58', NULL, NULL),
-(3, '2021-05-28 16:53:37', '2021-05-28 16:53:37', 15000, 1, '2021-05-28 18:30:13', 116214377, 1, '2021-05-28 18:30:13', NULL, NULL);
+INSERT INTO `peticiones` (`id`, `fecha_inicio`, `fecha_fin`, `precio_total`, `estado`, `created_at`, `usuario_rut`, `publicacion_id`, `updated_at`, `deleted_at`, `boleta`) VALUES
+(1, '2021-05-12 17:07:35', '2021-05-13 17:07:35', 15000, 1, NULL, 196656359, 1, NULL, NULL, 15000),
+(2, '2021-05-11 17:15:25', '2021-05-13 17:15:25', 15000, 1, NULL, 196656359, 1, NULL, NULL, 20000),
+(3, '2021-05-28 16:53:37', '2021-05-28 16:53:37', 22000, 1, '2021-06-01 13:24:49', 196656359, 1, '2021-06-01 13:26:11', '2021-06-01 13:26:11', NULL),
+(6, '2021-05-28 16:53:37', '2021-05-28 16:53:37', 22000, 1, '2021-06-01 16:13:33', 196656359, 1, '2021-06-01 16:13:33', NULL, NULL),
+(7, '2021-05-28 16:53:37', '2021-05-29 16:53:39', 19000, 19000, '2021-06-01 16:16:11', 123123123, 1, '2021-06-01 16:16:11', NULL, NULL),
+(8, '2021-05-12 17:07:35', '2021-05-13 17:07:35', 15000, 3, NULL, 123123123, 2, '2021-06-03 00:14:05', NULL, NULL),
+(9, '2021-06-08 14:20:18', '2021-06-08 14:20:18', 15000, 15000, '2021-06-08 14:26:44', 123123123, 4, '2021-06-08 14:26:44', NULL, 1),
+(10, '2021-07-07 16:12:12', '2021-02-02 12:09:09', NULL, NULL, '2021-06-09 17:47:35', 123123123, 4, '2021-06-09 17:47:35', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `peticion_mascota`
+--
+
+CREATE TABLE `peticion_mascota` (
+  `peticion_id` int NOT NULL,
+  `mascota_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -334,7 +302,11 @@ CREATE TABLE `publicaciones` (
 --
 
 INSERT INTO `publicaciones` (`id`, `descripcion`, `tarifa`, `created_at`, `updated_at`, `deleted_at`, `usuario_rut`) VALUES
-(1, 'Solicito cuidado para mis perros por 2 dias', 7500, '2021-05-28 15:59:28', '2021-05-28 16:05:51', '2021-05-28 16:05:51', 116214377);
+(1, 'Necesito que cuiden a mi perro por el fin de semana', 7500, NULL, '2021-06-08 14:20:28', '2021-06-08 14:20:28', 196656359),
+(2, 'Necesito que cuiden a mi gato por 3 dias', 7500, NULL, '2021-06-08 14:25:18', '2021-06-08 14:25:18', 123123123),
+(3, 'Necesito que cuiden a mi perro solo el sabado', 12000, NULL, '2021-06-08 14:25:15', '2021-06-08 14:25:15', 123123123),
+(4, 'Cuidador profesional', 6500, '2021-06-08 14:23:55', '2021-06-08 14:23:55', NULL, 196656359),
+(5, 'Buen cuidador casa grande como mi', 2500, '2021-06-09 17:56:38', '2021-06-09 17:56:38', NULL, 123123123);
 
 -- --------------------------------------------------------
 
@@ -357,13 +329,9 @@ CREATE TABLE `razas` (
 --
 
 INSERT INTO `razas` (`id`, `nombre`, `descripcion`, `deleted_at`, `especie_id`, `created_at`, `updated_at`) VALUES
-(3, 'Pastor alemán', 'El pastor alemán u ovejero es una raza canina que proviene de Alemania.​La raza es relativamente nueva, ya que su origen se remonta a 1899.​', NULL, 3, NULL, NULL),
-(4, 'Bulldog', 'El bulldog o bulldog inglés —en inglés: English Bulldog— es una raza canina originaria del Reino Unido. Su ancestro, conocido como el Antiguo Bulldog Inglés, fue utilizado en peleas de perros con toros hasta mediados del siglo XVII ', NULL, 3, NULL, NULL),
-(7, 'puddle', 'Perro pudle', NULL, 3, '2021-05-06 16:13:29', '2021-05-06 16:13:29'),
-(8, 'Chihuahua', 'perro ql insoportable', NULL, 3, '2021-05-06 16:14:13', '2021-05-06 16:14:13'),
-(10, 'Testing Update', 'Put method', '2021-05-28 15:02:19', 3, '2021-05-28 14:59:15', '2021-05-28 15:02:19'),
-(11, 'Testing', 'Testing', NULL, 3, '2021-05-28 15:04:03', '2021-05-28 15:04:03'),
-(12, 'Testing', 'Testing', NULL, 3, '2021-05-28 15:05:09', '2021-05-28 15:05:09');
+(4, 'Salchicha', 'Perro chico y largo', '2021-06-09 15:39:20', 1, NULL, '2021-06-09 15:39:20'),
+(5, 'Bulldog', 'Bulldog', NULL, 1, NULL, NULL),
+(9, 'Gato egipsio', 'Gato proveniente de egipto', NULL, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -380,15 +348,8 @@ CREATE TABLE `servicios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  `peticion_cuidado_id` int NOT NULL
+  `peticion_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `servicios`
---
-
-INSERT INTO `servicios` (`id`, `comentario`, `foto`, `monto`, `fecha`, `created_at`, `updated_at`, `deleted_at`, `peticion_cuidado_id`) VALUES
-(1, 'Servicio de peluqueria', 'foto', 17000, '2021-05-05 21:50:44', '2021-05-28 17:49:24', '2021-05-28 17:50:19', '2021-05-28 17:50:19', 0);
 
 -- --------------------------------------------------------
 
@@ -403,15 +364,6 @@ CREATE TABLE `tipos` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `tipos`
---
-
-INSERT INTO `tipos` (`id`, `tipo_negocio`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '2021-05-29 16:30:43', '2021-05-29 16:31:40', '2021-05-29 16:31:40'),
-(2, 2, '2021-05-29 16:30:47', '2021-05-29 16:30:47', NULL),
-(3, 4, '2021-05-29 16:30:50', '2021-05-29 16:31:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -430,13 +382,6 @@ CREATE TABLE `ubicaciones` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `ubicaciones`
---
-
-INSERT INTO `ubicaciones` (`id`, `tipo_ubicacion`, `descripcion`, `foto`, `direccion`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Plaza principal', 'foto', 'Avenida San Pedro con General xD', '2021-05-29 16:35:35', '2021-05-29 16:36:17', '2021-05-29 16:36:17');
-
 -- --------------------------------------------------------
 
 --
@@ -451,20 +396,23 @@ CREATE TABLE `usuarios` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `perfil_id` int NOT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `fecha_nacimiento` timestamp NULL DEFAULT NULL,
+  `sexo` int DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `numero_telefonico` int DEFAULT NULL,
+  `promedio_evaluaciones` int DEFAULT NULL,
+  `calendario` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `usuarios`
 --
 
-INSERT INTO `usuarios` (`rut`, `name`, `email`, `password`, `created_at`, `updated_at`, `perfil_id`, `deleted_at`) VALUES
-(1, 'alex', 'user1@gmail.com', '$2y$10$hsSYudkZmgYfpPvlqWtJVOJKZDZ0fZMvU7J.UiA.QcOK535O6LUvq', '2021-05-05 21:44:20', '2021-05-05 21:44:20', 1, NULL),
-(123, 'isa', 'isac@gmail.com', '$2y$10$5h.ntJI5/zsBbnYeVYI5suZcgQJskm964iU2U98Rdi6aZmGJSkNlq', '2021-05-21 16:32:53', '2021-05-21 16:32:53', 1, NULL),
-(321, 'dsa', 'dsa@gmail.com', '$2y$10$geGAkMcl7bkS5x7ZyBqMAegPAPIHWKuAz6i6vHW0Nnw3Pqga0bQOu', '2021-05-21 16:59:15', '2021-05-21 16:59:15', 1, NULL),
-(12345678, 'Testing', 'Testing', '$2y$10$WWkVaNQSzOpSKIB0gljuROB5aYZyFzxrvNsaX9kKmm.hU/2wJM9WK', '2021-05-28 15:26:52', '2021-05-28 15:26:52', 1, NULL),
-(116214377, 'Claudio', 'claudio@gmail.com', '$2y$10$pUiBdipLnae/o0C7ydPKOOQnbXgwGchdkFV20iIjiPN8JZ7MsAvy6', '2021-05-05 21:54:06', '2021-05-05 21:54:06', 1, NULL),
-(123456789, 'alf', 'alf@gmail.com', '$2y$10$nxGJBdlx6nPET9mz0vW.l.0u2sx2ZiIkWZPXm55MO.H1kkvE6pPaW', '2021-05-21 16:29:48', '2021-05-21 16:29:48', 1, NULL);
+INSERT INTO `usuarios` (`rut`, `name`, `email`, `password`, `created_at`, `updated_at`, `perfil_id`, `deleted_at`, `fecha_nacimiento`, `sexo`, `foto`, `numero_telefonico`, `promedio_evaluaciones`, `calendario`) VALUES
+(111111111, 'camilo', 'camilo@gmail.com', '$2y$10$cnVFRbFlaYHARCQqCbESUO0Y/kCLwR5DouL2Io5ZmcKzLf17nnBtK', '2021-06-09 19:17:35', '2021-06-09 19:24:46', 2, NULL, '2020-02-02 13:10:10', 1, 'foto', 9817381, NULL, NULL),
+(123123123, 'Admin', 'admin@gmail.com', '$2y$10$lFdvFkYmUj/F1rZ1JkkUvevR0nT3K8vh5OYYeLP1fHs1mRNatN2g6', '2021-06-01 16:02:36', '2021-06-09 14:56:04', 1, NULL, '2021-06-08 16:03:23', 1, 'foto', 81179172, NULL, NULL),
+(196656359, 'Ale', 'ale@gmail.com', '$2y$10$mAJbQ5Z9xmBaKdnZdBWUjOZNG4KmdwmuV5QDIWPFrJnlrsWo07zu.', NULL, '2021-06-09 14:18:40', 2, NULL, '2021-06-01 16:02:36', 1, 'foto fachera', 58626642, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -512,7 +460,7 @@ ALTER TABLE `especies`
 --
 ALTER TABLE `evaluaciones`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_evaluaciones_peticion_cuidado1_idx` (`peticion_cuidado_id`);
+  ADD KEY `fk_evaluaciones_peticiones1_idx` (`peticion_id`);
 
 --
 -- Indexes for table `hogares`
@@ -543,12 +491,20 @@ ALTER TABLE `perfiles`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `peticion_cuidado`
+-- Indexes for table `peticiones`
 --
-ALTER TABLE `peticion_cuidado`
+ALTER TABLE `peticiones`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_peticion_cuidado_usuarios1_idx` (`usuario_rut`),
   ADD KEY `fk_peticion_cuidado_publicaciones1_idx` (`publicacion_id`);
+
+--
+-- Indexes for table `peticion_mascota`
+--
+ALTER TABLE `peticion_mascota`
+  ADD PRIMARY KEY (`peticion_id`,`mascota_id`),
+  ADD KEY `fk_peticiones_has_mascotas_mascotas1_idx` (`mascota_id`),
+  ADD KEY `fk_peticiones_has_mascotas_peticiones1_idx` (`peticion_id`);
 
 --
 -- Indexes for table `publicaciones`
@@ -569,7 +525,7 @@ ALTER TABLE `razas`
 --
 ALTER TABLE `servicios`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_servicios_peticion_cuidado1_idx` (`peticion_cuidado_id`);
+  ADD KEY `fk_servicios_peticiones1_idx` (`peticion_id`);
 
 --
 -- Indexes for table `tipos`
@@ -598,37 +554,37 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `alertas`
 --
 ALTER TABLE `alertas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `comentarios_alertas`
 --
 ALTER TABLE `comentarios_alertas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `comentarios_negocios`
 --
 ALTER TABLE `comentarios_negocios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `comentarios_ubicaciones`
 --
 ALTER TABLE `comentarios_ubicaciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `especies`
 --
 ALTER TABLE `especies`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `evaluaciones`
 --
 ALTER TABLE `evaluaciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `hogares`
@@ -640,55 +596,55 @@ ALTER TABLE `hogares`
 -- AUTO_INCREMENT for table `mascotas`
 --
 ALTER TABLE `mascotas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `negocios`
 --
 ALTER TABLE `negocios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `perfiles`
 --
 ALTER TABLE `perfiles`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `peticion_cuidado`
+-- AUTO_INCREMENT for table `peticiones`
 --
-ALTER TABLE `peticion_cuidado`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `peticiones`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `razas`
 --
 ALTER TABLE `razas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `servicios`
 --
 ALTER TABLE `servicios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tipos`
 --
 ALTER TABLE `tipos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `ubicaciones`
 --
 ALTER TABLE `ubicaciones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -725,7 +681,7 @@ ALTER TABLE `comentarios_ubicaciones`
 -- Constraints for table `evaluaciones`
 --
 ALTER TABLE `evaluaciones`
-  ADD CONSTRAINT `fk_evaluaciones_peticion_cuidado1` FOREIGN KEY (`peticion_cuidado_id`) REFERENCES `peticion_cuidado` (`id`);
+  ADD CONSTRAINT `fk_evaluaciones_peticiones1` FOREIGN KEY (`peticion_id`) REFERENCES `peticiones` (`id`);
 
 --
 -- Constraints for table `hogares`
@@ -747,11 +703,18 @@ ALTER TABLE `negocios`
   ADD CONSTRAINT `fk_negocios_tipos1` FOREIGN KEY (`tipo_id`) REFERENCES `tipos` (`id`);
 
 --
--- Constraints for table `peticion_cuidado`
+-- Constraints for table `peticiones`
 --
-ALTER TABLE `peticion_cuidado`
+ALTER TABLE `peticiones`
   ADD CONSTRAINT `fk_peticion_cuidado_publicaciones1` FOREIGN KEY (`publicacion_id`) REFERENCES `publicaciones` (`id`),
   ADD CONSTRAINT `fk_peticion_cuidado_usuarios1` FOREIGN KEY (`usuario_rut`) REFERENCES `usuarios` (`rut`);
+
+--
+-- Constraints for table `peticion_mascota`
+--
+ALTER TABLE `peticion_mascota`
+  ADD CONSTRAINT `fk_peticiones_has_mascotas_mascotas1` FOREIGN KEY (`mascota_id`) REFERENCES `mascotas` (`id`),
+  ADD CONSTRAINT `fk_peticiones_has_mascotas_peticiones1` FOREIGN KEY (`peticion_id`) REFERENCES `peticiones` (`id`);
 
 --
 -- Constraints for table `publicaciones`
@@ -769,7 +732,7 @@ ALTER TABLE `razas`
 -- Constraints for table `servicios`
 --
 ALTER TABLE `servicios`
-  ADD CONSTRAINT `fk_servicios_peticion_cuidado1` FOREIGN KEY (`peticion_cuidado_id`) REFERENCES `peticion_cuidado` (`id`);
+  ADD CONSTRAINT `fk_servicios_peticiones1` FOREIGN KEY (`peticion_id`) REFERENCES `peticiones` (`id`);
 
 --
 -- Constraints for table `usuarios`

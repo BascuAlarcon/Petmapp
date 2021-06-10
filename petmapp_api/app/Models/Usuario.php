@@ -4,18 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-class Usuario extends Model
+
+class Usuario extends Model implements JWTSubject
 { 
     use HasFactory, Notifiable; 
     protected $table= "usuarios"; 
     protected $primaryKey = "rut";
     use SoftDeletes;  
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -72,11 +73,27 @@ class Usuario extends Model
         return $this->hasMany('App\Models\Hogar', 'usuario_rut', 'rut');
     }
 
-    public function publicaciones(){
+    public function alertas (){
+        return $this->hasMany('App\Models\Alerta', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioAlerta (){
+        return $this->hasMany('App\Models\ComentarioAlerta', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioNegocio (){
+        return $this->hasMany('App\Models\ComentarioNegocio', 'usuario_rut', 'rut');
+    }
+
+    public function comentarioUbicacion (){
+        return $this->hasMany('App\Models\ComentarioUbicacion', 'usuario_rut', 'rut');
+    }
+
+    public function publicaciones (){
         return $this->hasMany('App\Models\Publicacion', 'usuario_rut', 'rut');
     }
 
-    public function peticiones(){
-        return $this->hasMany('App\Models\PeticionCuidado', 'usuario_rut', 'rut');
+    public function peticiones (){
+        return $this->hasMany('App\Models\Peticion', 'usuario_rut', 'rut');
     }
 }

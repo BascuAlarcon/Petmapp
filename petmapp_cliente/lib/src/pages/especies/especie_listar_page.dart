@@ -5,6 +5,7 @@ import 'package:petmapp_cliente/src/pages/razas/raza_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_editar_page.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 
 class RazaListarPage extends StatefulWidget {
   RazaListarPage({Key key}) : super(key: key);
@@ -103,7 +104,7 @@ class _RazaListarPageState extends State<RazaListarPage> {
   }
 
   Future<List<dynamic>> _fetch() async {
-    var provider = new PetmappProvider();
+    var provider = new RazasProvider();
     return await provider.getRazas();
   }
 
@@ -127,7 +128,7 @@ class _RazaListarPageState extends State<RazaListarPage> {
   }
 
   void _razasBorrar(int id) async {
-    var provider = new PetmappProvider();
+    var provider = new RazasProvider();
     await provider.razasBorrar(id);
   }
 

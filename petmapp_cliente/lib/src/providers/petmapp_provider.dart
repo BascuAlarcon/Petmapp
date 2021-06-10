@@ -6,7 +6,7 @@ import 'package:petmapp_cliente/src/providers/url_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PetmappProvider {
-  var apiUrl = new UrlProvider().url();
+/*   var apiUrl = new UrlProvider().url();
   // RAZAS //
 
   // OBTENER RAZAS //
@@ -117,7 +117,7 @@ class PetmappProvider {
 
   // LISTAR USUARIOS //
   Future<List<dynamic>> getUsuarios() async {
-    var urlRequest = apiUrl + 'auth/index';
+    var urlRequest = apiUrl + 'auth/usuarios';
     var response = await http.get(Uri.parse(urlRequest));
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
@@ -180,5 +180,5 @@ class PetmappProvider {
   Future<http.Response> mascotaBorrar(int id) async {
     var urlRequest = apiUrl + 'mascotas/' + id.toString();
     return await http.delete(Uri.parse(urlRequest));
-  }
+  } */
 }

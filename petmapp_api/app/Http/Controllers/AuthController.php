@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Models\Usuario;
 
 class AuthController extends Controller
 {
@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'me', 'login', 'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login','editar' ,'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones']]);
     }
 
     /**
@@ -25,10 +25,10 @@ class AuthController extends Controller
      */
 
     public function index(){
-        return User::all();
+        return Usuario::all();
     }
     
-    public function me(User $user)
+    public function me(Usuario $user)
     { 
         $user = Auth::user();
         return $user;
@@ -47,14 +47,28 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = new User();
+        $user = new Usuario();
         $user->rut = $request->rut;
         $user->name = $request->name;
-        $user->email = $request->email;
+        $user->email = $request->email; 
         $user->password = bcrypt($request->password);
-        $user->perfil_id = 1;
+        $user->perfil_id = 2;
         $user->save();
         return response()->json(['status'=>'ok' ,'data'=>$user], 200);
+    }
+
+    public function editar(Request $request, Usuario $user)
+    {  
+        $user->email = $request->email; 
+        $user->name = $request->name;
+        $user->sexo = $request->sexo;
+        $user->perfil_id = $request->perfil_id;
+        $user->fecha_nacimiento = $request->fecha_nacimiento;
+        $user->foto = $request->foto;
+        $user->numero_telefonico = $request->numero_telefonico;
+        $user->promedio_evaluaciones = $request->promedio_evaluaciones;
+        $user->calendario = $request->calendario;
+        $user->save();
     }
 
     /**
@@ -85,31 +99,31 @@ class AuthController extends Controller
         ]);
     } 
 
-    public function perfil(User $user){
+    public function perfil(Usuario $user){
         $user = Auth::user();
         $perfil = $user->perfil;
         return $perfil;
     }
   
-    public function mascotas(User $user){
+    public function mascotas(Usuario $user){
         $user = Auth::user();
         $mascotas = $user->mascotas;
         return $mascotas;
     }
 
-    public function hogares(User $user){
+    public function hogares(Usuario $user){
         $user = Auth::user();
         $hogares = $user->hogares;
         return $hogares;
     }
 
-    public function publicaciones(User $user){ 
+    public function publicaciones(Usuario $user){ 
         $user = Auth::user();
         $publicaciones = $user->publicaciones;
         return $publicaciones;
     }
 
-    public function peticiones(User $user){
+    public function peticiones(Usuario $user){
         $user = Auth::user();
         $peticiones = $user->peticiones;
         return $peticiones;

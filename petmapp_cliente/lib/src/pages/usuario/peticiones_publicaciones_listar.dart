@@ -44,8 +44,7 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(
-                          'ID de la publicación: ${snapshot.data['id'].toString()}'),
+                      title: Text('PETICIONES DE CUIDADO'),
                     ),
                     Divider(
                       color: Colors.black,
@@ -83,10 +82,11 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
           separatorBuilder: (context, index) => Divider(),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(peticiones[index]['id'].toString()),
-              subtitle: Text(peticiones[index]['usuario_rut'].toString()),
-              onTap: () => _navegarPeticion(context,
-                  peticiones[index]['id']), // MOSTRAR PETICIÓN EN ESPEFICO //
+              title: Text(
+                  'ID de la petición  ${peticiones[index]['id'].toString()}'),
+              subtitle: Text(
+                  'Rut del usuario que hizo la petición ${peticiones[index]['usuario_rut'].toString()}'),
+              onTap: () => _navegarPeticion(context, peticiones[index]['id']),
             );
           });
     }

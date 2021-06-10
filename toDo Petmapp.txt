@@ -1,0 +1,54 @@
+Para poder ejecutar la app hay que cambiar:
+	en el backend, cambiar la contraseña para ingresar a la BD (archivo .env) 
+	en el frontend, poner la ip de nuestra computadora en la url del archivo Petmapp_provider.dart (si usamos dispositivo fisico).
+
+Para correr la app en nuestro dispositivo fisico, usar el comando: (Con la ip de nuestra computadora). Es necesario estar conetados a la misma
+red de internet.
+	php artisan serv --host 192.168.1.86   
+				192.168.0.10
+
+toDo: 
+	TABLES in BD / Controller / Model / CRUD -> tablas restantes
+	Reglas de validacion 
+	 
+Maps
+	Agregar más de un marcador al Google Maps  
+	Ver el uso de Google Places para nuestra app
+ 
+toDo:
+	INTENTAR ELIMINAR MODEL Y CONTROLLER DE USER
+
+	Traer usuario y dibujar un perfil para el usuario de la otra parte del servicio  
+ 	Pensar en como va a funcionar la tabla peticiones_mascotas (nombre fisico: 'cuidadas') 
+
+	Tabla Peticion
+		El precio_total se calcula a partir de los dias * tarifa diaria de la Tabla Publicacion
+		A boleta en un principio, se le asigna precio_total  
+	
+Clean Code:
+	Usar un Widget Drawer que se use desde cualquier parte de la app
+	Los widget Buttons de enviar y cancelar	
+	Utilizar un provider para todas las páginas que usemos 
+ 
+ISAAC:
+	¿Cuando se hace una publicacion / peticion, como saber a cuál Hogar de los que tenemos nos estamos refiriendo?
+ 
+1 VERSION
+	ORGANIZAR EN QUE CARPETA VAN LOS ARCHIVOS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

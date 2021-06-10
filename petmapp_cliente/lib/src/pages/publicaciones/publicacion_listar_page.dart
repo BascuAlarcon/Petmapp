@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_mostrar_page.dart';
-import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PublicacionListarPage extends StatefulWidget {
   PublicacionListarPage({Key key}) : super(key: key);
@@ -16,11 +16,22 @@ class PublicacionListarPage extends StatefulWidget {
 }
 
 class _PublicacionListarPageState extends State<PublicacionListarPage> {
+  SharedPreferences sharedPreferences;
+  String email = '';
+  String name = '';
+  String rut = '';
+  String perfil = '';
+
   @override
+  void initState() {
+    super.initState();
+    cargarDatosUsuario();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetmApp'),
+        title: Text('Publicaciones disponibles'),
         leading: Container(
             child: ElevatedButton(
                 child: Icon(MdiIcons.arrowBottomLeft),
@@ -40,40 +51,24 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () => _refresh(),
-                    child: ListView.separated(
+                    child: ListView.builder(
                       itemCount: safeCards.length,
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
                       itemBuilder: (context, index) {
-                        return Slidable(
-                          actionPane: SlidableDrawerActionPane(),
-                          actionExtentRatio: 0.25,
-                          child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
-                            title: Text(snapshot.data[index]['descripcion']),
-                            onTap: () => _navegarMascotas(
-                                context, snapshot.data[index]['id']),
-                          ),
-                          actions: [
-                            IconSlideAction(
-                              caption: 'Editar',
-                              color: Colors.yellow,
-                              icon: MdiIcons.pencil,
-                              onTap: () => _navegarpublicacionesEditar(
+                        if (snapshot.data[index]['usuario_rut'].toString() ==
+                            rut) {
+                          return Column();
+                        } else {
+                          return Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            actionExtentRatio: 0.25,
+                            child: ListTile(
+                              leading: Icon(MdiIcons.soccer),
+                              title: Text(snapshot.data[index]['descripcion']),
+                              onTap: () => _navegarPublicacion(
                                   context, snapshot.data[index]['id']),
-                            )
-                          ],
-                          secondaryActions: [
-                            IconSlideAction(
-                              caption: 'Borrar',
-                              color: Colors.red,
-                              icon: MdiIcons.trashCan,
-                              onTap: () => _mostrarConfirmacion(
-                                  context, snapshot.data, index),
                             ),
-                          ],
-                        );
+                          );
+                        }
                       },
                     ),
                   ),
@@ -166,12 +161,26 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
         });
   }
 
-  _navegarMascotas(BuildContext context, int id) {
+  _navegarPublicacion(BuildContext context, int id) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
       return PublicacionMostrarPage(
         idPublicacion: id,
       );
     });
     Navigator.push(context, route);
+  }
+
+  // TRAER DATOS DE SHARED PREFERENCES //
+  Future<void> cargarDatosUsuario() async {
+    SharedPreferences sharedPreferencess =
+        await SharedPreferences.getInstance();
+    setState(() {
+      /* listaDatos = sharedPreferencess.getStringList("usuario");
+      print(listaDatos); */
+      rut = sharedPreferencess.getStringList('usuario')[0];
+      email = sharedPreferencess.getStringList('usuario')[1];
+      name = sharedPreferencess.getStringList('usuario')[2];
+      perfil = sharedPreferencess.getStringList('usuario')[4];
+    });
   }
 }

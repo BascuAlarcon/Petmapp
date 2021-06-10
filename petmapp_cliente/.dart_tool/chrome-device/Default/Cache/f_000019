@@ -1,0 +1,1285 @@
+define(['dart_sdk', 'packages/flutter/src/foundation/print.dart', 'packages/flutter/src/foundation/_platform_web.dart', 'packages/flutter/src/foundation/object.dart', 'packages/flutter/src/foundation/stack_frame.dart'], (function load__packages__flutter__src__foundation__debug_dart(dart_sdk, packages__flutter__src__foundation__print$46dart, packages__flutter__src__foundation___platform_web$46dart, packages__flutter__src__foundation__object$46dart, packages__flutter__src__foundation__stack_frame$46dart) {
+  'use strict';
+  const core = dart_sdk.core;
+  const async = dart_sdk.async;
+  const _interceptors = dart_sdk._interceptors;
+  const _internal = dart_sdk._internal;
+  const _js_helper = dart_sdk._js_helper;
+  const math = dart_sdk.math;
+  const dart = dart_sdk.dart;
+  const dartx = dart_sdk.dartx;
+  const print = packages__flutter__src__foundation__print$46dart.src__foundation__print;
+  const platform = packages__flutter__src__foundation___platform_web$46dart.src__foundation__platform;
+  const object$ = packages__flutter__src__foundation__object$46dart.src__foundation__object;
+  const stack_frame = packages__flutter__src__foundation__stack_frame$46dart.src__foundation__stack_frame;
+  var debug = Object.create(dart.library);
+  var diagnostics$ = Object.create(dart.library);
+  var assertions = Object.create(dart.library);
+  var $toStringAsPrecision = dartx.toStringAsPrecision;
+  var $toStringAsFixed = dartx.toStringAsFixed;
+  var $times = dartx['*'];
+  var $isEmpty = dartx.isEmpty;
+  var $length = dartx.length;
+  var $clear = dartx.clear;
+  var $_get = dartx._get;
+  var $substring = dartx.substring;
+  var $split = dartx.split;
+  var $isNotEmpty = dartx.isNotEmpty;
+  var $last = dartx.last;
+  var $add = dartx.add;
+  var $trimRight = dartx.trimRight;
+  var $endsWith = dartx.endsWith;
+  var $toUpperCase = dartx.toUpperCase;
+  var $contains = dartx.contains;
+  var $where = dartx.where;
+  var $take = dartx.take;
+  var $toList = dartx.toList;
+  var $first = dartx.first;
+  var $_set = dartx._set;
+  var $runtimeType = dartx.runtimeType;
+  var $entries = dartx.entries;
+  var $map = dartx.map;
+  var $toString = dartx.toString;
+  var $isFinite = dartx.isFinite;
+  var $replaceAll = dartx.replaceAll;
+  var $clamp = dartx.clamp;
+  var $join = dartx.join;
+  var $values = dartx.values;
+  var $any = dartx.any;
+  var $hashCode = dartx.hashCode;
+  var $toUnsigned = dartx.toUnsigned;
+  var $toRadixString = dartx.toRadixString;
+  var $padLeft = dartx.padLeft;
+  var $indexOf = dartx.indexOf;
+  var $allMatches = dartx.allMatches;
+  var $startsWith = dartx.startsWith;
+  var $skip = dartx.skip;
+  var $setRange = dartx.setRange;
+  var $lastIndexOf = dartx.lastIndexOf;
+  var $trimLeft = dartx.trimLeft;
+  var $cast = dartx.cast;
+  var $firstWhere = dartx.firstWhere;
+  var $skipWhile = dartx.skipWhile;
+  var $forEach = dartx.forEach;
+  var $addAll = dartx.addAll;
+  var $containsKey = dartx.containsKey;
+  var $update = dartx.update;
+  var $removeAt = dartx.removeAt;
+  var $sort = dartx.sort;
+  var $single = dartx.single;
+  var $whereType = dartx.whereType;
+  dart._checkModuleNullSafetyMode(false);
+  var T$ = {
+    StringN: () => (T$.StringN = dart.constFn(dart.nullable(core.String)))(),
+    intN: () => (T$.intN = dart.constFn(dart.nullable(core.int)))(),
+    StringN__Tovoid: () => (T$.StringN__Tovoid = dart.constFn(dart.fnType(dart.void, [T$.StringN()], {wrapWidth: T$.intN()}, {})))(),
+    VoidTobool: () => (T$.VoidTobool = dart.constFn(dart.fnType(core.bool, [])))(),
+    StringL: () => (T$.StringL = dart.constFn(dart.legacy(core.String)))(),
+    DiagnosticLevelL: () => (T$.DiagnosticLevelL = dart.constFn(dart.legacy(diagnostics$.DiagnosticLevel)))(),
+    DiagnosticsTreeStyleL: () => (T$.DiagnosticsTreeStyleL = dart.constFn(dart.legacy(diagnostics$.DiagnosticsTreeStyle)))(),
+    _WordWrapParseModeL: () => (T$._WordWrapParseModeL = dart.constFn(dart.legacy(diagnostics$._WordWrapParseMode)))(),
+    JSArrayOfint: () => (T$.JSArrayOfint = dart.constFn(_interceptors.JSArray$(core.int)))(),
+    VoidToint: () => (T$.VoidToint = dart.constFn(dart.fnType(core.int, [])))(),
+    intTodynamic: () => (T$.intTodynamic = dart.constFn(dart.fnType(dart.dynamic, [core.int])))(),
+    intTobool: () => (T$.intTobool = dart.constFn(dart.fnType(core.bool, [core.int])))(),
+    SyncIterableOfString: () => (T$.SyncIterableOfString = dart.constFn(_js_helper.SyncIterable$(core.String)))(),
+    JSArrayOfString: () => (T$.JSArrayOfString = dart.constFn(_interceptors.JSArray$(core.String)))(),
+    DiagnosticsNodeTovoid: () => (T$.DiagnosticsNodeTovoid = dart.constFn(dart.fnType(dart.void, [diagnostics$.DiagnosticsNode])))(),
+    DiagnosticsNodeTobool: () => (T$.DiagnosticsNodeTobool = dart.constFn(dart.fnType(core.bool, [diagnostics$.DiagnosticsNode])))(),
+    DiagnosticsPropertyOfvoid: () => (T$.DiagnosticsPropertyOfvoid = dart.constFn(diagnostics$.DiagnosticsProperty$(dart.void)))(),
+    ObjectN: () => (T$.ObjectN = dart.constFn(dart.nullable(core.Object)))(),
+    IdentityMapOfString$ObjectN: () => (T$.IdentityMapOfString$ObjectN = dart.constFn(_js_helper.IdentityMap$(core.String, T$.ObjectN())))(),
+    MapOfStringL$ObjectN: () => (T$.MapOfStringL$ObjectN = dart.constFn(core.Map$(T$.StringL(), T$.ObjectN())))(),
+    MapLOfStringL$ObjectN: () => (T$.MapLOfStringL$ObjectN = dart.constFn(dart.legacy(T$.MapOfStringL$ObjectN())))(),
+    MapOfString$ObjectN: () => (T$.MapOfString$ObjectN = dart.constFn(core.Map$(core.String, T$.ObjectN())))(),
+    DiagnosticsNodeToMapOfString$ObjectN: () => (T$.DiagnosticsNodeToMapOfString$ObjectN = dart.constFn(dart.fnType(T$.MapOfString$ObjectN(), [diagnostics$.DiagnosticsNode])))(),
+    DiagnosticsNodeL: () => (T$.DiagnosticsNodeL = dart.constFn(dart.legacy(diagnostics$.DiagnosticsNode)))(),
+    DiagnosticableNodeOfDiagnosticable: () => (T$.DiagnosticableNodeOfDiagnosticable = dart.constFn(diagnostics$.DiagnosticableNode$(diagnostics$.Diagnosticable)))(),
+    JSArrayOfDiagnosticsNode: () => (T$.JSArrayOfDiagnosticsNode = dart.constFn(_interceptors.JSArray$(diagnostics$.DiagnosticsNode)))(),
+    ListOfString: () => (T$.ListOfString = dart.constFn(core.List$(core.String)))(),
+    JSArrayOfObject: () => (T$.JSArrayOfObject = dart.constFn(_interceptors.JSArray$(core.Object)))(),
+    VoidToString: () => (T$.VoidToString = dart.constFn(dart.fnType(core.String, [])))(),
+    DiagnosticsNodeN: () => (T$.DiagnosticsNodeN = dart.constFn(dart.nullable(diagnostics$.DiagnosticsNode)))(),
+    DiagnosticsNodeNTobool: () => (T$.DiagnosticsNodeNTobool = dart.constFn(dart.fnType(core.bool, [T$.DiagnosticsNodeN()])))(),
+    VoidToNull: () => (T$.VoidToNull = dart.constFn(dart.fnType(core.Null, [])))(),
+    StackFrameTobool: () => (T$.StackFrameTobool = dart.constFn(dart.fnType(core.bool, [stack_frame.StackFrame])))(),
+    IterableOfDiagnosticsNode: () => (T$.IterableOfDiagnosticsNode = dart.constFn(core.Iterable$(diagnostics$.DiagnosticsNode)))(),
+    IterableOfDiagnosticsNodeToIterableOfDiagnosticsNode: () => (T$.IterableOfDiagnosticsNodeToIterableOfDiagnosticsNode = dart.constFn(dart.fnType(T$.IterableOfDiagnosticsNode(), [T$.IterableOfDiagnosticsNode()])))(),
+    JSArrayOfIterableOfDiagnosticsNodeToIterableOfDiagnosticsNode: () => (T$.JSArrayOfIterableOfDiagnosticsNodeToIterableOfDiagnosticsNode = dart.constFn(_interceptors.JSArray$(T$.IterableOfDiagnosticsNodeToIterableOfDiagnosticsNode())))(),
+    DiagnosticsPropertyOfFlutterError: () => (T$.DiagnosticsPropertyOfFlutterError = dart.constFn(diagnostics$.DiagnosticsProperty$(assertions.FlutterError)))(),
+    DiagnosticsPropertyOfDiagnosticsNode: () => (T$.DiagnosticsPropertyOfDiagnosticsNode = dart.constFn(diagnostics$.DiagnosticsProperty$(diagnostics$.DiagnosticsNode)))(),
+    StringToErrorDescription: () => (T$.StringToErrorDescription = dart.constFn(dart.fnType(assertions.ErrorDescription, [core.String])))(),
+    IdentityMapOfString$int: () => (T$.IdentityMapOfString$int = dart.constFn(_js_helper.IdentityMap$(core.String, core.int)))(),
+    intToint: () => (T$.intToint = dart.constFn(dart.fnType(core.int, [core.int])))(),
+    ListOfStringN: () => (T$.ListOfStringN = dart.constFn(core.List$(T$.StringN())))(),
+    DiagnosticsNodeToString: () => (T$.DiagnosticsNodeToString = dart.constFn(dart.fnType(core.String, [diagnostics$.DiagnosticsNode])))(),
+    FlutterErrorDetailsTovoid: () => (T$.FlutterErrorDetailsTovoid = dart.constFn(dart.fnType(dart.void, [assertions.FlutterErrorDetails])))(),
+    StackTraceToStackTrace: () => (T$.StackTraceToStackTrace = dart.constFn(dart.fnType(core.StackTrace, [core.StackTrace])))(),
+    FlutterErrorDetails__Tovoid: () => (T$.FlutterErrorDetails__Tovoid = dart.constFn(dart.fnType(dart.void, [assertions.FlutterErrorDetails], {forceReport: core.bool}, {})))(),
+    JSArrayOfStackFilter: () => (T$.JSArrayOfStackFilter = dart.constFn(_interceptors.JSArray$(assertions.StackFilter)))(),
+    IterableOfString: () => (T$.IterableOfString = dart.constFn(core.Iterable$(core.String)))(),
+    IterableOfStringToIterableOfString: () => (T$.IterableOfStringToIterableOfString = dart.constFn(dart.fnType(T$.IterableOfString(), [T$.IterableOfString()])))(),
+    StringToDiagnosticsNode: () => (T$.StringToDiagnosticsNode = dart.constFn(dart.fnType(diagnostics$.DiagnosticsNode, [core.String])))(),
+    StringTobool: () => (T$.StringTobool = dart.constFn(dart.fnType(core.bool, [core.String])))()
+  };
+  var T$Eval = Object.assign({
+    _: () => T$Eval
+  }, T$);
+  var S = {
+    _: () => S
+  };
+  var S$Eval = Object.assign({
+    _: () => S$Eval
+  }, S);
+  const CT = Object.create({
+    _: () => (C, CT)
+  });
+  dart.defineLazy(CT, {
+    get C0() {
+      return C[0] = dart.fn(print.debugPrintThrottled, T$.StringN__Tovoid());
+    },
+    get C1() {
+      return C[1] = dart.constMap(T$.StringL(), T$.StringL(), ["mode", "basic"]);
+    },
+    get C2() {
+      return C[2] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.hidden",
+        index: 0
+      });
+    },
+    get C3() {
+      return C[3] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.fine",
+        index: 1
+      });
+    },
+    get C4() {
+      return C[4] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.debug",
+        index: 2
+      });
+    },
+    get C5() {
+      return C[5] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.info",
+        index: 3
+      });
+    },
+    get C6() {
+      return C[6] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.warning",
+        index: 4
+      });
+    },
+    get C7() {
+      return C[7] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.hint",
+        index: 5
+      });
+    },
+    get C8() {
+      return C[8] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.summary",
+        index: 6
+      });
+    },
+    get C9() {
+      return C[9] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.error",
+        index: 7
+      });
+    },
+    get C10() {
+      return C[10] = dart.const({
+        __proto__: diagnostics$.DiagnosticLevel.prototype,
+        [_name$]: "DiagnosticLevel.off",
+        index: 8
+      });
+    },
+    get C11() {
+      return C[11] = dart.constList([C[2] || CT.C2, C[3] || CT.C3, C[4] || CT.C4, C[5] || CT.C5, C[6] || CT.C6, C[7] || CT.C7, C[8] || CT.C8, C[9] || CT.C9, C[10] || CT.C10], T$.DiagnosticLevelL());
+    },
+    get C12() {
+      return C[12] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.none",
+        index: 0
+      });
+    },
+    get C13() {
+      return C[13] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.sparse",
+        index: 1
+      });
+    },
+    get C14() {
+      return C[14] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.offstage",
+        index: 2
+      });
+    },
+    get C15() {
+      return C[15] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.dense",
+        index: 3
+      });
+    },
+    get C16() {
+      return C[16] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.transition",
+        index: 4
+      });
+    },
+    get C17() {
+      return C[17] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.error",
+        index: 5
+      });
+    },
+    get C18() {
+      return C[18] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.whitespace",
+        index: 6
+      });
+    },
+    get C19() {
+      return C[19] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.flat",
+        index: 7
+      });
+    },
+    get C20() {
+      return C[20] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.singleLine",
+        index: 8
+      });
+    },
+    get C21() {
+      return C[21] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.errorProperty",
+        index: 9
+      });
+    },
+    get C22() {
+      return C[22] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.shallow",
+        index: 10
+      });
+    },
+    get C23() {
+      return C[23] = dart.const({
+        __proto__: diagnostics$.DiagnosticsTreeStyle.prototype,
+        [_name$]: "DiagnosticsTreeStyle.truncateChildren",
+        index: 11
+      });
+    },
+    get C24() {
+      return C[24] = dart.constList([C[12] || CT.C12, C[13] || CT.C13, C[14] || CT.C14, C[15] || CT.C15, C[16] || CT.C16, C[17] || CT.C17, C[18] || CT.C18, C[19] || CT.C19, C[20] || CT.C20, C[21] || CT.C21, C[22] || CT.C22, C[23] || CT.C23], T$.DiagnosticsTreeStyleL());
+    },
+    get C25() {
+      return C[25] = dart.const({
+        __proto__: diagnostics$._WordWrapParseMode.prototype,
+        [_name$]: "_WordWrapParseMode.inSpace",
+        index: 0
+      });
+    },
+    get C26() {
+      return C[26] = dart.const({
+        __proto__: diagnostics$._WordWrapParseMode.prototype,
+        [_name$]: "_WordWrapParseMode.inWord",
+        index: 1
+      });
+    },
+    get C27() {
+      return C[27] = dart.const({
+        __proto__: diagnostics$._WordWrapParseMode.prototype,
+        [_name$]: "_WordWrapParseMode.atBreak",
+        index: 2
+      });
+    },
+    get C28() {
+      return C[28] = dart.constList([C[25] || CT.C25, C[26] || CT.C26, C[27] || CT.C27], T$._WordWrapParseModeL());
+    },
+    get C29() {
+      return C[29] = dart.constList([], T$.MapLOfStringL$ObjectN());
+    },
+    get C30() {
+      return C[30] = dart.const({
+        __proto__: diagnostics$._NoDefaultValue.prototype
+      });
+    },
+    get C31() {
+      return C[31] = dart.constList([], T$.DiagnosticsNodeL());
+    },
+    get C32() {
+      return C[32] = dart.constMap(T$.StringL(), T$.ObjectN(), []);
+    },
+    get C33() {
+      return C[33] = dart.const({
+        __proto__: assertions.PartialStackFrame.prototype,
+        [method$]: "asynchronous suspension",
+        [className$]: "",
+        [$package$]: ""
+      });
+    },
+    get C34() {
+      return C[34] = dart.fn(assertions.FlutterError.dumpErrorToConsole, T$.FlutterErrorDetails__Tovoid());
+    },
+    get C35() {
+      return C[35] = dart.fn(assertions.FlutterError.defaultStackFilter, T$.IterableOfStringToIterableOfString());
+    },
+    get C36() {
+      return C[36] = dart.fn(assertions.DiagnosticsStackTrace._createStackFrame, T$.StringToDiagnosticsNode());
+    }
+  }, false);
+  var C = Array(37).fill(void 0);
+  var I = [
+    "file:///C:/src/flutter/packages/flutter/lib/src/foundation/debug.dart",
+    "file:///C:/src/flutter/packages/flutter/lib/src/foundation/diagnostics.dart",
+    "package:flutter/src/foundation/diagnostics.dart",
+    "file:///C:/src/flutter/packages/flutter/lib/src/foundation/assertions.dart",
+    "package:flutter/src/foundation/assertions.dart"
+  ];
+  debug.debugAssertAllFoundationVarsUnset = function debugAssertAllFoundationVarsUnset(reason, opts) {
+    if (reason == null) dart.nullFailed(I[0], 24, 47, "reason");
+    let debugPrintOverride = opts && 'debugPrintOverride' in opts ? opts.debugPrintOverride : C[0] || CT.C0;
+    if (debugPrintOverride == null) dart.nullFailed(I[0], 24, 76, "debugPrintOverride");
+    if (!dart.test(dart.fn(() => {
+      if (!dart.equals(print.debugPrint, debugPrintOverride) || platform.debugDefaultTargetPlatformOverride != null || debug.debugDoublePrecision != null || debug.debugBrightnessOverride != null) dart.throw(assertions.FlutterError.new(reason));
+      return true;
+    }, T$.VoidTobool())())) dart.assertFailed(null, I[0], 25, 10, "() {\r\n    if (debugPrint != debugPrintOverride ||\r\n        debugDefaultTargetPlatformOverride != null ||\r\n        debugDoublePrecision != null ||\r\n        debugBrightnessOverride != null)\r\n      throw FlutterError(reason);\r\n    return true;\r\n  }()");
+    return true;
+  };
+  debug.debugInstrumentAction = function debugInstrumentAction(T, description, action) {
+    if (description == null) dart.nullFailed(I[0], 54, 43, "description");
+    if (action == null) dart.nullFailed(I[0], 54, 66, "action");
+    return async.async(T, function* debugInstrumentAction() {
+      let t0;
+      let instrument = false;
+      if (!dart.test(dart.fn(() => {
+        instrument = debug.debugInstrumentationEnabled;
+        return true;
+      }, T$.VoidTobool())())) dart.assertFailed(null, I[0], 56, 10, "() {\r\n    instrument = debugInstrumentationEnabled;\r\n    return true;\r\n  }()");
+      if (dart.test(instrument)) {
+        let stopwatch = (t0 = new core.Stopwatch.new(), (() => {
+          t0.start();
+          return t0;
+        })());
+        try {
+          return yield action();
+        } finally {
+          stopwatch.stop();
+          print.debugPrint("Action \"" + dart.str(description) + "\" took " + dart.str(stopwatch.elapsed));
+        }
+      } else {
+        return action();
+      }
+    });
+  };
+  debug.debugFormatDouble = function debugFormatDouble(value) {
+    if (value == null) {
+      return "null";
+    }
+    if (debug.debugDoublePrecision != null) {
+      return value[$toStringAsPrecision](dart.nullCheck(debug.debugDoublePrecision));
+    }
+    return value[$toStringAsFixed](1);
+  };
+  dart.defineLazy(debug, {
+    /*debug.debugInstrumentationEnabled*/get debugInstrumentationEnabled() {
+      return false;
+    },
+    set debugInstrumentationEnabled(_) {},
+    /*debug.timelineArgumentsIndicatingLandmarkEvent*/get timelineArgumentsIndicatingLandmarkEvent() {
+      return C[1] || CT.C1;
+    },
+    /*debug.debugDoublePrecision*/get debugDoublePrecision() {
+      return null;
+    },
+    set debugDoublePrecision(_) {},
+    /*debug.debugBrightnessOverride*/get debugBrightnessOverride() {
+      return null;
+    },
+    set debugBrightnessOverride(_) {},
+    /*debug.activeDevToolsServerAddress*/get activeDevToolsServerAddress() {
+      return null;
+    },
+    set activeDevToolsServerAddress(_) {},
+    /*debug.connectedVmServiceUri*/get connectedVmServiceUri() {
+      return null;
+    },
+    set connectedVmServiceUri(_) {}
+  }, false);
+  var _name$ = dart.privateName(diagnostics$, "_name");
+  diagnostics$.DiagnosticLevel = class DiagnosticLevel extends core.Object {
+    toString() {
+      return this[_name$];
+    }
+  };
+  (diagnostics$.DiagnosticLevel.new = function(index, _name) {
+    if (index == null) dart.nullFailed(I[1], 28, 6, "index");
+    if (_name == null) dart.nullFailed(I[1], 28, 6, "_name");
+    this.index = index;
+    this[_name$] = _name;
+    ;
+  }).prototype = diagnostics$.DiagnosticLevel.prototype;
+  dart.addTypeTests(diagnostics$.DiagnosticLevel);
+  dart.addTypeCaches(diagnostics$.DiagnosticLevel);
+  dart.setLibraryUri(diagnostics$.DiagnosticLevel, I[2]);
+  dart.setFieldSignature(diagnostics$.DiagnosticLevel, () => ({
+    __proto__: dart.getFields(diagnostics$.DiagnosticLevel.__proto__),
+    index: dart.finalFieldType(core.int),
+    [_name$]: dart.finalFieldType(core.String)
+  }));
+  dart.defineExtensionMethods(diagnostics$.DiagnosticLevel, ['toString']);
+  diagnostics$.DiagnosticLevel.hidden = C[2] || CT.C2;
+  diagnostics$.DiagnosticLevel.fine = C[3] || CT.C3;
+  diagnostics$.DiagnosticLevel.debug = C[4] || CT.C4;
+  diagnostics$.DiagnosticLevel.info = C[5] || CT.C5;
+  diagnostics$.DiagnosticLevel.warning = C[6] || CT.C6;
+  diagnostics$.DiagnosticLevel.hint = C[7] || CT.C7;
+  diagnostics$.DiagnosticLevel.summary = C[8] || CT.C8;
+  diagnostics$.DiagnosticLevel.error = C[9] || CT.C9;
+  diagnostics$.DiagnosticLevel.off = C[10] || CT.C10;
+  diagnostics$.DiagnosticLevel.values = C[11] || CT.C11;
+  diagnostics$.DiagnosticsTreeStyle = class DiagnosticsTreeStyle extends core.Object {
+    toString() {
+      return this[_name$];
+    }
+  };
+  (diagnostics$.DiagnosticsTreeStyle.new = function(index, _name) {
+    if (index == null) dart.nullFailed(I[1], 100, 6, "index");
+    if (_name == null) dart.nullFailed(I[1], 100, 6, "_name");
+    this.index = index;
+    this[_name$] = _name;
+    ;
+  }).prototype = diagnostics$.DiagnosticsTreeStyle.prototype;
+  dart.addTypeTests(diagnostics$.DiagnosticsTreeStyle);
+  dart.addTypeCaches(diagnostics$.DiagnosticsTreeStyle);
+  dart.setLibraryUri(diagnostics$.DiagnosticsTreeStyle, I[2]);
+  dart.setFieldSignature(diagnostics$.DiagnosticsTreeStyle, () => ({
+    __proto__: dart.getFields(diagnostics$.DiagnosticsTreeStyle.__proto__),
+    index: dart.finalFieldType(core.int),
+    [_name$]: dart.finalFieldType(core.String)
+  }));
+  dart.defineExtensionMethods(diagnostics$.DiagnosticsTreeStyle, ['toString']);
+  diagnostics$.DiagnosticsTreeStyle.none = C[12] || CT.C12;
+  diagnostics$.DiagnosticsTreeStyle.sparse = C[13] || CT.C13;
+  diagnostics$.DiagnosticsTreeStyle.offstage = C[14] || CT.C14;
+  diagnostics$.DiagnosticsTreeStyle.dense = C[15] || CT.C15;
+  diagnostics$.DiagnosticsTreeStyle.transition = C[16] || CT.C16;
+  diagnostics$.DiagnosticsTreeStyle.error = C[17] || CT.C17;
+  diagnostics$.DiagnosticsTreeStyle.whitespace = C[18] || CT.C18;
+  diagnostics$.DiagnosticsTreeStyle.flat = C[19] || CT.C19;
+  diagnostics$.DiagnosticsTreeStyle.singleLine = C[20] || CT.C20;
+  diagnostics$.DiagnosticsTreeStyle.errorProperty = C[21] || CT.C21;
+  diagnostics$.DiagnosticsTreeStyle.shallow = C[22] || CT.C22;
+  diagnostics$.DiagnosticsTreeStyle.truncateChildren = C[23] || CT.C23;
+  diagnostics$.DiagnosticsTreeStyle.values = C[24] || CT.C24;
+  var prefixLineOne$ = dart.privateName(diagnostics$, "TextTreeConfiguration.prefixLineOne");
+  var suffixLineOne$ = dart.privateName(diagnostics$, "TextTreeConfiguration.suffixLineOne");
+  var prefixOtherLines$ = dart.privateName(diagnostics$, "TextTreeConfiguration.prefixOtherLines");
+  var prefixLastChildLineOne$ = dart.privateName(diagnostics$, "TextTreeConfiguration.prefixLastChildLineOne");
+  var prefixOtherLinesRootNode$ = dart.privateName(diagnostics$, "TextTreeConfiguration.prefixOtherLinesRootNode");
+  var propertyPrefixIfChildren$ = dart.privateName(diagnostics$, "TextTreeConfiguration.propertyPrefixIfChildren");
+  var propertyPrefixNoChildren$ = dart.privateName(diagnostics$, "TextTreeConfiguration.propertyPrefixNoChildren");
+  var linkCharacter$ = dart.privateName(diagnostics$, "TextTreeConfiguration.linkCharacter");
+  var childLinkSpace = dart.privateName(diagnostics$, "TextTreeConfiguration.childLinkSpace");
+  var lineBreak$ = dart.privateName(diagnostics$, "TextTreeConfiguration.lineBreak");
+  var lineBreakProperties$ = dart.privateName(diagnostics$, "TextTreeConfiguration.lineBreakProperties");
+  var beforeName$ = dart.privateName(diagnostics$, "TextTreeConfiguration.beforeName");
+  var afterName$ = dart.privateName(diagnostics$, "TextTreeConfiguration.afterName");
+  var afterDescriptionIfBody$ = dart.privateName(diagnostics$, "TextTreeConfiguration.afterDescriptionIfBody");
+  var afterDescription$ = dart.privateName(diagnostics$, "TextTreeConfiguration.afterDescription");
+  var beforeProperties$ = dart.privateName(diagnostics$, "TextTreeConfiguration.beforeProperties");
+  var afterProperties$ = dart.privateName(diagnostics$, "TextTreeConfiguration.afterProperties");
+  var mandatoryAfterProperties$ = dart.privateName(diagnostics$, "TextTreeConfiguration.mandatoryAfterProperties");
+  var propertySeparator$ = dart.privateName(diagnostics$, "TextTreeConfiguration.propertySeparator");
+  var bodyIndent$ = dart.privateName(diagnostics$, "TextTreeConfiguration.bodyIndent");
+  var showChildren$ = dart.privateName(diagnostics$, "TextTreeConfiguration.showChildren");
+  var addBlankLineIfNoChildren$ = dart.privateName(diagnostics$, "TextTreeConfiguration.addBlankLineIfNoChildren");
+  var isNameOnOwnLine$ = dart.privateName(diagnostics$, "TextTreeConfiguration.isNameOnOwnLine");
+  var footer$ = dart.privateName(diagnostics$, "TextTreeConfiguration.footer");
+  var mandatoryFooter$ = dart.privateName(diagnostics$, "TextTreeConfiguration.mandatoryFooter");
+  var isBlankLineBetweenPropertiesAndChildren$ = dart.privateName(diagnostics$, "TextTreeConfiguration.isBlankLineBetweenPropertiesAndChildren");
+  diagnostics$.TextTreeConfiguration = class TextTreeConfiguration extends core.Object {
+    get prefixLineOne() {
+      return this[prefixLineOne$];
+    }
+    set prefixLineOne(value) {
+      super.prefixLineOne = value;
+    }
+    get suffixLineOne() {
+      return this[suffixLineOne$];
+    }
+    set suffixLineOne(value) {
+      super.suffixLineOne = value;
+    }
+    get prefixOtherLines() {
+      return this[prefixOtherLines$];
+    }
+    set prefixOtherLines(value) {
+      super.prefixOtherLines = value;
+    }
+    get prefixLastChildLineOne() {
+      return this[prefixLastChildLineOne$];
+    }
+    set prefixLastChildLineOne(value) {
+      super.prefixLastChildLineOne = value;
+    }
+    get prefixOtherLinesRootNode() {
+      return this[prefixOtherLinesRootNode$];
+    }
+    set prefixOtherLinesRootNode(value) {
+      super.prefixOtherLinesRootNode = value;
+    }
+    get propertyPrefixIfChildren() {
+      return this[propertyPrefixIfChildren$];
+    }
+    set propertyPrefixIfChildren(value) {
+      super.propertyPrefixIfChildren = value;
+    }
+    get propertyPrefixNoChildren() {
+      return this[propertyPrefixNoChildren$];
+    }
+    set propertyPrefixNoChildren(value) {
+      super.propertyPrefixNoChildren = value;
+    }
+    get linkCharacter() {
+      return this[linkCharacter$];
+    }
+    set linkCharacter(value) {
+      super.linkCharacter = value;
+    }
+    get childLinkSpace() {
+      return this[childLinkSpace];
+    }
+    set childLinkSpace(value) {
+      super.childLinkSpace = value;
+    }
+    get lineBreak() {
+      return this[lineBreak$];
+    }
+    set lineBreak(value) {
+      super.lineBreak = value;
+    }
+    get lineBreakProperties() {
+      return this[lineBreakProperties$];
+    }
+    set lineBreakProperties(value) {
+      super.lineBreakProperties = value;
+    }
+    get beforeName() {
+      return this[beforeName$];
+    }
+    set beforeName(value) {
+      super.beforeName = value;
+    }
+    get afterName() {
+      return this[afterName$];
+    }
+    set afterName(value) {
+      super.afterName = value;
+    }
+    get afterDescriptionIfBody() {
+      return this[afterDescriptionIfBody$];
+    }
+    set afterDescriptionIfBody(value) {
+      super.afterDescriptionIfBody = value;
+    }
+    get afterDescription() {
+      return this[afterDescription$];
+    }
+    set afterDescription(value) {
+      super.afterDescription = value;
+    }
+    get beforeProperties() {
+      return this[beforeProperties$];
+    }
+    set beforeProperties(value) {
+      super.beforeProperties = value;
+    }
+    get afterProperties() {
+      return this[afterProperties$];
+    }
+    set afterProperties(value) {
+      super.afterProperties = value;
+    }
+    get mandatoryAfterProperties() {
+      return this[mandatoryAfterProperties$];
+    }
+    set mandatoryAfterProperties(value) {
+      super.mandatoryAfterProperties = value;
+    }
+    get propertySeparator() {
+      return this[propertySeparator$];
+    }
+    set propertySeparator(value) {
+      super.propertySeparator = value;
+    }
+    get bodyIndent() {
+      return this[bodyIndent$];
+    }
+    set bodyIndent(value) {
+      super.bodyIndent = value;
+    }
+    get showChildren() {
+      return this[showChildren$];
+    }
+    set showChildren(value) {
+      super.showChildren = value;
+    }
+    get addBlankLineIfNoChildren() {
+      return this[addBlankLineIfNoChildren$];
+    }
+    set addBlankLineIfNoChildren(value) {
+      super.addBlankLineIfNoChildren = value;
+    }
+    get isNameOnOwnLine() {
+      return this[isNameOnOwnLine$];
+    }
+    set isNameOnOwnLine(value) {
+      super.isNameOnOwnLine = value;
+    }
+    get footer() {
+      return this[footer$];
+    }
+    set footer(value) {
+      super.footer = value;
+    }
+    get mandatoryFooter() {
+      return this[mandatoryFooter$];
+    }
+    set mandatoryFooter(value) {
+      super.mandatoryFooter = value;
+    }
+    get isBlankLineBetweenPropertiesAndChildren() {
+      return this[isBlankLineBetweenPropertiesAndChildren$];
+    }
+    set isBlankLineBetweenPropertiesAndChildren(value) {
+      super.isBlankLineBetweenPropertiesAndChildren = value;
+    }
+  };
+  (diagnostics$.TextTreeConfiguration.new = function(opts) {
+    let prefixLineOne = opts && 'prefixLineOne' in opts ? opts.prefixLineOne : null;
+    if (prefixLineOne == null) dart.nullFailed(I[1], 204, 19, "prefixLineOne");
+    let prefixOtherLines = opts && 'prefixOtherLines' in opts ? opts.prefixOtherLines : null;
+    if (prefixOtherLines == null) dart.nullFailed(I[1], 205, 19, "prefixOtherLines");
+    let prefixLastChildLineOne = opts && 'prefixLastChildLineOne' in opts ? opts.prefixLastChildLineOne : null;
+    if (prefixLastChildLineOne == null) dart.nullFailed(I[1], 206, 19, "prefixLastChildLineOne");
+    let prefixOtherLinesRootNode = opts && 'prefixOtherLinesRootNode' in opts ? opts.prefixOtherLinesRootNode : null;
+    if (prefixOtherLinesRootNode == null) dart.nullFailed(I[1], 207, 19, "prefixOtherLinesRootNode");
+    let linkCharacter = opts && 'linkCharacter' in opts ? opts.linkCharacter : null;
+    if (linkCharacter == null) dart.nullFailed(I[1], 208, 19, "linkCharacter");
+    let propertyPrefixIfChildren = opts && 'propertyPrefixIfChildren' in opts ? opts.propertyPrefixIfChildren : null;
+    if (propertyPrefixIfChildren == null) dart.nullFailed(I[1], 209, 19, "propertyPrefixIfChildren");
+    let propertyPrefixNoChildren = opts && 'propertyPrefixNoChildren' in opts ? opts.propertyPrefixNoChildren : null;
+    if (propertyPrefixNoChildren == null) dart.nullFailed(I[1], 210, 19, "propertyPrefixNoChildren");
+    let lineBreak = opts && 'lineBreak' in opts ? opts.lineBreak : "\n";
+    if (lineBreak == null) dart.nullFailed(I[1], 211, 10, "lineBreak");
+    let lineBreakProperties = opts && 'lineBreakProperties' in opts ? opts.lineBreakProperties : true;
+    if (lineBreakProperties == null) dart.nullFailed(I[1], 212, 10, "lineBreakProperties");
+    let afterName = opts && 'afterName' in opts ? opts.afterName : ":";
+    if (afterName == null) dart.nullFailed(I[1], 213, 10, "afterName");
+    let afterDescriptionIfBody = opts && 'afterDescriptionIfBody' in opts ? opts.afterDescriptionIfBody : "";
+    if (afterDescriptionIfBody == null) dart.nullFailed(I[1], 214, 10, "afterDescriptionIfBody");
+    let afterDescription = opts && 'afterDescription' in opts ? opts.afterDescription : "";
+    if (afterDescription == null) dart.nullFailed(I[1], 215, 10, "afterDescription");
+    let beforeProperties = opts && 'beforeProperties' in opts ? opts.beforeProperties : "";
+    if (beforeProperties == null) dart.nullFailed(I[1], 216, 10, "beforeProperties");
+    let afterProperties = opts && 'afterProperties' in opts ? opts.afterProperties : "";
+    if (afterProperties == null) dart.nullFailed(I[1], 217, 10, "afterProperties");
+    let mandatoryAfterProperties = opts && 'mandatoryAfterProperties' in opts ? opts.mandatoryAfterProperties : "";
+    if (mandatoryAfterProperties == null) dart.nullFailed(I[1], 218, 10, "mandatoryAfterProperties");
+    let propertySeparator = opts && 'propertySeparator' in opts ? opts.propertySeparator : "";
+    if (propertySeparator == null) dart.nullFailed(I[1], 219, 10, "propertySeparator");
+    let bodyIndent = opts && 'bodyIndent' in opts ? opts.bodyIndent : "";
+    if (bodyIndent == null) dart.nullFailed(I[1], 220, 10, "bodyIndent");
+    let footer = opts && 'footer' in opts ? opts.footer : "";
+    if (footer == null) dart.nullFailed(I[1], 221, 10, "footer");
+    let showChildren = opts && 'showChildren' in opts ? opts.showChildren : true;
+    if (showChildren == null) dart.nullFailed(I[1], 222, 10, "showChildren");
+    let addBlankLineIfNoChildren = opts && 'addBlankLineIfNoChildren' in opts ? opts.addBlankLineIfNoChildren : true;
+    if (addBlankLineIfNoChildren == null) dart.nullFailed(I[1], 223, 10, "addBlankLineIfNoChildren");
+    let isNameOnOwnLine = opts && 'isNameOnOwnLine' in opts ? opts.isNameOnOwnLine : false;
+    if (isNameOnOwnLine == null) dart.nullFailed(I[1], 224, 10, "isNameOnOwnLine");
+    let isBlankLineBetweenPropertiesAndChildren = opts && 'isBlankLineBetweenPropertiesAndChildren' in opts ? opts.isBlankLineBetweenPropertiesAndChildren : true;
+    if (isBlankLineBetweenPropertiesAndChildren == null) dart.nullFailed(I[1], 225, 10, "isBlankLineBetweenPropertiesAndChildren");
+    let beforeName = opts && 'beforeName' in opts ? opts.beforeName : "";
+    if (beforeName == null) dart.nullFailed(I[1], 226, 10, "beforeName");
+    let suffixLineOne = opts && 'suffixLineOne' in opts ? opts.suffixLineOne : "";
+    if (suffixLineOne == null) dart.nullFailed(I[1], 227, 10, "suffixLineOne");
+    let mandatoryFooter = opts && 'mandatoryFooter' in opts ? opts.mandatoryFooter : "";
+    if (mandatoryFooter == null) dart.nullFailed(I[1], 228, 10, "mandatoryFooter");
+    this[prefixLineOne$] = prefixLineOne;
+    this[prefixOtherLines$] = prefixOtherLines;
+    this[prefixLastChildLineOne$] = prefixLastChildLineOne;
+    this[prefixOtherLinesRootNode$] = prefixOtherLinesRootNode;
+    this[linkCharacter$] = linkCharacter;
+    this[propertyPrefixIfChildren$] = propertyPrefixIfChildren;
+    this[propertyPrefixNoChildren$] = propertyPrefixNoChildren;
+    this[lineBreak$] = lineBreak;
+    this[lineBreakProperties$] = lineBreakProperties;
+    this[afterName$] = afterName;
+    this[afterDescriptionIfBody$] = afterDescriptionIfBody;
+    this[afterDescription$] = afterDescription;
+    this[beforeProperties$] = beforeProperties;
+    this[afterProperties$] = afterProperties;
+    this[mandatoryAfterProperties$] = mandatoryAfterProperties;
+    this[propertySeparator$] = propertySeparator;
+    this[bodyIndent$] = bodyIndent;
+    this[footer$] = footer;
+    this[showChildren$] = showChildren;
+    this[addBlankLineIfNoChildren$] = addBlankLineIfNoChildren;
+    this[isNameOnOwnLine$] = isNameOnOwnLine;
+    this[isBlankLineBetweenPropertiesAndChildren$] = isBlankLineBetweenPropertiesAndChildren;
+    this[beforeName$] = beforeName;
+    this[suffixLineOne$] = suffixLineOne;
+    this[mandatoryFooter$] = mandatoryFooter;
+    if (!(prefixLineOne != null)) dart.assertFailed(null, I[1], 229, 15, "prefixLineOne != null");
+    if (!(prefixOtherLines != null)) dart.assertFailed(null, I[1], 230, 15, "prefixOtherLines != null");
+    if (!(prefixLastChildLineOne != null)) dart.assertFailed(null, I[1], 231, 15, "prefixLastChildLineOne != null");
+    if (!(prefixOtherLinesRootNode != null)) dart.assertFailed(null, I[1], 232, 15, "prefixOtherLinesRootNode != null");
+    if (!(linkCharacter != null)) dart.assertFailed(null, I[1], 233, 15, "linkCharacter != null");
+    if (!(propertyPrefixIfChildren != null)) dart.assertFailed(null, I[1], 234, 15, "propertyPrefixIfChildren != null");
+    if (!(propertyPrefixNoChildren != null)) dart.assertFailed(null, I[1], 235, 15, "propertyPrefixNoChildren != null");
+    if (!(lineBreak != null)) dart.assertFailed(null, I[1], 236, 15, "lineBreak != null");
+    if (!(lineBreakProperties != null)) dart.assertFailed(null, I[1], 237, 15, "lineBreakProperties != null");
+    if (!(afterName != null)) dart.assertFailed(null, I[1], 238, 15, "afterName != null");
+    if (!(afterDescriptionIfBody != null)) dart.assertFailed(null, I[1], 239, 15, "afterDescriptionIfBody != null");
+    if (!(afterDescription != null)) dart.assertFailed(null, I[1], 240, 15, "afterDescription != null");
+    if (!(beforeProperties != null)) dart.assertFailed(null, I[1], 241, 15, "beforeProperties != null");
+    if (!(afterProperties != null)) dart.assertFailed(null, I[1], 242, 15, "afterProperties != null");
+    if (!(propertySeparator != null)) dart.assertFailed(null, I[1], 243, 15, "propertySeparator != null");
+    if (!(bodyIndent != null)) dart.assertFailed(null, I[1], 244, 15, "bodyIndent != null");
+    if (!(footer != null)) dart.assertFailed(null, I[1], 245, 15, "footer != null");
+    if (!(showChildren != null)) dart.assertFailed(null, I[1], 246, 15, "showChildren != null");
+    if (!(addBlankLineIfNoChildren != null)) dart.assertFailed(null, I[1], 247, 15, "addBlankLineIfNoChildren != null");
+    if (!(isNameOnOwnLine != null)) dart.assertFailed(null, I[1], 248, 15, "isNameOnOwnLine != null");
+    if (!(isBlankLineBetweenPropertiesAndChildren != null)) dart.assertFailed(null, I[1], 249, 15, "isBlankLineBetweenPropertiesAndChildren != null");
+    this[childLinkSpace] = " "[$times](linkCharacter.length);
+    ;
+  }).prototype = diagnostics$.TextTreeConfiguration.prototype;
+  dart.addTypeTests(diagnostics$.TextTreeConfiguration);
+  dart.addTypeCaches(diagnostics$.TextTreeConfiguration);
+  dart.setLibraryUri(diagnostics$.TextTreeConfiguration, I[2]);
+  dart.setFieldSignature(diagnostics$.TextTreeConfiguration, () => ({
+    __proto__: dart.getFields(diagnostics$.TextTreeConfiguration.__proto__),
+    prefixLineOne: dart.finalFieldType(core.String),
+    suffixLineOne: dart.finalFieldType(core.String),
+    prefixOtherLines: dart.finalFieldType(core.String),
+    prefixLastChildLineOne: dart.finalFieldType(core.String),
+    prefixOtherLinesRootNode: dart.finalFieldType(core.String),
+    propertyPrefixIfChildren: dart.finalFieldType(core.String),
+    propertyPrefixNoChildren: dart.finalFieldType(core.String),
+    linkCharacter: dart.finalFieldType(core.String),
+    childLinkSpace: dart.finalFieldType(core.String),
+    lineBreak: dart.finalFieldType(core.String),
+    lineBreakProperties: dart.finalFieldType(core.bool),
+    beforeName: dart.finalFieldType(core.String),
+    afterName: dart.finalFieldType(core.String),
+    afterDescriptionIfBody: dart.finalFieldType(core.String),
+    afterDescription: dart.finalFieldType(core.String),
+    beforeProperties: dart.finalFieldType(core.String),
+    afterProperties: dart.finalFieldType(core.String),
+    mandatoryAfterProperties: dart.finalFieldType(core.String),
+    propertySeparator: dart.finalFieldType(core.String),
+    bodyIndent: dart.finalFieldType(core.String),
+    showChildren: dart.finalFieldType(core.bool),
+    addBlankLineIfNoChildren: dart.finalFieldType(core.bool),
+    isNameOnOwnLine: dart.finalFieldType(core.bool),
+    footer: dart.finalFieldType(core.String),
+    mandatoryFooter: dart.finalFieldType(core.String),
+    isBlankLineBetweenPropertiesAndChildren: dart.finalFieldType(core.bool)
+  }));
+  diagnostics$._WordWrapParseMode = class _WordWrapParseMode extends core.Object {
+    toString() {
+      return this[_name$];
+    }
+  };
+  (diagnostics$._WordWrapParseMode.new = function(index, _name) {
+    if (index == null) dart.nullFailed(I[1], 776, 6, "index");
+    if (_name == null) dart.nullFailed(I[1], 776, 6, "_name");
+    this.index = index;
+    this[_name$] = _name;
+    ;
+  }).prototype = diagnostics$._WordWrapParseMode.prototype;
+  dart.addTypeTests(diagnostics$._WordWrapParseMode);
+  dart.addTypeCaches(diagnostics$._WordWrapParseMode);
+  dart.setLibraryUri(diagnostics$._WordWrapParseMode, I[2]);
+  dart.setFieldSignature(diagnostics$._WordWrapParseMode, () => ({
+    __proto__: dart.getFields(diagnostics$._WordWrapParseMode.__proto__),
+    index: dart.finalFieldType(core.int),
+    [_name$]: dart.finalFieldType(core.String)
+  }));
+  dart.defineExtensionMethods(diagnostics$._WordWrapParseMode, ['toString']);
+  diagnostics$._WordWrapParseMode.inSpace = C[25] || CT.C25;
+  diagnostics$._WordWrapParseMode.inWord = C[26] || CT.C26;
+  diagnostics$._WordWrapParseMode.atBreak = C[27] || CT.C27;
+  diagnostics$._WordWrapParseMode.values = C[28] || CT.C28;
+  var _nextPrefixOtherLines = dart.privateName(diagnostics$, "_nextPrefixOtherLines");
+  var _buffer = dart.privateName(diagnostics$, "_buffer");
+  var _currentLine = dart.privateName(diagnostics$, "_currentLine");
+  var _wrappableRanges = dart.privateName(diagnostics$, "_wrappableRanges");
+  var _numLines = dart.privateName(diagnostics$, "_numLines");
+  var _prefixOtherLines = dart.privateName(diagnostics$, "_prefixOtherLines");
+  var _getCurrentPrefix = dart.privateName(diagnostics$, "_getCurrentPrefix");
+  var _writeLine = dart.privateName(diagnostics$, "_writeLine");
+  var _finalizeLine = dart.privateName(diagnostics$, "_finalizeLine");
+  var _updatePrefix = dart.privateName(diagnostics$, "_updatePrefix");
+  diagnostics$._PrefixedStringBuilder = class _PrefixedStringBuilder extends core.Object {
+    get prefixOtherLines() {
+      let t0;
+      t0 = this[_nextPrefixOtherLines];
+      return t0 == null ? this[_prefixOtherLines] : t0;
+    }
+    set prefixOtherLines(prefix) {
+      this[_prefixOtherLines] = prefix;
+      this[_nextPrefixOtherLines] = null;
+    }
+    incrementPrefixOtherLines(suffix, opts) {
+      if (suffix == null) dart.nullFailed(I[1], 807, 41, "suffix");
+      let updateCurrentLine = opts && 'updateCurrentLine' in opts ? opts.updateCurrentLine : null;
+      if (updateCurrentLine == null) dart.nullFailed(I[1], 807, 64, "updateCurrentLine");
+      if (dart.test(this[_currentLine].isEmpty) || dart.test(updateCurrentLine)) {
+        this[_prefixOtherLines] = dart.nullCheck(this.prefixOtherLines) + dart.notNull(suffix);
+        this[_nextPrefixOtherLines] = null;
+      } else {
+        this[_nextPrefixOtherLines] = dart.nullCheck(this.prefixOtherLines) + dart.notNull(suffix);
+      }
+    }
+    get requiresMultipleLines() {
+      return dart.notNull(this[_numLines]) > 1 || this[_numLines] === 1 && dart.test(this[_currentLine].isNotEmpty) || dart.notNull(this[_currentLine].length) + dart.nullCheck(this[_getCurrentPrefix](true)).length > dart.nullCheck(this.wrapWidth);
+    }
+    get isCurrentLineEmpty() {
+      return this[_currentLine].isEmpty;
+    }
+    [_finalizeLine](addTrailingLineBreak) {
+      if (addTrailingLineBreak == null) dart.nullFailed(I[1], 834, 27, "addTrailingLineBreak");
+      let firstLine = this[_buffer].isEmpty;
+      let text = dart.toString(this[_currentLine]);
+      this[_currentLine].clear();
+      if (dart.test(this[_wrappableRanges][$isEmpty])) {
+        this[_writeLine](text, {includeLineBreak: addTrailingLineBreak, firstLine: firstLine});
+        return;
+      }
+      let lines = diagnostics$._PrefixedStringBuilder._wordWrapLine(text, this[_wrappableRanges], dart.nullCheck(this.wrapWidth), {startOffset: dart.test(firstLine) ? this.prefixLineOne.length : dart.nullCheck(this[_prefixOtherLines]).length, otherLineOffset: dart.test(firstLine) ? dart.nullCheck(this[_prefixOtherLines]).length : dart.nullCheck(this[_prefixOtherLines]).length});
+      let i = 0;
+      let length = lines[$length];
+      for (let line of lines) {
+        i = i + 1;
+        this[_writeLine](line, {includeLineBreak: dart.test(addTrailingLineBreak) || i < dart.notNull(length), firstLine: firstLine});
+      }
+      this[_wrappableRanges][$clear]();
+    }
+    static _wordWrapLine(message, wrapRanges, width, opts) {
+      if (message == null) dart.nullFailed(I[1], 878, 48, "message");
+      if (wrapRanges == null) dart.nullFailed(I[1], 878, 67, "wrapRanges");
+      if (width == null) dart.nullFailed(I[1], 878, 83, "width");
+      let startOffset = opts && 'startOffset' in opts ? opts.startOffset : 0;
+      if (startOffset == null) dart.nullFailed(I[1], 878, 96, "startOffset");
+      let otherLineOffset = opts && 'otherLineOffset' in opts ? opts.otherLineOffset : 0;
+      if (otherLineOffset == null) dart.nullFailed(I[1], 878, 117, "otherLineOffset");
+      return new (T$.SyncIterableOfString()).new(function* _wordWrapLine() {
+        if (message.length + dart.notNull(startOffset) < dart.notNull(width)) {
+          yield message;
+          return;
+        }
+        let startForLengthCalculations = -dart.notNull(startOffset);
+        let addPrefix = false;
+        let index = 0;
+        let mode = diagnostics$._WordWrapParseMode.inSpace;
+        let lastWordStart = null;
+        let lastWordStart$35isSet = false;
+        function lastWordStart$35get() {
+          return lastWordStart$35isSet ? lastWordStart : dart.throw(new _internal.LateError.localNI("lastWordStart"));
+        }
+        dart.fn(lastWordStart$35get, T$.VoidToint());
+        function lastWordStart$35set(t3) {
+          if (t3 == null) dart.nullFailed(I[1], 888, 14, "null");
+          lastWordStart$35isSet = true;
+          return lastWordStart = t3;
+        }
+        dart.fn(lastWordStart$35set, T$.intTodynamic());
+        let lastWordEnd = null;
+        let start = 0;
+        let currentChunk = 0;
+        function noWrap(index) {
+          if (index == null) dart.nullFailed(I[1], 895, 21, "index");
+          while (true) {
+            if (currentChunk >= dart.notNull(wrapRanges[$length])) return true;
+            if (dart.notNull(index) < dart.notNull(wrapRanges[$_get](currentChunk + 1))) break;
+            currentChunk = currentChunk + 2;
+          }
+          return dart.notNull(index) < dart.notNull(wrapRanges[$_get](currentChunk));
+        }
+        dart.fn(noWrap, T$.intTobool());
+        while (true) {
+          switch (mode) {
+            case C[25] || CT.C25:
+            {
+              while (index < message.length && message[$_get](index) === " ")
+                index = index + 1;
+              lastWordStart$35set(index);
+              mode = diagnostics$._WordWrapParseMode.inWord;
+              break;
+            }
+            case C[26] || CT.C26:
+            {
+              while (index < message.length && (message[$_get](index) !== " " || dart.test(noWrap(index))))
+                index = index + 1;
+              mode = diagnostics$._WordWrapParseMode.atBreak;
+              break;
+            }
+            case C[27] || CT.C27:
+            {
+              if (index - startForLengthCalculations > dart.notNull(width) || index === message.length) {
+                if (index - startForLengthCalculations <= dart.notNull(width) || lastWordEnd == null) {
+                  lastWordEnd = index;
+                }
+                let line = message[$substring](start, lastWordEnd);
+                yield line;
+                addPrefix = true;
+                if (dart.notNull(lastWordEnd) >= message.length) return;
+                if (lastWordEnd === index) {
+                  while (index < message.length && message[$_get](index) === " ")
+                    index = index + 1;
+                  start = index;
+                  mode = diagnostics$._WordWrapParseMode.inWord;
+                } else {
+                  if (!(dart.notNull(lastWordStart$35get()) > dart.notNull(lastWordEnd))) dart.assertFailed(null, I[1], 943, 22, "lastWordStart > lastWordEnd");
+                  start = lastWordStart$35get();
+                  mode = diagnostics$._WordWrapParseMode.atBreak;
+                }
+                startForLengthCalculations = dart.notNull(start) - dart.notNull(otherLineOffset);
+                if (!addPrefix) dart.assertFailed(null, I[1], 948, 20, "addPrefix");
+                lastWordEnd = null;
+              } else {
+                lastWordEnd = index;
+                mode = diagnostics$._WordWrapParseMode.inSpace;
+              }
+              break;
+            }
+            default:
+            {
+              dart.throw(new _internal.ReachabilityError.new("`null` encountered as case in a switch expression with a non-nullable enum type."));
+            }
+          }
+        }
+      });
+    }
+    write(s, opts) {
+      let t5;
+      if (s == null) dart.nullFailed(I[1], 966, 21, "s");
+      let allowWrap = opts && 'allowWrap' in opts ? opts.allowWrap : false;
+      if (allowWrap == null) dart.nullFailed(I[1], 966, 30, "allowWrap");
+      if (s[$isEmpty]) return;
+      let lines = s[$split]("\n");
+      for (let i = 0; i < dart.notNull(lines[$length]); i = i + 1) {
+        if (i > 0) {
+          this[_finalizeLine](true);
+          this[_updatePrefix]();
+        }
+        let line = lines[$_get](i);
+        if (line[$isNotEmpty]) {
+          if (dart.test(allowWrap) && this.wrapWidth != null) {
+            let wrapStart = this[_currentLine].length;
+            let wrapEnd = dart.notNull(wrapStart) + line.length;
+            if (dart.test(this[_wrappableRanges][$isNotEmpty]) && this[_wrappableRanges][$last] == wrapStart) {
+              this[_wrappableRanges][$last] = wrapEnd;
+            } else {
+              t5 = this[_wrappableRanges];
+              (() => {
+                t5[$add](wrapStart);
+                t5[$add](wrapEnd);
+                return t5;
+              })();
+            }
+          }
+          this[_currentLine].write(line);
+        }
+      }
+    }
+    [_updatePrefix]() {
+      if (this[_nextPrefixOtherLines] != null) {
+        this[_prefixOtherLines] = this[_nextPrefixOtherLines];
+        this[_nextPrefixOtherLines] = null;
+      }
+    }
+    [_writeLine](line, opts) {
+      if (line == null) dart.nullFailed(I[1], 1000, 12, "line");
+      let includeLineBreak = opts && 'includeLineBreak' in opts ? opts.includeLineBreak : null;
+      if (includeLineBreak == null) dart.nullFailed(I[1], 1001, 19, "includeLineBreak");
+      let firstLine = opts && 'firstLine' in opts ? opts.firstLine : null;
+      if (firstLine == null) dart.nullFailed(I[1], 1002, 19, "firstLine");
+      line = dart.str(this[_getCurrentPrefix](firstLine)) + dart.str(line);
+      this[_buffer].write(line[$trimRight]());
+      if (dart.test(includeLineBreak)) this[_buffer].write("\n");
+      this[_numLines] = dart.notNull(this[_numLines]) + 1;
+    }
+    [_getCurrentPrefix](firstLine) {
+      if (firstLine == null) dart.nullFailed(I[1], 1011, 34, "firstLine");
+      return dart.test(this[_buffer].isEmpty) ? this.prefixLineOne : dart.test(firstLine) ? this[_prefixOtherLines] : this[_prefixOtherLines];
+    }
+    writeRawLines(lines) {
+      if (lines == null) dart.nullFailed(I[1], 1017, 29, "lines");
+      if (lines[$isEmpty]) return;
+      if (dart.test(this[_currentLine].isNotEmpty)) {
+        this[_finalizeLine](true);
+      }
+      if (!dart.test(this[_currentLine].isEmpty)) dart.assertFailed(null, I[1], 1024, 13, "_currentLine.isEmpty");
+      this[_buffer].write(lines);
+      if (!lines[$endsWith]("\n")) this[_buffer].write("\n");
+      this[_numLines] = dart.notNull(this[_numLines]) + 1;
+      this[_updatePrefix]();
+    }
+    writeStretched(text, targetLineLength) {
+      if (text == null) dart.nullFailed(I[1], 1034, 30, "text");
+      if (targetLineLength == null) dart.nullFailed(I[1], 1034, 40, "targetLineLength");
+      this.write(text);
+      let currentLineLength = dart.notNull(this[_currentLine].length) + dart.nullCheck(this[_getCurrentPrefix](this[_buffer].isEmpty)).length;
+      if (!(dart.notNull(this[_currentLine].length) > 0)) dart.assertFailed(null, I[1], 1037, 13, "_currentLine.length > 0");
+      let targetLength = dart.notNull(targetLineLength) - currentLineLength;
+      if (targetLength > 0) {
+        if (!text[$isNotEmpty]) dart.assertFailed(null, I[1], 1040, 14, "text.isNotEmpty");
+        let lastChar = text[$_get](text.length - 1);
+        if (!(lastChar !== "\n")) dart.assertFailed(null, I[1], 1042, 14, "lastChar != '\\n'");
+        this[_currentLine].write(lastChar[$times](targetLength));
+      }
+      this[_wrappableRanges][$clear]();
+    }
+    build() {
+      if (dart.test(this[_currentLine].isNotEmpty)) this[_finalizeLine](false);
+      return dart.toString(this[_buffer]);
+    }
+  };
+  (diagnostics$._PrefixedStringBuilder.new = function(opts) {
+    let prefixLineOne = opts && 'prefixLineOne' in opts ? opts.prefixLineOne : null;
+    if (prefixLineOne == null) dart.nullFailed(I[1], 787, 19, "prefixLineOne");
+    let prefixOtherLines = opts && 'prefixOtherLines' in opts ? opts.prefixOtherLines : null;
+    let wrapWidth = opts && 'wrapWidth' in opts ? opts.wrapWidth : null;
+    this[_nextPrefixOtherLines] = null;
+    this[_buffer] = new core.StringBuffer.new();
+    this[_currentLine] = new core.StringBuffer.new();
+    this[_wrappableRanges] = T$.JSArrayOfint().of([]);
+    this[_numLines] = 0;
+    this.prefixLineOne = prefixLineOne;
+    this.wrapWidth = wrapWidth;
+    this[_prefixOtherLines] = prefixOtherLines;
+    ;
+  }).prototype = diagnostics$._PrefixedStringBuilder.prototype;
+  dart.addTypeTests(diagnostics$._PrefixedStringBuilder);
+  dart.addTypeCaches(diagnostics$._PrefixedStringBuilder);
+  dart.setMethodSignature(diagnostics$._PrefixedStringBuilder, () => ({
+    __proto__: dart.getMethods(diagnostics$._PrefixedStringBuilder.__proto__),
+    incrementPrefixOtherLines: dart.fnType(dart.void, [core.String], {}, {updateCurrentLine: core.bool}),
+    [_finalizeLine]: dart.fnType(dart.void, [core.bool]),
+    write: dart.fnType(dart.void, [core.String], {allowWrap: core.bool}, {}),
+    [_updatePrefix]: dart.fnType(dart.void, []),
+    [_writeLine]: dart.fnType(dart.void, [core.String], {}, {firstLine: core.bool, includeLineBreak: core.bool}),
+    [_getCurrentPrefix]: dart.fnType(dart.nullable(core.String), [core.bool]),
+    writeRawLines: dart.fnType(dart.void, [core.String]),
+    writeStretched: dart.fnType(dart.void, [core.String, core.int]),
+    build: dart.fnType(core.String, [])
+  }));
+  dart.setGetterSignature(diagnostics$._PrefixedStringBuilder, () => ({
+    __proto__: dart.getGetters(diagnostics$._PrefixedStringBuilder.__proto__),
+    prefixOtherLines: dart.nullable(core.String),
+    requiresMultipleLines: core.bool,
+    isCurrentLineEmpty: core.bool
+  }));
+  dart.setSetterSignature(diagnostics$._PrefixedStringBuilder, () => ({
+    __proto__: dart.getSetters(diagnostics$._PrefixedStringBuilder.__proto__),
+    prefixOtherLines: dart.nullable(core.String)
+  }));
+  dart.setLibraryUri(diagnostics$._PrefixedStringBuilder, I[2]);
+  dart.setFieldSignature(diagnostics$._PrefixedStringBuilder, () => ({
+    __proto__: dart.getFields(diagnostics$._PrefixedStringBuilder.__proto__),
+    prefixLineOne: dart.finalFieldType(core.String),
+    [_prefixOtherLines]: dart.fieldType(dart.nullable(core.String)),
+    [_nextPrefixOtherLines]: dart.fieldType(dart.nullable(core.String)),
+    wrapWidth: dart.finalFieldType(dart.nullable(core.int)),
+    [_buffer]: dart.finalFieldType(core.StringBuffer),
+    [_currentLine]: dart.finalFieldType(core.StringBuffer),
+    [_wrappableRanges]: dart.finalFieldType(core.List$(core.int)),
+    [_numLines]: dart.fieldType(core.int)
+  }));
+  diagnostics$._NoDefaultValue = class _NoDefaultValue extends core.Object {};
+  (diagnostics$._NoDefaultValue.new = function() {
+    ;
+  }).prototype = diagnostics$._NoDefaultValue.prototype;
+  dart.addTypeTests(diagnostics$._NoDefaultValue);
+  dart.addTypeCaches(diagnostics$._NoDefaultValue);
+  dart.setLibraryUri(diagnostics$._NoDefaultValue, I[2]);
+  var _minLevel = dart.privateName(diagnostics$, "_minLevel");
+  var _wrapWidth = dart.privateName(diagnostics$, "_wrapWidth");
+  var _wrapWidthProperties = dart.privateName(diagnostics$, "_wrapWidthProperties");
+  var _maxDescendentsTruncatableNode = dart.privateName(diagnostics$, "_maxDescendentsTruncatableNode");
+  var _childTextConfiguration = dart.privateName(diagnostics$, "_childTextConfiguration");
+  var _debugRender = dart.privateName(diagnostics$, "_debugRender");
+  diagnostics$.TextTreeRenderer = class TextTreeRenderer extends core.Object {
+    [_childTextConfiguration](child, textStyle) {
+      if (child == null) dart.nullFailed(I[1], 1109, 21, "child");
+      if (textStyle == null) dart.nullFailed(I[1], 1110, 27, "textStyle");
+      let childStyle = child.style;
+      return dart.test(diagnostics$._isSingleLine(childStyle)) || childStyle == diagnostics$.DiagnosticsTreeStyle.errorProperty ? textStyle : child.textTreeConfiguration;
+    }
+    render(node, opts) {
+      if (node == null) dart.nullFailed(I[1], 1118, 21, "node");
+      let prefixLineOne = opts && 'prefixLineOne' in opts ? opts.prefixLineOne : "";
+      if (prefixLineOne == null) dart.nullFailed(I[1], 1119, 12, "prefixLineOne");
+      let prefixOtherLines = opts && 'prefixOtherLines' in opts ? opts.prefixOtherLines : null;
+      let parentConfiguration = opts && 'parentConfiguration' in opts ? opts.parentConfiguration : null;
+      if (false) {
+        return "";
+      } else {
+        return this[_debugRender](node, {prefixLineOne: prefixLineOne, prefixOtherLines: prefixOtherLines, parentConfiguration: parentConfiguration});
+      }
+    }
+    [_debugRender](node, opts) {
+      let t5, t5$, t5$0;
+      if (node == null) dart.nullFailed(I[1], 1135, 21, "node");
+      let prefixLineOne = opts && 'prefixLineOne' in opts ? opts.prefixLineOne : "";
+      if (prefixLineOne == null) dart.nullFailed(I[1], 1136, 12, "prefixLineOne");
+      let prefixOtherLines = opts && 'prefixOtherLines' in opts ? opts.prefixOtherLines : null;
+      let parentConfiguration = opts && 'parentConfiguration' in opts ? opts.parentConfiguration : null;
+      let isSingleLine = dart.test(diagnostics$._isSingleLine(node.style)) && (t5 = parentConfiguration, t5 == null ? null : t5.lineBreakProperties) !== true;
+      prefixOtherLines == null ? prefixOtherLines = prefixLineOne : null;
+      if (node.linePrefix != null) {
+        prefixLineOne = dart.notNull(prefixLineOne) + dart.nullCheck(node.linePrefix);
+        prefixOtherLines = dart.notNull(prefixOtherLines) + dart.nullCheck(node.linePrefix);
+      }
+      let config = dart.nullCheck(node.textTreeConfiguration);
+      if (prefixOtherLines[$isEmpty]) prefixOtherLines = dart.notNull(prefixOtherLines) + dart.notNull(config.prefixOtherLinesRootNode);
+      if (node.style == diagnostics$.DiagnosticsTreeStyle.truncateChildren) {
+        let descendants = T$.JSArrayOfString().of([]);
+        let depth = 0;
+        let lines = 0;
+        function visitor(node) {
+          if (node == null) dart.nullFailed(I[1], 1159, 36, "node");
+          for (let child of node.getChildren()) {
+            if (lines < 25) {
+              depth = depth + 1;
+              descendants[$add](dart.str(prefixOtherLines) + "  "[$times](depth) + dart.str(child));
+              if (depth < 5) visitor(child);
+              depth = depth - 1;
+            } else if (lines === 25) {
+              descendants[$add](dart.str(prefixOtherLines) + "  ...(descendants list truncated after " + dart.str(lines) + " lines)");
+            }
+            lines = lines + 1;
+          }
+        }
+        dart.fn(visitor, T$.DiagnosticsNodeTovoid());
+        visitor(node);
+        let information = new core.StringBuffer.new(prefixLineOne);
+        if (lines > 1) {
+          information.writeln("This " + dart.str(node.name) + " had the following descendants (showing up to depth " + dart.str(5) + "):");
+        } else if (descendants[$length] === 1) {
+          information.writeln("This " + dart.str(node.name) + " had the following child:");
+        } else {
+          information.writeln("This " + dart.str(node.name) + " has no descendants.");
+        }
+        information.writeAll(descendants, "\n");
+        return information.toString();
+      }
+      let builder = new diagnostics$._PrefixedStringBuilder.new({prefixLineOne: prefixLineOne, prefixOtherLines: prefixOtherLines, wrapWidth: math.max(core.int, this[_wrapWidth], prefixOtherLines.length + dart.notNull(this[_wrapWidthProperties]))});
+      let children = node.getChildren();
+      let description = node.toDescription({parentConfiguration: parentConfiguration});
+      if (config.beforeName[$isNotEmpty]) {
+        builder.write(config.beforeName);
+      }
+      let wrapName = !isSingleLine && dart.test(node.allowNameWrap);
+      let wrapDescription = !isSingleLine && dart.test(node.allowWrap);
+      let uppercaseTitle = node.style == diagnostics$.DiagnosticsTreeStyle.error;
+      let name = node.name;
+      if (uppercaseTitle) {
+        name = (t5$ = name, t5$ == null ? null : t5$[$toUpperCase]());
+      }
+      if (description == null || description[$isEmpty]) {
+        if (dart.test(node.showName) && name != null) builder.write(name, {allowWrap: wrapName});
+      } else {
+        let includeName = false;
+        if (name != null && name[$isNotEmpty] && dart.test(node.showName)) {
+          includeName = true;
+          builder.write(name, {allowWrap: wrapName});
+          if (dart.test(node.showSeparator)) builder.write(config.afterName, {allowWrap: wrapName});
+          builder.write(dart.test(config.isNameOnOwnLine) || description[$contains]("\n") ? "\n" : " ", {allowWrap: wrapName});
+        }
+        if (!isSingleLine && dart.test(builder.requiresMultipleLines) && !dart.test(builder.isCurrentLineEmpty)) {
+          builder.write("\n");
+        }
+        if (includeName) {
+          builder.incrementPrefixOtherLines(dart.test(children[$isEmpty]) ? config.propertyPrefixNoChildren : config.propertyPrefixIfChildren, {updateCurrentLine: true});
+        }
+        if (uppercaseTitle) {
+          description = description[$toUpperCase]();
+        }
+        builder.write(description[$trimRight](), {allowWrap: wrapDescription});
+        if (!includeName) {
+          builder.incrementPrefixOtherLines(dart.test(children[$isEmpty]) ? config.propertyPrefixNoChildren : config.propertyPrefixIfChildren, {updateCurrentLine: false});
+        }
+      }
+      if (config.suffixLineOne[$isNotEmpty]) {
+        builder.writeStretched(config.suffixLineOne, dart.nullCheck(builder.wrapWidth));
+      }
+      let propertiesIterable = node.getProperties()[$where](dart.fn(n => {
+        if (n == null) dart.nullFailed(I[1], 1249, 30, "n");
+        return !dart.test(n.isFiltered(this[_minLevel]));
+      }, T$.DiagnosticsNodeTobool()));
+      let properties = null;
+      if (dart.notNull(this[_maxDescendentsTruncatableNode]) >= 0 && dart.test(node.allowTruncate)) {
+        if (dart.notNull(propertiesIterable[$length]) < dart.notNull(this[_maxDescendentsTruncatableNode])) {
+          properties = propertiesIterable[$take](this[_maxDescendentsTruncatableNode])[$toList]();
+          properties[$add](diagnostics$.DiagnosticsNode.message("..."));
+        } else {
+          properties = propertiesIterable[$toList]();
+        }
+        if (dart.notNull(this[_maxDescendentsTruncatableNode]) < dart.notNull(children[$length])) {
+          children = children[$take](this[_maxDescendentsTruncatableNode])[$toList]();
+          children[$add](diagnostics$.DiagnosticsNode.message("..."));
+        }
+      } else {
+        properties = propertiesIterable[$toList]();
+      }
+      if ((dart.test(properties[$isNotEmpty]) || dart.test(children[$isNotEmpty]) || node.emptyBodyDescription != null) && (dart.test(node.showSeparator) || (t5$0 = description, t5$0 == null ? null : t5$0[$isNotEmpty]) === true)) {
+        builder.write(config.afterDescriptionIfBody);
+      }
+      if (dart.test(config.lineBreakProperties)) builder.write(config.lineBreak);
+      if (dart.test(properties[$isNotEmpty])) builder.write(config.beforeProperties);
+      builder.incrementPrefixOtherLines(config.bodyIndent, {updateCurrentLine: false});
+      if (node.emptyBodyDescription != null && dart.test(properties[$isEmpty]) && dart.test(children[$isEmpty]) && prefixLineOne[$isNotEmpty]) {
+        builder.write(dart.nullCheck(node.emptyBodyDescription));
+        if (dart.test(config.lineBreakProperties)) builder.write(config.lineBreak);
+      }
+      for (let i = 0; i < dart.notNull(properties[$length]); i = i + 1) {
+        let property = properties[$_get](i);
+        if (i > 0) builder.write(config.propertySeparator);
+        let propertyStyle = dart.nullCheck(property.textTreeConfiguration);
+        if (dart.test(diagnostics$._isSingleLine(property.style))) {
+          let propertyRender = this.render(property, {prefixLineOne: propertyStyle.prefixLineOne, prefixOtherLines: dart.str(propertyStyle.childLinkSpace) + dart.str(propertyStyle.prefixOtherLines), parentConfiguration: config});
+          let propertyLines = propertyRender[$split]("\n");
+          if (propertyLines[$length] === 1 && !dart.test(config.lineBreakProperties)) {
+            builder.write(propertyLines[$first]);
+          } else {
+            builder.write(propertyRender, {allowWrap: false});
+            if (!propertyRender[$endsWith]("\n")) builder.write("\n");
+          }
+        } else {

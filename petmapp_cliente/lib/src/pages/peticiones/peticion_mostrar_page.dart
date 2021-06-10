@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 
 class PeticionMostrarPage extends StatefulWidget {
@@ -39,16 +40,19 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                           title:
                               Text('Usuario: ${snapshot.data['usuario_rut']}'),
                           subtitle: Text(
-                              'Fecha publicación: ${snapshot.data['precio_total']}'),
+                            'VER PERFIL DEL USUARIO',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          leading: Icon(MdiIcons.account),
+                          tileColor: Colors.blue,
+                          onTap: () => _navegarPerfilUsuario(
+                              context, snapshot.data['usuario_rut']),
                         ),
-                        /* fechaInicio = snapshot.data['fecha_inicio'],
-                        fechaFin = snapshot.data['fecha_fin'],
-                        precioTotal = snapshot.data['precio_total'], */
                         Divider(color: Colors.black),
                         Expanded(
                           child: ListTile(
                             title: Text(
-                                'Estado de la peticion: ${snapshot.data['estado']}'),
+                                'Fecha de la petición: ${snapshot.data['created_at']}'),
                           ),
                         ),
                         Padding(
@@ -114,4 +118,13 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
         fechaInicio.toString(), fechaFin.toString(), precio.toString());
     Navigator.of(context).pop();
   }
+}
+
+_navegarPerfilUsuario(BuildContext context, int rut) {
+  MaterialPageRoute route = MaterialPageRoute(builder: (context) {
+    return PeticionMostrarPage(
+      idPeticion: rut,
+    );
+  });
+  Navigator.push(context, route);
 }

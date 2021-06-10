@@ -6,7 +6,7 @@ import 'package:petmapp_cliente/src/pages/peticiones/peticion_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_mostrar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/publicacion_peticiones_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/peticiones_publicaciones_listar.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';

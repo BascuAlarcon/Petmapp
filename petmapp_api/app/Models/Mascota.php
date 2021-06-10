@@ -20,4 +20,8 @@ class Mascota extends Model
     public function user(){
         return $this->belongsTo('App\Models\User');
     }
+
+    public function peticiones(){
+        return $this->belongsToMany('App\Models\Peticion');
+    }
 }

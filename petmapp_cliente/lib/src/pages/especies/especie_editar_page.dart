@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 
 class RazaEditarPage extends StatefulWidget {
   final int idRaza;
@@ -94,12 +95,12 @@ class _RazaEditarPageState extends State<RazaEditarPage> {
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
-    var provider = PetmappProvider();
+    var provider = RazasProvider();
     return await provider.getRaza(widget.idRaza);
   }
 
   void _razaEditar(BuildContext context) {
-    var provider = new PetmappProvider();
+    var provider = new RazasProvider();
     provider.razaEditar(widget.idRaza, nombreCtrl.text,
         descripcionCtrl.text); // usamos un controller //
     Navigator.pop(context);

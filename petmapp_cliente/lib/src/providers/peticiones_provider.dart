@@ -28,14 +28,8 @@ class PeticionProvider {
   }
 
   // AGREGAR peticiones //
-  Future<http.Response> peticionAgregar(
-      String fecha_inicio,
-      String fecha_fin,
-      String precio_total,
-      String estado,
-      String boleta,
-      String usuario_rut,
-      String publicacion_id) async {
+  Future<http.Response> peticionAgregar(String fecha_inicio, String fecha_fin,
+      String usuario_rut, String publicacion_id) async {
     var urlRequest = apiUrl + 'peticiones';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -44,9 +38,6 @@ class PeticionProvider {
         body: jsonEncode(<String, String>{
           'fecha_inicio': fecha_inicio,
           'fecha_fin': fecha_fin,
-          'precio_total': precio_total,
-          'estado': estado,
-          'boleta': boleta,
           'usuario_rut': usuario_rut,
           'publicacion_id': publicacion_id
         }));

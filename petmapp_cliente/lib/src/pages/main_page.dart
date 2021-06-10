@@ -3,14 +3,16 @@ import 'dart:async';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:petmapp_cliente/src/pages/hogar/hogar_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/usuario_publicacion_listar.dart';
+import 'package:petmapp_cliente/src/pages/usuario/hogares_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/usuario_perfil_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/mis_publicaciones_usuario_listar.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_agregar_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -25,6 +27,7 @@ class _MainPageState extends State<MainPage> {
   String email = '';
   String name = '';
   String rut = '';
+  String perfil = '';
   var listaDatos;
 
   @override
@@ -81,44 +84,26 @@ class _MainPageState extends State<MainPage> {
           child: new ListView(
             children: <Widget>[
               new UserAccountsDrawerHeader(
-                accountName: new Text(' '),
+                accountName: new Text(perfil),
                 accountEmail: new Text(name),
               ),
               new Divider(),
               ListTile(
-                title: Text('Configuración'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Mi Perfil'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Dark Mode'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+                  title: Text('Mi Perfil'),
+                  onTap: () => _navegarUsuarioPerfil(context)),
               ListTile(
                   title: Text('Razas'), onTap: () => _navegarRazas(context)),
               ListTile(
                   title: Text('Especies'), onTap: () => _navegarRazas(context)),
               ListTile(
-                  title: Text('Hogares'),
-                  onTap: () => _navegarHogares(context)),
-              ListTile(
-                  title: Text('Mis Mascotas'),
-                  onTap: () => _navegarListarMascotas(context)),
-              ListTile(
                   title: Text('Ver Publicaciones'),
                   onTap: () => _navegarPublicaciones(context)),
-              ListTile(
-                  title: Text('Mis Publicaciones'),
-                  onTap: () => _navegarMisPublicaciones(context)),
+              perfil == "1"
+                  ? ListTile(
+                      title: Text('Ver Usuarios'),
+                      onTap: () => _navegarListarUsuarios(context),
+                    )
+                  : Text(''),
               ElevatedButton(
                 onPressed: () {
                   sharedPreferences.clear();
@@ -155,25 +140,16 @@ class _MainPageState extends State<MainPage> {
         ));
   }
 
+  void _navegarUsuarioPerfil(BuildContext context) {
+    var route = new MaterialPageRoute(
+        builder: (context) => UsuarioPerfilPage(
+              rutUsuario: int.tryParse(rut),
+            ));
+    Navigator.push(context, route);
+  }
+
   void _navegarRazas(BuildContext context) {
     var route = new MaterialPageRoute(builder: (context) => RazaListarPage());
-    Navigator.push(context, route);
-  }
-
-  void _navegarHogares(BuildContext context) {
-    var route = new MaterialPageRoute(builder: (context) => HogarListarPage());
-    Navigator.push(context, route);
-  }
-
-  void _navegarAgregarMascota(BuildContext context) {
-    var route =
-        new MaterialPageRoute(builder: (context) => MascotasAgregarPage());
-    Navigator.push(context, route);
-  }
-
-  void _navegarListarMascotas(BuildContext context) {
-    var route =
-        new MaterialPageRoute(builder: (context) => MascotaListarPage());
     Navigator.push(context, route);
   }
 
@@ -183,22 +159,20 @@ class _MainPageState extends State<MainPage> {
     Navigator.push(context, route);
   }
 
-  void _navegarMisPublicaciones(BuildContext context) {
-    var route =
-        new MaterialPageRoute(builder: (context) => MisPublicacionesPage());
-    Navigator.push(context, route);
-  }
-
   // TRAER DATOS DE SHARED PREFERENCES //
   Future<void> cargarDatosUsuario() async {
     SharedPreferences sharedPreferencess =
         await SharedPreferences.getInstance();
     setState(() {
-      /* listaDatos = sharedPreferencess.getStringList("usuario");
-      print(listaDatos); */
       rut = sharedPreferencess.getStringList('usuario')[0];
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
+      perfil = sharedPreferencess.getStringList('usuario')[4];
     });
   }
+}
+
+_navegarListarUsuarios(BuildContext context) {
+  var route = new MaterialPageRoute(builder: (context) => UsuarioListarPage());
+  Navigator.push(context, route);
 }

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\RazaController;
 use App\Http\Controllers\API\MascotaController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AuthController;
 
 
@@ -45,22 +46,24 @@ Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionController')
 // Listar por id // 
 Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');   
 Route::get('especies/{especie}/razas', 'App\Http\Controllers\API\EspecieController@razas');
-Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones'); 
+Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones');  
 
-// USUARIO // 
+// USUARIO //   
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth', 
-], function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']); 
-    Route::post('register', [AuthController::class, 'register']);  
-    Route::get('index', [AuthController::class, 'index']); 
-    Route::get('index/{usuario}', [AuthController::class, 'show']);      
-    Route::post('me', [AuthController::class, 'me']);
-    Route::get('me/publicaciones', [AuthController::class, 'publicaciones']);
-    Route::get('me/peticiones', [AuthController::class, 'peticiones']);
-    Route::get('me/mascotas', [AuthController::class, 'mascotas']);
-    Route::get('me/perfil', [AuthController::class, 'perfil']);
-    Route::get('me/hogares', [AuthController::class, 'hogares']);
+    'prefix' => 'auth',
+], function(){
+    Route::post('login',                [AuthController::class, 'login']);
+    Route::post('logout',               [AuthController::class, 'logout']); 
+    Route::post('register',             [AuthController::class, 'register']);  
+    Route::post('me',                   [AuthController::class, 'me']);
+    Route::get('usuarios',              [UserController::class, 'index']);
+    Route::get('usuarios/{usuario}',    [UserController::class, 'show']);
+    Route::put('usuarios/{usuario}',    [UserController::class, 'editarPerfil']);
+    Route::delete('usuarios/{usuario}', [UserController::class, 'destroy']);
+    Route::get('me/publicaciones',      [AuthController::class, 'publicaciones']);
+    Route::get('me/peticiones',         [AuthController::class, 'peticiones']);
+    Route::get('me/mascotas',           [AuthController::class, 'mascotas']);
+    Route::get('me/perfil',             [AuthController::class, 'perfil']);
+    Route::get('me/hogares',            [AuthController::class, 'hogares']);
 });

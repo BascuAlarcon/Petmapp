@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MascotasAgregarPage extends StatefulWidget {
@@ -33,7 +35,7 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Agregar Mascota'),
-        backgroundColor: Color.fromRGBO(155, 177, 255, 1.0),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: Stack(children: <Widget>[
         Column(
@@ -44,7 +46,7 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                   Stack(children: <Widget>[
                     FadeInImage(
                         image: NetworkImage(
-                            'https://danbooru.donmai.us/data/sample/e5/2e/__samsung_sam_samsung_drawn_by_iwbitu_sa__sample-e52e8d8330554ccbada090d408606548.jpg'),
+                            'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif'),
                         placeholder: AssetImage('assets/jar-loading.gif'),
                         fit: BoxFit.cover),
                     // Botón Agregar Foto
@@ -118,6 +120,11 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                     child: ElevatedButton(
                       child: Text('Cancelar'),
                       style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Color.fromRGBO(199, 199, 183, 1.0)),
                       ),
@@ -130,8 +137,13 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                     height: 45,
                     width: 180,
                     child: ElevatedButton(
-                      child: Text('Agregar Mascota'),
+                      child: Text('Aceptar'),
                       style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Color.fromRGBO(120, 139, 255, 1.0)),
                       ),
@@ -172,12 +184,17 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
   }
 
   void _mascotaAgregar(BuildContext context) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var provider = new PetmappProvider();
-    rut = sharedPreferences.getStringList('usuario')[0];
-    provider.mascotaAgregar(
-        rut, nombreCtrl.text.trim(), sexoCtrl.text.trim(), raza);
-    Navigator.pop(context);
+    if (nombreCtrl.text.trim() != "" ||
+        sexoCtrl.text.trim() != "" ||
+        raza != "") {
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      var provider = new MascotaProvider();
+      rut = sharedPreferences.getStringList('usuario')[0];
+      provider.mascotaAgregar(
+          rut, nombreCtrl.text.trim(), sexoCtrl.text.trim(), raza);
+      Navigator.pop(context);
+    }
   }
 
   void _navegarCancelar(BuildContext context) {
@@ -185,7 +202,7 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
   }
 
   _cargarRazas() async {
-    var provider = new PetmappProvider();
+    var provider = new RazasProvider();
     var razas = await provider.getRazas();
     razas.forEach((raza) {
       setState(() {

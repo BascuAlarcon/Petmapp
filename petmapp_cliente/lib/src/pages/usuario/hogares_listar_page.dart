@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/pages/hogar/hogar_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/hogar/hogar_editar_page.dart';
+import 'package:petmapp_cliente/src/pages/hogar/hogar_mostrar_page.dart';
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
-import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
-import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/pages/peticiones/peticion_editar_page.dart';
+import 'package:petmapp_cliente/src/pages/peticiones/peticion_listar_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
+import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HogarListarPage extends StatefulWidget {
   HogarListarPage({Key key}) : super(key: key);
@@ -15,11 +19,19 @@ class HogarListarPage extends StatefulWidget {
 }
 
 class _HogarListarPageState extends State<HogarListarPage> {
+  SharedPreferences sharedPreferences;
+  String token = '';
+
   @override
+  void initState() {
+    super.initState();
+    cargarDatosUsuario();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetmApp'),
+        title: Text('Mis Hogares'),
         leading: Container(
             child: ElevatedButton(
                 child: Icon(MdiIcons.arrowBottomLeft),
@@ -51,8 +63,11 @@ class _HogarListarPageState extends State<HogarListarPage> {
                           child: ListTile(
                             leading: Icon(MdiIcons.soccer),
                             title: Text(snapshot.data[index]['descripcion']),
-                            onTap: () => _navegarMascotas(
-                                context, snapshot.data[index]['id']),
+                            onTap: () => _navegarHogarMostrar(
+                                    context, snapshot.data[index]['id'])(
+                                // OJO ACA //
+                                context,
+                                snapshot.data[index]['id']),
                           ),
                           actions: [
                             IconSlideAction(
@@ -87,7 +102,7 @@ class _HogarListarPageState extends State<HogarListarPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () => _navegarhogaresAgregar(context),
-                          child: Text('Agregar hogares'))),
+                          child: Text('Agregar'))),
                 )
                 // BOTON AGREGAR //
               ],
@@ -104,8 +119,8 @@ class _HogarListarPageState extends State<HogarListarPage> {
   }
 
   Future<List<dynamic>> _fetch() async {
-    var provider = new HogarProvider();
-    return await provider.hogarListar();
+    var provider = new UsuarioProvider();
+    return await provider.hogarListar(token);
   }
 
   void _navegarhogaresAgregar(BuildContext context) {
@@ -164,12 +179,21 @@ class _HogarListarPageState extends State<HogarListarPage> {
         });
   }
 
-  _navegarMascotas(BuildContext context, int id) {
+  _navegarHogarMostrar(BuildContext context, int id) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
-      /* return MascotasListarPage(
-        idMascota: id,
-      ); */
+      return HogarMostrarPage(idHogar: id);
     });
     Navigator.push(context, route);
+  }
+
+  // TRAER DATOS DE SHARED PREFERENCES //
+  Future<void> cargarDatosUsuario() async {
+    SharedPreferences sharedPreferencess =
+        await SharedPreferences.getInstance();
+    setState(() {
+      /* listaDatos = sharedPreferencess.getStringList("usuario");
+      print(listaDatos); */
+      token = sharedPreferencess.getStringList('usuario')[3];
+    });
   }
 }

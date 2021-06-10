@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:petmapp_cliente/src/pages/peticiones/peticion_agregar_page.dart';
+import 'package:petmapp_cliente/src/pages/publicaciones/perfil_publicacion_page.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 
 class PublicacionMostrarPage extends StatefulWidget {
@@ -51,6 +52,15 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                                 height: 40,
                                 width: double.infinity,
                                 child: ElevatedButton(
+                                    child: Text('Ver Perfil'),
+                                    onPressed: () => _navegarPerfil(context,
+                                        snapshot.data['usuario_rut'])))),
+                        Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 40,
+                                width: double.infinity,
+                                child: ElevatedButton(
                                     child: Text('Agregar peticion'),
                                     onPressed: () => _navegarAgregarPeticion(
                                         context, snapshot.data['id']))))
@@ -64,14 +74,12 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
         ));
   }
 
-  /* _navegarMascotas(BuildContext context, int id) {
+  _navegarPerfil(BuildContext context, int rut) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
-      return PublicacionMostrarPage(
-        idPublicacion: id,
-      );
+      return PerfilPublicacionPage(rut);
     });
     Navigator.push(context, route);
-  } */
+  }
 
   _navegarAgregarPeticion(BuildContext context, int idPublicacion) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {

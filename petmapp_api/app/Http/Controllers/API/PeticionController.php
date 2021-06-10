@@ -29,9 +29,9 @@ class PeticionController extends Controller
         $peticion = new Peticion();
         $peticion->fecha_inicio = $request->fecha_inicio;
         $peticion->fecha_fin = $request->fecha_fin;
-        $peticion->precio_total = $request->precio_total;
-        $peticion->estado = $request->estado;
-        $peticion->boleta = $request->boleta; 
+        // $peticion->precio_total = $request->precio_total;
+        $peticion->estado = 1;
+        // $peticion->boleta = $request->boleta; 
         $peticion->usuario_rut = $request->usuario_rut;
         $peticion->publicacion_id = $request->publicacion_id;
         $peticion->save();

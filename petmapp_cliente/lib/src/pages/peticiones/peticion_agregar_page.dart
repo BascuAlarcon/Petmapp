@@ -66,10 +66,9 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
-                      controller: precioTotalCtrl,
                       decoration: InputDecoration(
-                          labelText: 'Precio',
-                          hintText: 'Precio',
+                          labelText: 'Funcionalidad inactiva',
+                          hintText: 'Seleccionar mascotas a cuidar...',
                           suffixIcon: Icon(Icons.flag)),
                     ),
                   ),
@@ -77,25 +76,12 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
-                      controller: estadoCtrl,
                       decoration: InputDecoration(
-                          labelText: 'Estado',
-                          hintText: 'Estado',
+                          labelText: 'Funcionalidad inactiva',
+                          hintText: 'Selecionar Hogar...',
                           suffixIcon: Icon(Icons.flag)),
                     ),
                   ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: boletaCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Boleta',
-                          hintText: 'Boleta',
-                          suffixIcon: Icon(Icons.flag)),
-                    ),
-                  ),
-                  Divider(),
                 ],
               ),
             ),
@@ -130,13 +116,7 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
 
   void _peticionesAgregar(BuildContext context) {
     var provider = new PeticionProvider();
-    provider.peticionAgregar(
-        fechaInicioCtrl.text,
-        fechaFinCtrl.text,
-        precioTotalCtrl.text,
-        boletaCtrl.text,
-        estadoCtrl.text,
-        rut,
+    provider.peticionAgregar(fechaInicioCtrl.text, fechaFinCtrl.text, rut,
         widget.idPublicacion.toString()); // usamos un controller //
     Navigator.pop(context);
   }

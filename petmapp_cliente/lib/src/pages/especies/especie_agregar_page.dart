@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 
 class RazasAgregarPage extends StatefulWidget {
   RazasAgregarPage({Key key}) : super(key: key);
@@ -79,7 +80,7 @@ class _RazasAgregarPageState extends State<RazasAgregarPage> {
   }
 
   void _razaAgregar(BuildContext context) {
-    var provider = new PetmappProvider();
+    var provider = new RazasProvider();
     provider.razaAgregar(
         nombreCtrl.text, descripcionCtrl.text); // usamos un controller //
     Navigator.pop(context);

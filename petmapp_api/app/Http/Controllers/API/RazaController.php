@@ -60,8 +60,7 @@ class RazaController extends Controller
     public function update(Request $request, Raza $raza)
     {
         $raza->nombre = $request->nombre;
-        $raza->descripcion = $request->descripcion;
-        $raza->especie_id = 3;
+        $raza->descripcion = $request->descripcion; 
         $raza->save();
     }
 

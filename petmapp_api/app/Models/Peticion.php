@@ -27,4 +27,8 @@ class Peticion extends Model
     public function evaluaciones(){
         return $this->hasMany('App\Models\Evaluacion', 'peticion_id', 'id');
     }
+
+    public function mascotas(){
+        return $this->belongsToMany('App\Models\Mascotas');
+    }
 }
