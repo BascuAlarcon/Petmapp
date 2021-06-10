@@ -20,13 +20,17 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
   bool _validate = false;
   var raza = '';
   var rut = '';
+  var sexo = '';
   var _razas = <DropdownMenuItem>[];
+  var _sexo = <DropdownMenuItem>[];
   var _valorSeleccionado;
+  var _valorSeleccionado2;
 
   @override
   void initState() {
     super.initState();
     _cargarRazas();
+    _cargarSexo();
   }
 
   Widget build(BuildContext context) {
@@ -74,14 +78,19 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(17.0),
-                          child: TextField(
-                            controller: sexoCtrl,
+                          child: DropdownButtonFormField(
+                            value: _valorSeleccionado2,
+                            items: _sexo,
+                            hint: Text('Sexo'),
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                labelText: 'Sexo',
-                                hintText: 'Sexo de la Mascota',
-                                suffixIcon: Icon(Icons.gesture_rounded)),
+                                    borderRadius: BorderRadius.circular(20.0))),
+                            onChanged: (value) {
+                              setState(() {
+                                sexo = value.toString();
+                                _valorSeleccionado2 = value;
+                              });
+                            },
                           ),
                         ),
                         Padding(
@@ -184,21 +193,23 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
   }
 
   void _mascotaAgregar(BuildContext context) async {
-    if (nombreCtrl.text.trim() != "" ||
-        sexoCtrl.text.trim() != "" ||
-        raza != "") {
+    if (nombreCtrl.text.trim() != "" || sexo != "" || raza != "") {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       var provider = new MascotaProvider();
       rut = sharedPreferences.getStringList('usuario')[0];
-      provider.mascotaAgregar(
-          rut, nombreCtrl.text.trim(), sexoCtrl.text.trim(), raza);
+      provider.mascotaAgregar(rut, nombreCtrl.text.trim(), sexo, raza);
       Navigator.pop(context);
     }
   }
 
   void _navegarCancelar(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  _cargarSexo() async {
+    _sexo.add(DropdownMenuItem(child: Text("Macho"), value: 0));
+    _sexo.add(DropdownMenuItem(child: Text("Hembra"), value: 1));
   }
 
   _cargarRazas() async {
