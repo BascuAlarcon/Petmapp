@@ -204,17 +204,43 @@ class _LoginPageState extends State<LoginPage> {
       var rut;
       var correo;
       var nombre;
+      var perfil;
       var token;
+      var estado = 1;
       for (var usuario in usuarios) {
         if (usuario['email'] == email) {
           // GUARDAR LOS DATOS CON SHARED PREFERENCES //
           rut = usuario['rut'];
           correo = usuario['email'];
           nombre = usuario['name'];
+          perfil = usuario['perfil_id'];
           token = respuesta['access_token'];
           rut = rut.toString();
-          sharedPreferences
-              .setStringList("usuario", [rut, correo, nombre, token]);
+          var peticiones = await provider.getPeticiones(token);
+          for (var peticion in peticiones) {
+            if (peticion['estado'] == 2) {
+              // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
+              estado = 2;
+            }
+          }
+          var publicaciones = await provider.publicacionListar(token);
+          for (var publicacion in publicaciones) {
+            var peticioness = await provider.peticionListar2(publicacion['id']);
+            for (var peticione in peticioness) {
+              if (peticione['estado'] == 2) {
+                // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
+                estado = 2;
+              }
+            }
+          }
+          sharedPreferences.setStringList("usuario", [
+            rut,
+            correo,
+            nombre,
+            perfil.toString(),
+            token,
+            estado.toString()
+          ]);
         }
       }
 

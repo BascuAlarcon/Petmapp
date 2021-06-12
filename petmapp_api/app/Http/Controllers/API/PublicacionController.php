@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Publicacion;
+use App\Models\Peticion;
 use Illuminate\Http\Request;
 
 class PublicacionController extends Controller
@@ -72,5 +73,10 @@ class PublicacionController extends Controller
     public function peticiones(Publicacion $publicacion){ 
         $publicacion->load('peticiones');
         return $publicacion;
+    }
+
+    public function peticiones2($publicacion){
+        $peticion = Peticion::where('publicacion_id', $publicacion)->get();
+        return $peticion;
     }
 }

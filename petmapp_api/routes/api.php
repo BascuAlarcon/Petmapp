@@ -46,7 +46,10 @@ Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionController')
 // Listar por id // 
 Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');   
 Route::get('especies/{especie}/razas', 'App\Http\Controllers\API\EspecieController@razas');
-Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones');  
+Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones');
+Route::get('publicaciones/{publicacion}/peticioness', 'App\Http\Controllers\API\PublicacionController@peticiones2');
+Route::get('peticiones/{peticion}/evaluaciones', 'App\Http\Controllers\API\PeticionController@evaluaciones');
+Route::get('peticiones/{peticion}/servicios', 'App\Http\Controllers\API\PeticionController@servicios');
 
 // USUARIO //   
 Route::group([

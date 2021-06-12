@@ -7,7 +7,16 @@ class MascotaProvider {
 
 // AGREGAR MASCOTA //
   Future<http.Response> mascotaAgregar(
-      String rut, String nombre, String sexo, String raza) async {
+      String rut,
+      String nombre,
+      String estirilizacion,
+      String fechaNacimiento,
+      String condicionMedica,
+      String microchip,
+      String alimentos,
+      String personalidad,
+      String sexo,
+      String raza) async {
     var urlRequest = apiUrl + 'mascotas';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -16,6 +25,12 @@ class MascotaProvider {
         body: jsonEncode(<String, String>{
           'nombre': nombre,
           'sexo': sexo,
+          'estirilizacion': estirilizacion,
+          'fecha_nacimiento': fechaNacimiento,
+          'condicion_medica': condicionMedica,
+          'microchip': microchip,
+          'alimentos': alimentos,
+          'personalidad': personalidad,
           'raza_id': raza,
           'usuario_rut': rut,
         }));

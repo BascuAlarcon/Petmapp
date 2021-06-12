@@ -37,17 +37,15 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                     child: Column(
                       children: [
                         ListTile(
-                          title:
-                              Text('Usuario: ${snapshot.data['usuario_rut']}'),
-                          subtitle: Text(
-                            'VER PERFIL DEL USUARIO',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          leading: Icon(MdiIcons.account),
-                          tileColor: Colors.blue,
-                          onTap: () => _navegarPerfilUsuario(
-                              context, snapshot.data['usuario_rut']),
-                        ),
+                            title: Text(
+                                'Usuario: ${snapshot.data['usuario_rut']}'),
+                            subtitle: Text(
+                              'VER PERFIL DEL USUARIO',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            leading: Icon(MdiIcons.account),
+                            tileColor: Colors.blue,
+                            onTap: () {}),
                         Divider(color: Colors.black),
                         Expanded(
                           child: ListTile(

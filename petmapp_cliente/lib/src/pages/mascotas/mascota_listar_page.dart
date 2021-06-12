@@ -227,10 +227,8 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
   }
 
   void _navegarMascotasEditar(BuildContext context, int idMascota) {
-    var route = new MaterialPageRoute(
-        builder: (context) => MascotaEditarPage(
-            /* idMascota: idMascota, */
-            ));
+    var route =
+        new MaterialPageRoute(builder: (context) => MascotasEditarPage());
     Navigator.push(context, route).then((value) {
       setState(
           () {}); // cuando se devuelva el navigator con un pop, que resfresque //

@@ -126,9 +126,51 @@ class UsuarioProvider {
     }
   }
 
+  Future<List<dynamic>> peticionListar2(id) async {
+    var urlRequest = apiUrl + 'publicaciones/$id/peticioness'; // peticioness //
+    var response = await http.get(
+      Uri.parse(urlRequest),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        return json.decode(response.body);
+      } else {
+        return new List<dynamic>();
+      }
+    } else {
+      return new List<dynamic>();
+    }
+  }
+
   // OBTENER HOGARES //
   Future<List<dynamic>> hogarListar(token) async {
     var urlRequest = apiUrl + 'auth/me/hogares';
+    var response = await http.get(
+      Uri.parse(urlRequest),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        return json.decode(response.body);
+      } else {
+        return new List<dynamic>();
+      }
+    } else {
+      return new List<dynamic>();
+    }
+  }
+
+  // OBTENER HOGARES //
+  Future<List<dynamic>> getPeticiones(token) async {
+    var urlRequest = apiUrl + 'auth/me/peticiones';
     var response = await http.get(
       Uri.parse(urlRequest),
       headers: <String, String>{

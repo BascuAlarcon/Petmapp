@@ -21,7 +21,7 @@ class Peticion extends Model
     }
 
     public function servicios(){
-        return $this->hasMany('App\Models\Servcio', 'peticion_id', 'id');
+        return $this->hasMany('App\Models\Servicio', 'peticion_id', 'id');
     }
     
     public function evaluaciones(){

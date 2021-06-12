@@ -3,18 +3,13 @@ import 'dart:async';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:petmapp_cliente/src/pages/mascotas/mascota_agregar_page.dart';
-import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/especies/especie_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/hogares_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_perfil_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/mis_publicaciones_usuario_listar.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
-import 'package:petmapp_cliente/src/pages/razas/raza_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -25,7 +20,9 @@ class _MainPageState extends State<MainPage> {
   Completer<GoogleMapController> _controller = Completer();
   SharedPreferences sharedPreferences;
   String email = '';
+  String token = '';
   String name = '';
+  String estado = '';
   String rut = '';
   String perfil = '';
   var listaDatos;
@@ -94,28 +91,26 @@ class _MainPageState extends State<MainPage> {
               ListTile(
                   title: Text('Razas'), onTap: () => _navegarRazas(context)),
               ListTile(
-                  title: Text('Especies'), onTap: () => _navegarRazas(context)),
+                  title: Text('Especies'),
+                  onTap: () => _navegarEspecies(context)),
               ListTile(
                   title: Text('Ver Publicaciones'),
                   onTap: () => _navegarPublicaciones(context)),
+              estado == "2"
+                  ? ListTile(
+                      title: Text('Cuidado'),
+                      onTap: () {},
+                    )
+                  : Text(''),
+              perfil == "1"
+                  ? ListTile(title: Text('Administrador'), onTap: () {})
+                  : Text(''),
               perfil == "1"
                   ? ListTile(
                       title: Text('Ver Usuarios'),
                       onTap: () => _navegarListarUsuarios(context),
                     )
                   : Text(''),
-              ElevatedButton(
-                onPressed: () {
-                  sharedPreferences.clear();
-                  sharedPreferences.commit();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()),
-                      (Route<dynamic> route) => false);
-                },
-                child: Text("Cerrar Sesión",
-                    style: TextStyle(color: Colors.white)),
-              ),
             ],
           ),
         ),
@@ -167,9 +162,21 @@ class _MainPageState extends State<MainPage> {
       rut = sharedPreferencess.getStringList('usuario')[0];
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
-      perfil = sharedPreferencess.getStringList('usuario')[4];
+      perfil = sharedPreferencess.getStringList('usuario')[3];
+      token = sharedPreferencess.getStringList('usuario')[4];
+      estado = sharedPreferencess.getStringList('usuario')[5];
     });
   }
+}
+
+void _navegarCuidado(BuildContext context) {
+  var route = new MaterialPageRoute(builder: (context) => EspecieListarPage());
+  Navigator.push(context, route);
+}
+
+void _navegarEspecies(BuildContext context) {
+  var route = new MaterialPageRoute(builder: (context) => EspecieListarPage());
+  Navigator.push(context, route);
 }
 
 _navegarListarUsuarios(BuildContext context) {

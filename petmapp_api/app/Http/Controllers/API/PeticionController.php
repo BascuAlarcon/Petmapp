@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Peticion;
+use App\Models\Evaluacion;
+use App\Models\Servicio;
 use Illuminate\Http\Request;
 
 class PeticionController extends Controller
@@ -79,5 +81,15 @@ class PeticionController extends Controller
     public function respuesta(Request $request, Peticion $peticion){ 
         $peticion->estado = $request->estado; 
         $peticion->save();
+    }
+
+    public function evaluaciones( $peticion){
+        $evaluaciones = Evaluacion::where('peticion_id', $peticion)->get(); 
+        return $evaluaciones;   
+    }
+
+    public function servicios($peticion){ 
+        $servicios = Servicio::where('peticion_id', $peticion)->get();
+        return $servicios;   
     }
 }

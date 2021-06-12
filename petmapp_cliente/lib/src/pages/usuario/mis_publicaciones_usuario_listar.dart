@@ -191,9 +191,7 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
     SharedPreferences sharedPreferencess =
         await SharedPreferences.getInstance();
     setState(() {
-      /* listaDatos = sharedPreferencess.getStringList("usuario");
-      print(listaDatos); */
-      token = sharedPreferencess.getStringList('usuario')[3];
+      token = sharedPreferencess.getStringList('usuario')[4];
     });
   }
 }
