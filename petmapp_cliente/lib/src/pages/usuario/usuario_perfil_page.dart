@@ -30,7 +30,9 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromRGBO(247, 247, 247, 1.0),
         appBar: AppBar(
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
           title: Text('Mi Perfil'),
           centerTitle: true,
           actions: [
@@ -56,8 +58,10 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                     child: Column(
                       children: [
                         ListTile(
-                          title: Text('${snapshot.data['name']}'),
-                          subtitle: Text('${snapshot.data['email']}'),
+                          title:
+                              Center(child: Text('${snapshot.data['name']}')),
+                          subtitle:
+                              Center(child: Text('${snapshot.data['email']}')),
                         ),
                         Divider(color: Colors.black),
                         Text('Rut: ${snapshot.data['rut']}'),
@@ -82,7 +86,23 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                                 height: 40,
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                    child: Text('Mis Mascotas'),
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              side: BorderSide(
+                                                  color: Colors.white12))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Color.fromRGBO(
+                                                  120, 139, 255, 1.0)),
+                                    ),
+                                    child: Text(
+                                      'Mis Mascotas',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                     onPressed: () =>
                                         _navegarListarMascotas(context)))),
                         Padding(
@@ -91,6 +111,19 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                                 height: 40,
                                 width: double.infinity,
                                 child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              side: BorderSide(
+                                                  color: Colors.white12))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Color.fromRGBO(
+                                                  120, 139, 255, 1.0)),
+                                    ),
                                     child: Text('Mis Publicaciones'),
                                     onPressed: () =>
                                         _navegarMisPublicaciones(context)))),
@@ -100,6 +133,19 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                                 height: 40,
                                 width: double.infinity,
                                 child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18.0),
+                                              side: BorderSide(
+                                                  color: Colors.white12))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Color.fromRGBO(
+                                                  120, 139, 255, 1.0)),
+                                    ),
                                     child: Text('Hogares'),
                                     onPressed: () =>
                                         _navegarListarHogares(context))))

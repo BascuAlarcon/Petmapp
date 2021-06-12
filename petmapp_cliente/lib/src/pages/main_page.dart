@@ -28,6 +28,7 @@ class _MainPageState extends State<MainPage> {
   String name = '';
   String rut = '';
   String perfil = '';
+  String token = '';
   var listaDatos;
 
   @override
@@ -57,15 +58,17 @@ class _MainPageState extends State<MainPage> {
     // SCAFFOLD //
     return Scaffold(
         appBar: AppBar(
-            title: Text("PetmApp", style: TextStyle(color: Colors.white)),
+            title: Text("PetmApp",
+                style: TextStyle(color: Colors.white, fontFamily: "Raleway")),
+            centerTitle: true,
             backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
             actions: <Widget>[
               Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: CircleAvatar(
-                    child: Text('SL'),
+                    // child: Text('SL'),
                     backgroundImage: NetworkImage(
-                        'https://danbooru.donmai.us/data/sample/1f/bf/__saigyouji_yuyuko_touhou_drawn_by_shiranui_wasuresateraito__sample-1fbf785207a8d70f72f49f1a33ef26e0.jpg'),
+                        'https://e7.pngegg.com/pngimages/604/701/png-clipart-puppy-kitten-dachshund-dog-breed-f-minus-pigs-shirt-mammal-carnivoran.png'),
                   )),
             ]),
 
@@ -80,43 +83,99 @@ class _MainPageState extends State<MainPage> {
         ),
 
         /// DRAWER ///
-        drawer: Drawer(
-          child: new ListView(
-            children: <Widget>[
-              new UserAccountsDrawerHeader(
-                accountName: new Text(perfil),
-                accountEmail: new Text(name),
-              ),
-              new Divider(),
-              ListTile(
-                  title: Text('Mi Perfil'),
-                  onTap: () => _navegarUsuarioPerfil(context)),
-              ListTile(
-                  title: Text('Razas'), onTap: () => _navegarRazas(context)),
-              ListTile(
-                  title: Text('Especies'), onTap: () => _navegarRazas(context)),
-              ListTile(
-                  title: Text('Ver Publicaciones'),
-                  onTap: () => _navegarPublicaciones(context)),
-              perfil == "1"
-                  ? ListTile(
-                      title: Text('Ver Usuarios'),
-                      onTap: () => _navegarListarUsuarios(context),
-                    )
-                  : Text(''),
-              ElevatedButton(
-                onPressed: () {
-                  sharedPreferences.clear();
-                  sharedPreferences.commit();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()),
-                      (Route<dynamic> route) => false);
-                },
-                child: Text("Cerrar Sesión",
-                    style: TextStyle(color: Colors.white)),
-              ),
-            ],
+        drawer: Theme(
+          data: Theme.of(context)
+              .copyWith(canvasColor: Color.fromRGBO(120, 139, 255, 1.0)),
+          child: Drawer(
+            child: new ListView(
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.white,
+                        fontFamily: 'Raleway'),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              "https://t4.ftcdn.net/jpg/04/29/99/81/360_F_429998130_UfBO2KQf745euFhOnETvamzPPgPuyHuI.jpg"),
+                          fit: BoxFit.cover)),
+                ),
+                // new UserAccountsDrawerHeader(
+                //   accountName: new Text(perfil),
+                //   accountEmail: new Text(name),
+                // ),
+                new Divider(),
+                ListTile(
+                    title: Text(
+                      'Mi Perfil',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _navegarUsuarioPerfil(context)),
+                ListTile(
+                    title: Text(
+                      'Razas',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _navegarRazas(context)),
+                ListTile(
+                    title: Text(
+                      'Especies',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _navegarRazas(context)),
+                ListTile(
+                    title: Text(
+                      'Ver Publicaciones',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    onTap: () => _navegarPublicaciones(context)),
+                perfil == "1"
+                    ? ListTile(
+                        title: Text(
+                          'Ver Usuarios',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: Icon(Icons.keyboard_arrow_right),
+                        onTap: () => _navegarListarUsuarios(context),
+                      )
+                    : Text(''),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 40.0,
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    margin: EdgeInsets.only(top: 15.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      onPressed: () {
+                        sharedPreferences.clear();
+                        sharedPreferences.commit();
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => LoginPage()),
+                            (Route<dynamic> route) => false);
+                      },
+                      child: Text("Cerrar Sesión",
+                          style: TextStyle(
+                              color: Colors.black, fontFamily: 'Raleway')),
+                    )),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: CurvedNavigationBar(
@@ -125,14 +184,46 @@ class _MainPageState extends State<MainPage> {
           items: <Widget>[
             Column(children: <Widget>[
               Container(
-                child: Icon(Icons.home),
+                child: Icon(
+                  Icons.home,
+                  color: Color.fromRGBO(120, 139, 255, 1.0),
+                ),
               ),
               Container(
-                child: Text('Home'),
+                child: Text(
+                  'Home',
+                  style: TextStyle(color: Color.fromRGBO(120, 139, 255, 1.0)),
+                ),
               )
             ]),
-            Icon(Icons.list, size: 30),
-            Icon(Icons.compare_arrows, size: 30),
+            Column(children: <Widget>[
+              Container(
+                child: Icon(
+                  Icons.add_alert,
+                  color: Color.fromRGBO(120, 139, 255, 1.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  'Alerta',
+                  style: TextStyle(color: Color.fromRGBO(120, 139, 255, 1.0)),
+                ),
+              )
+            ]),
+            Column(children: <Widget>[
+              Container(
+                child: Icon(
+                  Icons.photo_library,
+                  color: Color.fromRGBO(120, 139, 255, 1.0),
+                ),
+              ),
+              Container(
+                child: Text(
+                  'Lugar',
+                  style: TextStyle(color: Color.fromRGBO(120, 139, 255, 1.0)),
+                ),
+              )
+            ]),
           ],
           onTap: (index) {
             //Handle button tap
@@ -167,7 +258,8 @@ class _MainPageState extends State<MainPage> {
       rut = sharedPreferencess.getStringList('usuario')[0];
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
-      perfil = sharedPreferencess.getStringList('usuario')[4];
+      perfil = sharedPreferencess.getStringList('usuario')[3];
+      token = sharedPreferencess.getStringList('usuario')[4];
     });
   }
 }

@@ -65,7 +65,7 @@ class UsuarioProvider {
 
   // EDITAR USUARIO //
   Future<http.Response> perfilEditar(String rut, String email, String name,
-      String sexo, String fechaNacimiento, String foto, String numero) async {
+      String sexo, String fechaNacimiento, String numero) async {
     var rutEdit = int.tryParse(rut);
     var urlRequest = apiUrl + 'auth/usuarios/$rutEdit';
     var respuesta = await http.put(Uri.parse(urlRequest),
@@ -77,7 +77,7 @@ class UsuarioProvider {
           'name': name,
           'sexo': sexo,
           'fecha_nacimiento': fechaNacimiento,
-          'foto': foto,
+          // 'foto': foto,
           'numero_telefonico': numero
         }));
     return respuesta;

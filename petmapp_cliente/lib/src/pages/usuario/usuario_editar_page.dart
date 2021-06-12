@@ -175,7 +175,7 @@ class _UsuarioEditarPageState extends State<UsuarioEditarPage> {
   void _usuarioEditar(BuildContext context) {
     var provider = new UsuarioProvider();
     provider.perfilEditar(rut, emailCtrl.text, nameCtrl.text, sexoCtrl.text,
-        fechaNacimientoCtrl.text, fotoCtrl.text, numeroTelefonicoCtrl.text);
+        fechaNacimientoCtrl.text, numeroTelefonicoCtrl.text);
     Navigator.pop(context);
   }
 

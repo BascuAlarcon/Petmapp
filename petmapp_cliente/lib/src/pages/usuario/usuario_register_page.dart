@@ -242,6 +242,8 @@ class _RegistrarPageState extends State<RegistrarPage> {
   }
 
   signUp(String rut, String email, String password, String nombre) async {
+    var rutSplit = rut.split("-");
+    rut = rutSplit[0] + rutSplit[1];
     var provider = UsuarioProvider();
     return await provider.registrar(rut, email, password, nombre);
   }
