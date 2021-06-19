@@ -17,7 +17,7 @@ Maps
  
 toDo:
 	INTENTAR ELIMINAR MODEL Y CONTROLLER DE USER
-
+ 
 	Traer usuario y dibujar un perfil para el usuario de la otra parte del servicio  
  	Pensar en como va a funcionar la tabla peticiones_mascotas (nombre fisico: 'cuidadas') 
 
@@ -28,27 +28,10 @@ toDo:
 Clean Code:
 	Usar un Widget Drawer que se use desde cualquier parte de la app
 	Los widget Buttons de enviar y cancelar	
-	Utilizar un provider para todas las páginas que usemos 
- 
+	Utilizar un provider para todas las páginas que usemos  
+
 ISAAC:
-	¿Cuando se hace una publicacion / peticion, como saber a cuál Hogar de los que tenemos nos estamos refiriendo?
- 
-1 VERSION
-	ORGANIZAR EN QUE CARPETA VAN LOS ARCHIVOS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	TABLA TIPO_HOGARES PARA HOGARES
 
 
 
