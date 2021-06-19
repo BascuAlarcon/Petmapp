@@ -78,5 +78,5 @@ class PublicacionController extends Controller
     public function peticiones2($publicacion){
         $peticion = Peticion::where('publicacion_id', $publicacion)->get();
         return $peticion;
-    }
+    } 
 }

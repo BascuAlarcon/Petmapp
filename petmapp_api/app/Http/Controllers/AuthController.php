@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'me', 'login','editar' ,'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login','editar' ,'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'alertas']]);
     }
 
     /**
@@ -127,5 +127,11 @@ class AuthController extends Controller
         $user = Auth::user();
         $peticiones = $user->peticiones;
         return $peticiones;
+    }
+
+    public function alertas(Usuario $user){
+        $user = Auth::user();
+        $alertas = $user->alertas;
+        return $alertas;
     }
 }

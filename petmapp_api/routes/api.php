@@ -28,8 +28,7 @@ use App\Http\Controllers\AuthController;
 // rutas //
 Route::apiResource('/razas',        'App\Http\Controllers\API\RazaController')->parameters(['razas'=>'raza']);
 Route::apiResource('/mascotas',     'App\Http\Controllers\API\MascotaController')->parameters(['mascotas'=>'mascota']);
-Route::apiResource('/especies',     'App\Http\Controllers\API\EspecieController')->parameters(['especies'=>'especie']); 
-Route::apiResource('/evaluaciones', 'App\Http\Controllers\API\EvaluacionController')->parameters(['evaluaciones'=>'evaluacion']);
+Route::apiResource('/especies',     'App\Http\Controllers\API\EspecieController')->parameters(['especies'=>'especie']);  
 Route::apiResource('/hogares',      'App\Http\Controllers\API\HogarController')->parameters(['hogares'=>'hogar']);
 Route::apiResource('/perfiles',     'App\Http\Controllers\API\PerfilController')->parameters(['perfiles'=>'perfil']); 
 Route::apiResource('/publicaciones', 'App\Http\Controllers\API\PublicacionController')->parameters(['publicaciones'=>'publicacion']);
@@ -42,6 +41,9 @@ Route::apiResource('/comentariosAlerta', 'App\Http\Controllers\API\ComentarioAle
 Route::apiResource('/comentariosNegocio', 'App\Http\Controllers\API\ComentarioNegocioController')->parameters(['comentariosNegocio'=>'comentarioNegocio']); 
 Route::apiResource('/comentariosUbicacion', 'App\Http\Controllers\API\ComentarioUbicacionController')->parameters(['comentariosUbicacion'=>'comentarioUbicacion']); 
 Route::apiResource('/peticiones', 'App\Http\Controllers\API\PeticionController')->parameters(['peticiones'=>'peticion']);
+Route::apiResource('/tiposAlerta', 'App\Http\Controllers\API\TipoAlertaController')->parameters(['tiposAlerta'=>'tipoAlerta']);
+Route::apiResource('/tiposUbicacion', 'App\Http\Controllers\API\TipoUbicacionController')->parameters(['tiposUbicacion'=>'tipoUbicacion']);
+
 
 // Listar por id // 
 Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mascotas');   
@@ -50,6 +52,9 @@ Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\P
 Route::get('publicaciones/{publicacion}/peticioness', 'App\Http\Controllers\API\PublicacionController@peticiones2');
 Route::get('peticiones/{peticion}/evaluaciones', 'App\Http\Controllers\API\PeticionController@evaluaciones');
 Route::get('peticiones/{peticion}/servicios', 'App\Http\Controllers\API\PeticionController@servicios');
+Route::get('alertas/{alerta}/comentarios', 'App\Http\Controllers\API\AlertaController@comentarios');
+Route::get('negocios/{negocio}/comentarios', 'App\Http\Controllers\API\NegocioController@comentarios');
+Route::get('ubicaciones/{ubicacion}/comentarios', 'App\Http\Controllers\API\UbicacionController@comentarios');
 
 // USUARIO //   
 Route::group([
@@ -69,4 +74,5 @@ Route::group([
     Route::get('me/mascotas',           [AuthController::class, 'mascotas']);
     Route::get('me/perfil',             [AuthController::class, 'perfil']);
     Route::get('me/hogares',            [AuthController::class, 'hogares']);
+    Route::get('me/alertas',            [AuthController::class, 'alertas']);
 });

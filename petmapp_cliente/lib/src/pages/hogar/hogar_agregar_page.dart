@@ -27,7 +27,7 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
   TextEditingController direccionCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController fotoCtrl = new TextEditingController();
-
+  TextEditingController localizacionCtrl = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +93,17 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
                           suffixIcon: Icon(Icons.flag)),
                     ),
                   ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: localizacionCtrl,
+                      decoration: InputDecoration(
+                          labelText: 'localizacion',
+                          hintText: 'localizacion del hogar',
+                          suffixIcon: Icon(Icons.flag)),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -133,6 +144,7 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
         direccionCtrl.text,
         descripcionCtrl.text,
         fotoCtrl.text,
+        localizacionCtrl.text,
         rut); // usamos un controller //
     Navigator.pop(context);
   }

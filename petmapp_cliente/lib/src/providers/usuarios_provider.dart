@@ -168,9 +168,31 @@ class UsuarioProvider {
     }
   }
 
-  // OBTENER HOGARES //
+  // OBTENER peticiones //
   Future<List<dynamic>> getPeticiones(token) async {
     var urlRequest = apiUrl + 'auth/me/peticiones';
+    var response = await http.get(
+      Uri.parse(urlRequest),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        return json.decode(response.body);
+      } else {
+        return new List<dynamic>();
+      }
+    } else {
+      return new List<dynamic>();
+    }
+  }
+
+  // LISTAR MIS ALERTAS //
+  Future<List<dynamic>> getAlertas(token) async {
+    var urlRequest = apiUrl + 'auth/me/alertas';
     var response = await http.get(
       Uri.parse(urlRequest),
       headers: <String, String>{

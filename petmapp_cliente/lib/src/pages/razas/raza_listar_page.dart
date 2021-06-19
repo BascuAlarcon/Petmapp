@@ -19,7 +19,7 @@ class _RazaListarPageState extends State<RazaListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetmApp'),
+        title: Text('Razas'),
         leading: Container(
             child: ElevatedButton(
                 child: Icon(MdiIcons.arrowBottomLeft),

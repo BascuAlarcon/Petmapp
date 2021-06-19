@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alerta;
+use App\Models\ComentarioAlerta;
 use Illuminate\Http\Request;
 
 class AlertaController extends Controller
@@ -26,14 +27,15 @@ class AlertaController extends Controller
      */
     public function store(Request $request)
     {
-        $alerta = new Alerta();
-        $alerta->tipo_alerta = $request->tipo_alerta;
+        $alerta = new Alerta(); 
         $alerta->foto = $request->foto;
         $alerta->descripcion = $request->descripcion;
         $alerta->direccion = $request->direccion;
+        $alerta->localizacion = $request->localizacion;
         $alerta->habilitado = $request->habilitado;
         $alerta->ultima_actividad = $request->ultima_actividad;
         $alerta->usuario_rut = $request->usuario_rut;
+        $alerta->tipo_alerta_id = $request->tipo_alerta;   
         $alerta->save();
     }
 
@@ -57,13 +59,13 @@ class AlertaController extends Controller
      */
     public function update(Request $request, Alerta $alerta)
     {
-        $alerta->tipo_alerta = $request->tipo_alerta;
+        $alerta->tipo_alerta_id = $request->tipo_alerta;
         $alerta->foto = $request->foto;
         $alerta->descripcion = $request->descripcion;
         $alerta->direccion = $request->direccion;
+        $alerta->localizacion = $request->localizacion;
         $alerta->habilitado = $request->habilitado;
-        $alerta->ultima_actividad = $request->ultima_actividad;
-        $alerta->usuario_rut = $request->usuario_rut;
+        $alerta->ultima_actividad = $request->ultima_actividad;  
         $alerta->save();
     }
 
@@ -77,4 +79,10 @@ class AlertaController extends Controller
     {
         $alerta->delete();
     }
+
+    public function comentarios($alerta){
+        $comentario = ComentarioAlerta::where('alerta_id', $alerta)->get();
+        return $comentario;
+    }
+ 
 }

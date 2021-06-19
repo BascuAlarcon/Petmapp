@@ -33,9 +33,9 @@ class RazaController extends Controller
     public function store(Request $request)
     {
         $raza = new Raza();
-        $raza->nombre = $request->nombre;
+        $raza->nombre = $request->nombre;   
         $raza->descripcion = $request->descripcion;
-        $raza->especie_id = 3;
+        $raza->especie_id = 2;
         $raza->save(); 
     }
 

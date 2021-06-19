@@ -19,4 +19,8 @@ class Alerta extends Model
     public function comentarios(){
         return $this->hasMany('App\Models\ComentarioAlerta');
     }
+
+    public function tipo(){
+        return $this->belongsTo('App\Models\TipoAlerta');
+    }
 }

@@ -12,6 +12,6 @@ class Servicio extends Model
     use SoftDeletes;  
 
     public function cuidado(){
-        return $this->belongsTo('App\Models\PeticionCuidado');
+        return $this->belongsTo('App\Models\Peticion');
     }
 }

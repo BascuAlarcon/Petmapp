@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var provider = UsuarioProvider();
     var respuesta = await provider.login(email, password);
-    // en caso de que este todo OK, respuesta debería tener un access_token
+    // en caso de que este todo OK, respuesta deberÃ­a tener un access_token
     if (respuesta['access_token'] == null) {
       print('no hay access_token');
     } else {

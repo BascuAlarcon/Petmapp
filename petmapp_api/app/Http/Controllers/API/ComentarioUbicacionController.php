@@ -57,9 +57,7 @@ class ComentarioUbicacionController extends Controller
     {
         $comentarioUbicacion->descripcion = $request->descripcion ;
         $comentarioUbicacion->fecha_emision = $request->fecha_emision ;
-        $comentarioUbicacion->foto = $request->foto ;
-        $comentarioUbicacion->ubicacion_id = $request->ubicacion_id ;
-        $comentarioUbicacion->usuario_rut = $request->usuario_rut ;
+        $comentarioUbicacion->foto = $request->foto ; 
         $comentarioUbicacion->save();
     }
 
@@ -73,4 +71,6 @@ class ComentarioUbicacionController extends Controller
     {
         $comentarioUbicacion->delete();
     }
+
+    
 }

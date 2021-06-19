@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/hogar/hogares_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/hogares_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/mis_publicaciones_usuario_listar.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
@@ -31,7 +31,9 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Mi Perfil'),
+          title: Text('Mi Perfil',
+              style: TextStyle(color: Colors.white, fontFamily: 'Raleway')),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
           centerTitle: true,
           actions: [
             PopupMenuButton<MenuItem>(
@@ -50,27 +52,128 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
               if (!snapshot.hasData) {
                 return Text('Loading...');
               } else {
+                var fechaNacimiento =
+                    DateTime.parse(snapshot.data['fecha_nacimiento']);
+                String edadd = ecalcularEdad(fechaNacimiento);
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
+                        Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            // ACÁ INSERTAR LA IMAGEN DE PERFIL
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/0f/ee/__kiryu_coco_hololive_drawn_by_beedrops__sample-0fee041361a8ad923821089770bddaca.jpg'),
+                                fit: BoxFit.fill),
+                          ),
+                        ),
                         ListTile(
-                          title: Text('${snapshot.data['name']}'),
-                          subtitle: Text('${snapshot.data['email']}'),
+                          title: Center(
+                              child: Text(
+                            '${snapshot.data['name']}',
+                            style: TextStyle(fontSize: 23.0),
+                          )),
+                          subtitle:
+                              Center(child: Text('${snapshot.data['email']}')),
+                        ),
+                        Center(
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8.0),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              side: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      120, 139, 255, 1.0)))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                    ),
+                                    child: Icon(Icons.favorite,
+                                        color:
+                                            Color.fromRGBO(120, 139, 255, 1.0)),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8.0),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              side: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      120, 139, 255, 1.0)))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                    ),
+                                    child: Icon(Icons.star_border,
+                                        color:
+                                            Color.fromRGBO(120, 139, 255, 1.0)),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, right: 8.0),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              side: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      120, 139, 255, 1.0)))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                    ),
+                                    child: Icon(Icons.warning,
+                                        color:
+                                            Color.fromRGBO(120, 139, 255, 1.0)),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         Divider(color: Colors.black),
                         Text('Rut: ${snapshot.data['rut']}'),
+                        //
+
                         snapshot.data['fecha_nacimiento'] != null
-                            ? Text(
-                                'Fecha nacimiento: ${snapshot.data['fecha_nacimiento']}')
+                            ? Text('Edad: $edadd')
                             : Text(''),
+                        //
                         snapshot.data['sexo'] != null
                             ? Text('Sexo: ${snapshot.data['sexo']}')
                             : Text(''),
-                        snapshot.data['foto'] != null
-                            ? Text('Foto: ${snapshot.data['foto']}')
-                            : Text(''),
+                        // snapshot.data['foto'] != null
+                        //     ? Text('Foto: ${snapshot.data['foto']}')
+                        //     : Text(''),
                         snapshot.data['numero_telefonico'] != null
                             ? Text(
                                 'Numero telefonico: ${snapshot.data['numero_telefonico']}')
@@ -111,6 +214,20 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
             },
           ),
         ));
+  }
+
+  String ecalcularEdad(DateTime fechaNacimiento) {
+    int daysBetween(DateTime from, DateTime to) {
+      from = DateTime(from.year, from.month, from.day);
+      to = DateTime(to.year, to.month, to.day);
+      return (to.difference(from).inHours / 24).round();
+    }
+
+    final fechaActual = new DateTime.now();
+    final difference = daysBetween(fechaNacimiento, fechaActual);
+    double edad = (difference / 365);
+    final edadcortada = edad.toString().split('.');
+    return edadcortada[0];
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Negocio;
+use App\Models\ComentarioNegocio;
 use Illuminate\Http\Request;
 
 class NegocioController extends Controller
@@ -33,7 +34,8 @@ class NegocioController extends Controller
         $negocio->direccion = $request->direccion ;
         $negocio->foto = $request->foto ;
         $negocio->tipo_id = $request->tipo_id ;
-        $negocio->save();
+        $negocio->localizacion = $request->localizacion;
+        $negocio->save();   
     }
 
     /**
@@ -62,6 +64,7 @@ class NegocioController extends Controller
         $negocio->direccion = $request->direccion ;
         $negocio->foto = $request->foto ;
         $negocio->tipo_id = $request->tipo_id ;
+        $negocio->localizacion = $request->localizacion;
         $negocio->save();
     }
 
@@ -74,5 +77,10 @@ class NegocioController extends Controller
     public function destroy(Negocio $negocio)
     {
         $negocio->delete();
+    }
+
+    public function comentarios($negocio){
+        $comentario = ComentarioNegocio::where('negocio_id', $negocio)->get();
+        return $comentario;
     }
 }

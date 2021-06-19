@@ -14,4 +14,8 @@ class Hogar extends Model
     public function usuario(){
         return $this->belongsTo('App\Models\User');
     }
+
+    public function publicaciones(){
+        return $this->hasMany('App\Models\Publicacion');
+    }
 }

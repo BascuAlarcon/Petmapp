@@ -101,8 +101,7 @@ class _RazaEditarPageState extends State<RazaEditarPage> {
 
   void _razaEditar(BuildContext context) {
     var provider = new RazasProvider();
-    provider.razaEditar(widget.idRaza, nombreCtrl.text,
-        descripcionCtrl.text); // usamos un controller //
+    provider.razaEditar(widget.idRaza, nombreCtrl.text, descripcionCtrl.text);
     Navigator.pop(context);
   }
 

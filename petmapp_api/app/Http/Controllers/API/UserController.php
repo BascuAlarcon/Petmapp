@@ -49,7 +49,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email; 
         $user->password = bcrypt($request->password);
-        $user->perfil_id = 1;
+        $user->perfil_id = 2;
         $user->save();
         return response()->json(['status'=>'ok' ,'data'=>$user], 200);
     }

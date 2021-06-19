@@ -27,8 +27,14 @@ class HogarProvider {
   }
 
   // AGREGAR hogares //
-  Future<http.Response> hogarAgregar(String tipo, String disponibilidad,
-      String direccion, String descripcion, String foto, String rut) async {
+  Future<http.Response> hogarAgregar(
+      String tipo,
+      String disponibilidad,
+      String direccion,
+      String descripcion,
+      String foto,
+      String localizacion,
+      String rut) async {
     var urlRequest = apiUrl + 'hogares';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -40,6 +46,7 @@ class HogarProvider {
           'direccion': direccion,
           'descripcion': descripcion,
           'foto': foto,
+          'localizacion': localizacion,
           'usuario_rut': rut
         }));
     return respuesta;

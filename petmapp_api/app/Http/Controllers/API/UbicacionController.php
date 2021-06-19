@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ubicacion;
+use App\Models\ComentarioUbicacion;
 use Illuminate\Http\Request;
 
 class UbicacionController extends Controller
@@ -26,11 +27,12 @@ class UbicacionController extends Controller
      */
     public function store(Request $request)
     {
-        $ubicacion = new Ubicacion();
-        $ubicacion->tipo_ubicacion = $request->tipo_ubicacion ;
+        $ubicacion = new Ubicacion(); 
         $ubicacion->descripcion = $request->descripcion ;
         $ubicacion->foto = $request->foto ;
         $ubicacion->direccion = $request->direccion ;
+        $ubicacion->localizacion = $request->localizacion ;
+        $ubicacion->tipo_ubicacion_id = $request->tipo_ubicacion ;
         $ubicacion->save();
     }
 
@@ -53,11 +55,12 @@ class UbicacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Ubicacion $ubicacion)
-    {
-        $ubicacion->tipo_ubicacion = $request->tipo_ubicacion ;
+    { 
         $ubicacion->descripcion = $request->descripcion ;
         $ubicacion->foto = $request->foto ;
         $ubicacion->direccion = $request->direccion ;
+        $ubicacion->localizacion = $request->localizacion ;
+        $ubicacion->tipo_ubicacion_id = $request->tipo_ubicacion  ;
         $ubicacion->save();
     }
 
@@ -71,4 +74,10 @@ class UbicacionController extends Controller
     {
         $ubicacion->delete();
     }
+
+    public function comentarios($ubicacion){
+        $comentario = ComentarioUbicacion::where('ubicacion_id', $ubicacion)->get();
+        return $comentario;
+    }
 }
+    

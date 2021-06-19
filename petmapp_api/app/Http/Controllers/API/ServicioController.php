@@ -31,7 +31,7 @@ class ServicioController extends Controller
         $servicio->foto = $request->foto;
         $servicio->monto = $request->monto;
         $servicio->fecha = $request->fecha;
-        $servicio->cuidado_id = $request->cuidado_id;
+        $servicio->peticion_id = $request->peticion_id;
         $servicio->save();
     }
 
@@ -58,8 +58,7 @@ class ServicioController extends Controller
         $servicio->comentario = $request->comentario;
         $servicio->foto = $request->foto;
         $servicio->monto = $request->monto;
-        $servicio->fecha = $request->fecha;
-        $servicio->cuidado_id = $request->cuidado_id;
+        $servicio->fecha = $request->fecha; 
         $servicio->save();
     }
 

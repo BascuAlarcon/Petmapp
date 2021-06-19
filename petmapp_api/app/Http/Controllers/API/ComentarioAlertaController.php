@@ -57,9 +57,7 @@ class ComentarioAlertaController extends Controller
     {
         $comentarioAlerta->descripcion= $request->descripcion;
         $comentarioAlerta->fecha_emision = $request->fecha_emision ;
-        $comentarioAlerta->foto = $request->foto ;
-        $comentarioAlerta->alerta_id = $request->alerta_id ;
-        $comentarioAlerta->usuario_rut = $request->usuario_rut ;
+        $comentarioAlerta->foto = $request->foto ; 
         $comentarioAlerta->save();
     }
 
@@ -73,4 +71,6 @@ class ComentarioAlertaController extends Controller
     {
         $comentarioAlerta->delete();
     }
+
+    
 }

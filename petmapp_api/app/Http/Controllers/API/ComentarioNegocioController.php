@@ -28,7 +28,7 @@ class ComentarioNegocioController extends Controller
     {
         $comentarioNegocio = new ComentarioNegocio();
         $comentarioNegocio->descripcion = $request->descripcion ;
-        $comentarioNegocio->fecha_emision = $request->fecha_emision ;
+        $comentarioNegocio->fecha_emision = $request->fecha_emision ;   
         $comentarioNegocio->foto = $request->foto ;
         $comentarioNegocio->usuario_rut = $request->usuario_rut ;
         $comentarioNegocio->negocio_id = $request->negocio_id ;
@@ -57,9 +57,7 @@ class ComentarioNegocioController extends Controller
     {
         $comentarioNegocio->descripcion = $request->descripcion ;
         $comentarioNegocio->fecha_emision = $request->fecha_emision ;
-        $comentarioNegocio->foto = $request->foto ;
-        $comentarioNegocio->usuario_rut = $request->usuario_rut ;
-        $comentarioNegocio->negocio_id = $request->negocio_id ;
+        $comentarioNegocio->foto = $request->foto ;  
         $comentarioNegocio->save();
     }
 

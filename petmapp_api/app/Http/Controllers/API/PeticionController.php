@@ -65,6 +65,8 @@ class PeticionController extends Controller
         $peticion->estado = $request->estado;
         $peticion->boleta = $request->boleta; 
         $peticion->save();
+        // TABLA M:N PETICION MASCOTA
+        // $petidion->mascotas()->attach($request->mascota);    
     }
 
     /**
@@ -82,12 +84,7 @@ class PeticionController extends Controller
         $peticion->estado = $request->estado; 
         $peticion->save();
     }
-
-    public function evaluaciones( $peticion){
-        $evaluaciones = Evaluacion::where('peticion_id', $peticion)->get(); 
-        return $evaluaciones;   
-    }
-
+ 
     public function servicios($peticion){ 
         $servicios = Servicio::where('peticion_id', $peticion)->get();
         return $servicios;   

@@ -15,4 +15,9 @@ class Ubicacion extends Model
     public function comentarios(){
         return $this->hasMany('App\Models\ComentarioUbicacion', 'id_ubicacion', 'id');
     }
+
+    public function tipo(){
+        return $this->belongsTo('App\Models\TipoUbicacion'/* ,'tipo_ubicacion_id','id' */);
+    }
+ 
 }
