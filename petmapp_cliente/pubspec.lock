@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  carousel_pro:
+    dependency: "direct main"
+    description:
+      name: carousel_pro
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   characters:
     dependency: transitive
     description:
@@ -97,6 +104,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.0"
+  flutter_sliding_up_panel:
+    dependency: "direct main"
+    description:
+      name: flutter_sliding_up_panel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -107,6 +121,34 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geocoder:
+    dependency: "direct main"
+    description:
+      name: geocoder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
+  geolocator:
+    dependency: "direct main"
+    description:
+      name: geolocator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.1.0"
+  geolocator_platform_interface:
+    dependency: transitive
+    description:
+      name: geolocator_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
+  geolocator_web:
+    dependency: transitive
+    description:
+      name: geolocator_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -135,6 +177,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.1"
+  image_picker_for_web:
+    dependency: transitive
+    description:
+      name: image_picker_for_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  image_picker_platform_interface:
+    dependency: transitive
+    description:
+      name: image_picker_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.1"
   js:
     dependency: transitive
     description:
@@ -352,4 +422,4 @@ packages:
     version: "0.2.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.22.0"
+  flutter: ">=2.0.0"

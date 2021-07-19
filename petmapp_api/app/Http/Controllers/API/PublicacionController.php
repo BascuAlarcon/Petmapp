@@ -28,6 +28,8 @@ class PublicacionController extends Controller
     public function store(Request $request)
     {
         $publicacion = new Publicacion();
+        $publicacion->latitude = $request->latitude;
+        $publicacion->longitude = $request->longitude;
         $publicacion->descripcion = $request->descripcion;
         $publicacion->tarifa = $request->tarifa;
         $publicacion->usuario_rut = $request->usuario_rut;

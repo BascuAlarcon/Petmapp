@@ -23,6 +23,7 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
   }
 
 // Controllers //
+  TextEditingController coordenadasCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController tarifaCtrl = new TextEditingController();
 
@@ -37,6 +38,16 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
             Expanded(
               child: ListView(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: descripcionCtrl,
+                      decoration: InputDecoration(
+                          labelText: 'Coordenadas',
+                          hintText: 'Coordenadas de la publicación',
+                          suffixIcon: Icon(Icons.flag)),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
@@ -93,8 +104,8 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
 
   void _publicacionAgregar(BuildContext context) {
     var provider = new PublicacionProvider();
-    provider.publicacionAgregar(
-        descripcionCtrl.text, tarifaCtrl.text, rut); // usamos un controller //
+    provider.publicacionAgregar("", descripcionCtrl.text, tarifaCtrl.text,
+        rut); // usamos un controller //
     Navigator.pop(context);
   }
 

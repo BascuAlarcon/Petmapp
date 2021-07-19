@@ -1,11 +1,14 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:petmapp_cliente/src/providers/especie_provider.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MascotasAgregarPage extends StatefulWidget {
   MascotasAgregarPage({Key key}) : super(key: key);
@@ -17,7 +20,8 @@ class MascotasAgregarPage extends StatefulWidget {
 class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
 // Validaciones //
   final _formKey = GlobalKey<FormState>();
-
+  PickedFile _imagefile;
+  final ImagePicker _picker = ImagePicker();
 // Controllers //
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController sexoCtrl = new TextEditingController();
@@ -53,9 +57,11 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
   var _valorMicrochip;
   var _valorSeleccionadoPerros;
   var _valorSeleccionadoGatos;
+  DateTime _fechaNacimiento;
 
   @override
   void initState() {
+    _fechaNacimiento = DateTime.now();
     super.initState();
     _cargarEspecies();
     _cargarSexo();
@@ -83,11 +89,37 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                 children: <Widget>[
                   Stack(children: <Widget>[
                     FadeInImage(
-                        image: NetworkImage(
-                            'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif'),
+                        image: _imagefile == null
+                            ? NetworkImage(
+                                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+                            : FileImage(File(_imagefile.path)),
                         placeholder: AssetImage('assets/jar-loading.gif'),
                         fit: BoxFit.cover),
-                    // Botón Agregar Foto
+                    //           size: 25.0,
+                    //         ),
+                    IconButton(
+                      icon: new Icon(
+                        Icons.add_a_photo_rounded,
+                        color: Colors.white,
+                      ),
+                      highlightColor: Colors.pink,
+                      onPressed: () {
+                        tomarFoto(ImageSource.camera);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        icon: new Icon(
+                          Icons.folder_special_outlined,
+                          color: Colors.white,
+                        ),
+                        highlightColor: Colors.pink,
+                        onPressed: () {
+                          tomarFoto(ImageSource.gallery);
+                        },
+                      ),
+                    ),
                   ]),
                   Card(
                     shape: RoundedRectangleBorder(
@@ -139,10 +171,55 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                             },
                           ),
                         ),
+                        // Padding(
+                        //     padding: const EdgeInsets.all(17.0),
+                        //     child: Row(
+                        //       children: [
+                        //         Expanded(
+                        //             child: Text(DateFormat('dd-MM-yyyy')
+                        //                 .format(_fechaNacimiento))),
+                        //         FlatButton(
+                        //             onPressed: () {
+                        //               showDatePicker(
+                        //                       context: context,
+                        //                       initialDate: DateTime.now(),
+                        //                       firstDate: DateTime(1900),
+                        //                       lastDate: DateTime.now())
+                        //                   .then((fecha) => setState(() {
+                        //                         _fechaNacimiento = fecha;
+                        //                       }));
+                        //               fechaNacimientoCtrl.text = Text(
+                        //                       DateFormat('dd-MM-yyyy')
+                        //                           .format(_fechaNacimiento))
+                        //                   .toString();
+                        //             },
+                        //             child: Icon(Icons.date_range))
+                        //       ],
+                        //     )),
                         Padding(
                           padding: const EdgeInsets.all(17.0),
                           child: TextFormField(
                             controller: fechaNacimientoCtrl,
+                            onTap: () {
+                              showDatePicker(
+                                      context: context,
+                                      initialDate: fechaNacimientoCtrl == null
+                                          ? DateTime.now()
+                                          : _fechaNacimiento,
+                                      firstDate: DateTime(1900),
+                                      lastDate: DateTime.now())
+                                  .then((value) => setState(() {
+                                        _fechaNacimiento = value;
+                                        fechaNacimientoCtrl.text =
+                                            DateFormat('dd-MM-yyyy')
+                                                .format(value)
+                                                .toString();
+                                      }));
+                              // fechaNacimientoCtrl.text =
+                              //     DateFormat('dd-MM-yyyy')
+                              //         .format(_fechaNacimiento)
+                              //         .toString();
+                            },
                             /* validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Por favor ingrese un nombre';
@@ -154,7 +231,7 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               labelText: 'Fecha de nacimiento',
                               hintText: 'Fecha de nacimiento',
-                              suffixIcon: Icon(Icons.pets),
+                              suffixIcon: Icon(Icons.date_range),
                               errorText:
                                   _validate ? 'Value Can\'t Be Empty' : null,
                             ),
@@ -381,32 +458,41 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
             )
           ],
         ),
-        Positioned(
-          right: 10.0,
-          top: 260.0, // or whatever
-          child: Container(
-            child: InkWell(
-              onTap: () => {},
-              borderRadius: BorderRadius.circular(50.0),
-              child: Container(
-                width: 45.0,
-                height: 45.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Color.fromRGBO(180, 196, 247, 1.0)),
-                  color: Color.fromRGBO(120, 139, 255, 1.0),
-                ),
-                child: Icon(
-                  Icons.add_a_photo_rounded,
-                  color: Colors.white,
-                  size: 25.0,
-                ),
-              ),
-            ),
-          ),
-        ),
+        // Positioned(
+        //   right: 10.0,
+        //   top: 260.0, // or whatever
+        //   child: Container(
+        //     child: InkWell(
+        //       onTap: () => {},
+        //       borderRadius: BorderRadius.circular(50.0),
+        //       child: Container(
+        //         width: 45.0,
+        //         height: 45.0,
+        //         decoration: BoxDecoration(
+        //           shape: BoxShape.circle,
+        //           border: Border.all(color: Color.fromRGBO(180, 196, 247, 1.0)),
+        //           color: Color.fromRGBO(120, 139, 255, 1.0),
+        //         ),
+        //         child: Icon(
+        //           Icons.add_a_photo_rounded,
+        //           color: Colors.white,
+        //           size: 25.0,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ]),
     );
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      _imagefile = pickedFile;
+    });
   }
 
   void _mascotaAgregar(BuildContext context) async {

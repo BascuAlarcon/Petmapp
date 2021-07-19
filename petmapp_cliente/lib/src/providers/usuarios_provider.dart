@@ -189,4 +189,11 @@ class UsuarioProvider {
       return new List<dynamic>();
     }
   }
+
+  // CALCULAR EDAD DE USUARIO  //
+  // Future<String> calcularEdad(DateTime fechaNacimiento) async {
+  //   final fechaActual = new DateTime.now();
+  //   var fechaFinal = fechaActual.difference(fechaNacimiento);
+  //   return "";
+  // }
 }
