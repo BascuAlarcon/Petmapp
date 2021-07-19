@@ -10,7 +10,8 @@ import 'package:petmapp_cliente/src/providers/servicios_provider.dart';
 
 class ServicioListarPage extends StatefulWidget {
   final int idPeticion;
-  ServicioListarPage({this.idPeticion});
+  final int boleta;
+  ServicioListarPage({this.idPeticion, this.boleta});
 
   @override
   _ServicioListarPageState createState() => _ServicioListarPageState();
@@ -21,7 +22,9 @@ class _ServicioListarPageState extends State<ServicioListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Servicios Adicionles'),
+        centerTitle: true,
+        title: Text('Servicios Adicionales'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -105,6 +108,7 @@ class _ServicioListarPageState extends State<ServicioListarPage> {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
       return ServiciosAgregarPage(
         idPeticion: idPeticion,
+        boleta: widget.boleta,
       );
     });
     Navigator.push(context, route);

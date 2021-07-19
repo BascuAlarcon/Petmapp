@@ -13,8 +13,7 @@ class NegocioProvider {
       String descripcion,
       String direccion,
       String localizacion,
-      String nombre,
-      String horario) async {
+      String nombre) async {
     var urlRequest = apiUrl + 'negocios';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -26,8 +25,7 @@ class NegocioProvider {
           'descripcion': descripcion,
           'direccion': direccion,
           'localizacion': localizacion,
-          'nombre': nombre,
-          'horario': horario
+          'nombre': nombre
         }));
     return respuesta;
   }
@@ -55,8 +53,7 @@ class NegocioProvider {
       String descripcion,
       String direccion,
       String localizacion,
-      String nombre,
-      String horario) async {
+      String nombre) async {
     var urlRequest = apiUrl + 'negocios/$idNegocio';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -69,7 +66,6 @@ class NegocioProvider {
           'direccion': direccion,
           'localizacion': localizacion,
           'nombre': nombre,
-          'horario': horario
         }));
     return respuesta;
   }

@@ -26,8 +26,8 @@ class TipoAlertaController extends Controller
      */
     public function store(Request $request)
     {
-        $tipo = new TipoAlerta();
-        $tipo->tipo_alerta = $request->tipo_alerta ;
+        $tipo = new TipoAlerta(); 
+        $tipo->nombre = $request->nombre;
         $tipo->save();
     }
 
@@ -50,8 +50,8 @@ class TipoAlertaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TipoAlerta $tipoAlerta)
-    {
-        $tipoAlerta->tipo_alerta = $request->tipo_alerta;
+    { 
+        $tipoAlerta->nombre = $request->nombre;
         $tipoAlerta->save();
     }
 

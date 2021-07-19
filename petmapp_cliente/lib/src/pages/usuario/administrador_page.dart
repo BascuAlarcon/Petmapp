@@ -19,7 +19,7 @@ import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'itemMenu.dart';
+import '../Models/itemMenu.dart';
 
 class AdministradorPagePage extends StatefulWidget {
   final int rutUsuario;
@@ -43,13 +43,7 @@ class _AdministradorPagePageState extends State<AdministradorPagePage> {
         appBar: AppBar(
           title: Text('Administrador :) '),
           centerTitle: true,
-          actions: [
-            PopupMenuButton<MenuItem>(
-              onSelected: (item) => onSelected(context, item),
-              itemBuilder: (context) =>
-                  [...MenuItems.itemsFirst.map(buildItem).toList()],
-            )
-          ],
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
         body: Container(
           width: double.infinity,
@@ -71,72 +65,93 @@ class _AdministradorPagePageState extends State<AdministradorPagePage> {
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Usuarios'),
-                                    onPressed: () =>
-                                        _navegarListarUsuarios(context)))),
+                                child: Tooltip(
+                                  message: 'Lista de usuarios',
+                                  child: ElevatedButton(
+                                      child: Text('Usuarios'),
+                                      onPressed: () =>
+                                          _navegarListarUsuarios(context)),
+                                ))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Especies'),
-                                    onPressed: () =>
-                                        _navegarEspecies(context)))),
+                                child: Tooltip(
+                                  message: 'Especies Existentes',
+                                  child: ElevatedButton(
+                                      child: Text('Especies'),
+                                      onPressed: () =>
+                                          _navegarEspecies(context)),
+                                ))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Razas'),
-                                    onPressed: () => _navegarRazas(context)))),
+                                child: Tooltip(
+                                    message: 'Razas Existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Razas'),
+                                        onPressed: () =>
+                                            _navegarRazas(context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Ubicaciones'),
-                                    onPressed: () =>
-                                        _navegarListarUbicaciones(context)))),
+                                child: Tooltip(
+                                    message: 'Ubicaciones Existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Ubicaciones'),
+                                        onPressed: () =>
+                                            _navegarListarUbicaciones(
+                                                context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Negocios'),
-                                    onPressed: () =>
-                                        _navegarListarNegocios(context)))),
+                                child: Tooltip(
+                                    message: 'Negocios Existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Negocios'),
+                                        onPressed: () =>
+                                            _navegarListarNegocios(context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Tipos Negocios'),
-                                    onPressed: () =>
-                                        _navegarTiposNegocios(context)))),
+                                child: Tooltip(
+                                    message: 'Tipos de negocios existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Tipos Negocios'),
+                                        onPressed: () =>
+                                            _navegarTiposNegocios(context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Tipos Ubicaciones'),
-                                    onPressed: () =>
-                                        _navegarTiposUbicaciones(context)))),
+                                child: Tooltip(
+                                    message: 'Tipos de ubicaciones existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Tipos Ubicaciones'),
+                                        onPressed: () =>
+                                            _navegarTiposUbicaciones(
+                                                context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                                 height: 40,
                                 width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Tipos Alertas'),
-                                    onPressed: () =>
-                                        _navegarTiposAlertas(context)))),
+                                child: Tooltip(
+                                    message: 'Tipos de alertas existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Tipos Alertas'),
+                                        onPressed: () =>
+                                            _navegarTiposAlertas(context))))),
                       ],
                     ),
                   ),

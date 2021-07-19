@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -20,6 +21,18 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
   var rut;
   var id;
   SharedPreferences sharedPreferences;
+
+// Controllers //
+  TextEditingController nombreCtrl = new TextEditingController();
+  TextEditingController sexoCtrl = new TextEditingController();
+  TextEditingController estirilizacionCtrl = new TextEditingController();
+  TextEditingController fechaNacimientoCtrl = new TextEditingController();
+  TextEditingController condicionMedicaCtrl = new TextEditingController();
+  TextEditingController microchipCtrl = new TextEditingController();
+  TextEditingController alimentosCtrl = new TextEditingController();
+  TextEditingController personalidadCtrl = new TextEditingController();
+  TextEditingController razaCtrl = new TextEditingController();
+  TextEditingController usuarioCtrl = new TextEditingController();
 
   getSharedPreferences() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -83,10 +96,15 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
                                     child: Column(
                                       children: <Widget>[
                                         // Usamos el widget Image para mostrar una imagen
-                                        Image(
-                                          // Como queremos traer una imagen desde un url usamos NetworkImage
-                                          image: NetworkImage(
-                                              'https://cdn.dribbble.com/users/2402074/screenshots/14168530/media/3c81d79d3b8415f6b309eb953e69f0bd.png?compress=1&resize=400x300'),
+                                        FadeInImage(
+                                          image: snapshot.data[index]['foto'] ==
+                                                  null
+                                              ? NetworkImage(
+                                                  'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+                                              : FileImage(File(snapshot
+                                                  .data[index]['foto'])),
+                                          placeholder: AssetImage(
+                                              'assets/jar-loading.gif'),
                                         ),
                                         // Usamos Container para el contenedor de la descripción
                                         Container(
@@ -227,8 +245,10 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
   }
 
   void _navegarMascotasEditar(BuildContext context, int idMascota) {
-    var route =
-        new MaterialPageRoute(builder: (context) => MascotasEditarPage());
+    var route = new MaterialPageRoute(
+        builder: (context) => MascotasEditarPage(
+              idMascota: idMascota,
+            ));
     Navigator.push(context, route).then((value) {
       setState(
           () {}); // cuando se devuelva el navigator con un pop, que resfresque //

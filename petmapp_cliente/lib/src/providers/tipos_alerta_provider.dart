@@ -7,17 +7,14 @@ class TipoAlertaProvider {
   var apiUrl = new UrlProvider().url();
 
 // AGREGAR UBICACION //
-  Future<http.Response> tipoAgregar(
-    String tipoAlerta,
-  ) async {
+  Future<http.Response> tipoAgregar( String nombre) async {
     var urlRequest = apiUrl + 'tiposAlerta';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(<String, String>{
-          'tipo_alerta': tipoAlerta,
-        }));
+        body: jsonEncode(
+            <String, String>{ 'nombre': nombre}));
     return respuesta;
   }
 
@@ -38,17 +35,14 @@ class TipoAlertaProvider {
 
   // EDITAR ALERTA //
   Future<http.Response> tipoEditar(
-    int idTipo,
-    String tipoAlerta,
-  ) async {
+      int idTipo,   String nombre) async {
     var urlRequest = apiUrl + 'tiposAlerta/$idTipo';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(<String, String>{
-          'tipo_alerta': tipoAlerta,
-        }));
+        body: jsonEncode(
+            <String, String>{'nombre': nombre}));
     return respuesta;
   }
 

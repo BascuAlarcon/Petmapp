@@ -19,11 +19,9 @@ class _RazaListarPageState extends State<RazaListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Razas'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -49,7 +47,9 @@ class _RazaListarPageState extends State<RazaListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
+                            leading: snapshot.data[index]['especie_id'] == 1
+                                ? Icon(MdiIcons.dog)
+                                : Icon(MdiIcons.cat),
                             title: Text(snapshot.data[index]['nombre']),
                             onTap: () => _navegarMascotas(
                                 context, snapshot.data[index]['id']),
@@ -86,8 +86,18 @@ class _RazaListarPageState extends State<RazaListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegarRazasAgregar(context),
-                          child: Text('Agregar Razas'))),
+                        onPressed: () => _navegarRazasAgregar(context),
+                        child: Text('Agregar una Raza'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],

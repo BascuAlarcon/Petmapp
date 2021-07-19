@@ -31,6 +31,7 @@ class PublicacionController extends Controller
         $publicacion->descripcion = $request->descripcion;
         $publicacion->tarifa = $request->tarifa;
         $publicacion->usuario_rut = $request->usuario_rut;
+        $publicacion->hogar_id = $request->hogar_id;
         $publicacion->save();
     }
 
@@ -56,6 +57,14 @@ class PublicacionController extends Controller
     {
         $publicacion->descripcion = $request->descripcion;
         $publicacion->tarifa = $request->tarifa; 
+        $publicacion->hogar_id = $request->hogar_id;
+        $publicacion->save();
+    }
+
+    public function evaluacion(Request $request, Publicacion $publicacion)
+    {
+        $publicacion->nota = $request->nota;
+        $publicacion->comentario = $request->comentario;  
         $publicacion->save();
     }
 
@@ -79,4 +88,10 @@ class PublicacionController extends Controller
         $peticion = Peticion::where('publicacion_id', $publicacion)->get();
         return $peticion;
     } 
+
+    public function comentario(Request $request, Publicacion $publicacion){ 
+        $publicacion->comentario = $request->comentario; 
+        $publicacion->nota = $request->nota; 
+        $publicacion->save();
+    }
 }

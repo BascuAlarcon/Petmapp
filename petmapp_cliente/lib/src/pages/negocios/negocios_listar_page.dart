@@ -7,6 +7,8 @@ import 'package:petmapp_cliente/src/pages/negocios/negocios_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_editar_page.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/negocios_provider.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
+import 'package:petmapp_cliente/src/providers/tipos_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NegociosListarPage extends StatefulWidget {
@@ -22,21 +24,22 @@ class _NegociosListarPageState extends State<NegociosListarPage> {
   String name = '';
   String rut = '';
   String perfil = '';
+  var _tipos = []..length = 500;
+  var _nombres = []..length = 500;
 
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _cargarTipo();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Negocios Existentes'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -59,10 +62,10 @@ class _NegociosListarPageState extends State<NegociosListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
+                            leading: Icon(MdiIcons.store),
                             title: Text(snapshot.data[index]['descripcion']),
-                            subtitle: Text(
-                                'tipo de negocio ${snapshot.data[index]['tipo_id'].toString()}'),
+                            subtitle:
+                                Text(_nombres[snapshot.data[index]['tipo_id']]),
                             onTap: () => _navegarComentariosNegocio(
                                 context, snapshot.data[index]['id']),
                           ),
@@ -102,8 +105,18 @@ class _NegociosListarPageState extends State<NegociosListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegarnegociosAgregar(context),
-                          child: Text('Agregar negocios'))),
+                        onPressed: () => _navegarnegociosAgregar(context),
+                        child: Text('Agregar Negocio'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -195,6 +208,17 @@ class _NegociosListarPageState extends State<NegociosListarPage> {
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
       perfil = sharedPreferencess.getStringList('usuario')[3];
+    });
+  }
+
+  _cargarTipo() async {
+    var provider = TipoProvider();
+    var tipos = await provider.tipoListar();
+    tipos.forEach((tipo) {
+      setState(() {
+        _tipos.add(tipo['id']);
+        _nombres[tipo['id']] = tipo['nombre'];
+      });
     });
   }
 }

@@ -4,11 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:petmapp_cliente/src/providers/url_provider.dart';
 
 class PeticionProvider {
-  // PARA DISPOSISITO VIRTUAL USAR 10.0.2.2
-  // final apiUrl = 'http://10.0.2.2:8000/api/';
-  // DISPOSITIVO FISICO USAR LA IP DE NUESTRA COMPUTADORA
-  // final apiUrl = 'http://192.168.1.86:8000/api/';
-
   // OBTENER URL //
   var apiUrl = new UrlProvider().url();
 
@@ -26,33 +21,113 @@ class PeticionProvider {
       return new List<dynamic>();
     }
   }
+  // agregar peticion //
 
-  // AGREGAR peticiones //
-  Future<http.Response> peticionAgregar(String fecha_inicio, String fecha_fin,
-      String usuario_rut, String publicacion_id) async {
+  // FALTA AGREGAR PRECIO TOTAL (CALCULADO A PARTIR DEL CAMPO 'TARIFA' DE LA TABLA PUBLICACIÓN Y LOS DÍAS QUE DURARÁ EL CUIDADO //
+  Future<http.Response> peticionAgregar(
+      String descripcion,
+      String fecha_inicio,
+      String fecha_fin,
+      List mascotas,
+      String usuario_rut,
+      String publicacion_id) async {
     var urlRequest = apiUrl + 'peticiones';
-    var respuesta = await http.post(Uri.parse(urlRequest),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(<String, String>{
-          'fecha_inicio': fecha_inicio,
-          'fecha_fin': fecha_fin,
-          'usuario_rut': usuario_rut,
-          'publicacion_id': publicacion_id
-        }));
-    print(respuesta);
-    return respuesta;
+    print(mascotas.length);
+    if (mascotas.length == 1) {
+      var respuesta = await http.post(Uri.parse(urlRequest),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(<String, String>{
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuario_rut': usuario_rut,
+            'publicacion_id': publicacion_id,
+            'descripcion': descripcion,
+            'mascota1': mascotas[0].id.toString()
+          }));
+      print(respuesta);
+      return respuesta;
+    }
+    if (mascotas.length == 2) {
+      var respuesta = await http.post(Uri.parse(urlRequest),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(<String, String>{
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuario_rut': usuario_rut,
+            'publicacion_id': publicacion_id,
+            'descripcion': descripcion,
+            'mascota1': mascotas[0].id.toString(),
+            'mascota2': mascotas[1].id.toString()
+          }));
+      print(respuesta);
+      return respuesta;
+    }
+    if (mascotas.length == 3) {
+      var respuesta = await http.post(Uri.parse(urlRequest),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(<String, String>{
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuario_rut': usuario_rut,
+            'publicacion_id': publicacion_id,
+            'descripcion': descripcion,
+            'mascota1': mascotas[0].id.toString(),
+            'mascota2': mascotas[1].id.toString(),
+            'mascota3': mascotas[2].id.toString()
+          }));
+      print(respuesta);
+      return respuesta;
+    }
+    if (mascotas.length == 4) {
+      var respuesta = await http.post(Uri.parse(urlRequest),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(<String, String>{
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuario_rut': usuario_rut,
+            'publicacion_id': publicacion_id,
+            'descripcion': descripcion,
+            'mascota1': mascotas[0].id.toString(),
+            'mascota2': mascotas[1].id.toString(),
+            'mascota3': mascotas[2].id.toString(),
+            'mascota4': mascotas[3].id.toString()
+          }));
+      print(respuesta);
+      return respuesta;
+    }
+    if (mascotas.length == 5) {
+      var respuesta = await http.post(Uri.parse(urlRequest),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: jsonEncode(<String, String>{
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuario_rut': usuario_rut,
+            'publicacion_id': publicacion_id,
+            'descripcion': descripcion,
+            'mascota1': mascotas[0].id.toString(),
+            'mascota2': mascotas[1].id.toString(),
+            'mascota3': mascotas[2].id.toString(),
+            'mascota4': mascotas[3].id.toString(),
+            'mascota5': mascotas[4].id.toString()
+          }));
+      print(respuesta);
+      return respuesta;
+    }
   }
 
   // EDITAR peticiones //
-  Future<http.Response> peticionEditar(
-      int idpeticion,
-      String fecha_inicio,
-      String fecha_fin,
-      String precio_total,
-      String estado,
-      String boleta) async {
+  Future<http.Response> peticionEditar(int idpeticion, String descripcion,
+      String fecha_inicio, String fecha_fin) async {
     var urlRequest = apiUrl + 'peticiones/$idpeticion';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -61,9 +136,6 @@ class PeticionProvider {
         body: jsonEncode(<String, String>{
           'fecha_inicio': fecha_inicio,
           'fecha_fin': fecha_fin,
-          'precio_total': precio_total,
-          'estado': estado,
-          'boleta': boleta
         }));
     return respuesta;
   }
@@ -86,19 +158,26 @@ class PeticionProvider {
   }
 
   // RESPUESTA PETICION //
-  Future<http.Response> peticionRespuesta(int idpeticion, String estado,
-      String fechaInicio, String fechaFin, String precio) async {
-    var urlRequest = apiUrl + 'peticiones/$idpeticion';
-    var respuesta = await http.put(Uri.parse(urlRequest),
+  // TIENE QUE SER CON METODO POST //
+  Future<http.Response> peticionRespuesta(int idpeticion, String estado) async {
+    var urlRequest = apiUrl + 'peticiones/$idpeticion/respuesta';
+    var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(<String, String>{
-          'fecha_inicio': fechaInicio,
-          'fecha_fin': fechaFin,
-          'precio_total': precio,
-          'estado': estado,
-        }));
+        body: jsonEncode(<String, String>{'estado': estado}));
+    return respuesta;
+  }
+
+  Future<http.Response> peticionComentario(
+      int idpeticion, String comentario, String nota) async {
+    var urlRequest = apiUrl + 'peticiones/$idpeticion/comentario';
+    var respuesta = await http.post(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(
+            <String, String>{'comentario': comentario, 'nota': nota}));
     return respuesta;
   }
 }

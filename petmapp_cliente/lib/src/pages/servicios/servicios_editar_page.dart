@@ -18,104 +18,159 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
   TextEditingController montoCtrl = new TextEditingController();
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController fechaCtrl = new TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Agregar Publicacion'),
+          centerTitle: true,
+          title: Text('Editar servicio'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
-        body: FutureBuilder(
-          future: _fetch(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Text('No hay data'),
-              );
-            } else {
-              comentarioCtrl.text = snapshot.data['comentario'];
-              montoCtrl.text = snapshot.data['monto'].toString();
-              fechaCtrl.text = snapshot.data['fecha'];
-              fotoCtrl.text = snapshot.data['foto'];
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: comentarioCtrl,
-                            decoration: InputDecoration(
-                                labelText: 'comentario',
-                                hintText: 'comentario del servicio',
-                                suffixIcon: Icon(Icons.flag)),
+        body: Form(
+          key: _formKey,
+          child: FutureBuilder(
+            future: _fetch(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: Text('No hay data'),
+                );
+              } else {
+                comentarioCtrl.text = snapshot.data['comentario'];
+                montoCtrl.text = snapshot.data['monto'].toString();
+                fechaCtrl.text = snapshot.data['fecha'];
+                fotoCtrl.text = snapshot.data['foto'];
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: comentarioCtrl,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  labelText: 'comentario',
+                                  hintText: 'comentario del servicio',
+                                  suffixIcon: Icon(Icons.flag)),
+                              validator: (valor) {
+                                if (valor.isEmpty || valor == null) {
+                                  return 'Debe ingresar una descripcion';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: montoCtrl,
-                            decoration: InputDecoration(
-                                labelText: 'monto',
-                                hintText: 'monto',
-                                suffixIcon: Icon(Icons.flag)),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: montoCtrl,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  labelText: 'monto',
+                                  hintText: 'monto',
+                                  suffixIcon: Icon(Icons.flag)),
+                              validator: (valor) {
+                                if (valor.isEmpty || valor == null) {
+                                  return 'Debe ingresar el monto del servicio';
+                                }
+                                return null;
+                              },
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: fechaCtrl,
-                            decoration: InputDecoration(
-                                labelText: 'fecha',
-                                hintText: 'fecha',
-                                suffixIcon: Icon(Icons.flag)),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: fechaCtrl,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  labelText: 'fecha',
+                                  hintText: 'fecha',
+                                  suffixIcon: Icon(Icons.flag)),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: fotoCtrl,
-                            decoration: InputDecoration(
-                                labelText: 'foto',
-                                hintText: 'foto',
-                                suffixIcon: Icon(Icons.flag)),
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: fotoCtrl,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  labelText: 'foto',
+                                  hintText: 'foto',
+                                  suffixIcon: Icon(Icons.flag)),
+                            ),
                           ),
-                        ),
-                        Divider(),
-                      ],
+                          Divider(),
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            child: Text('Editar servicio'),
-                            onPressed: () => _servicioAgregar(context),
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              child: Text('Guardar Cambios'),
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side:
+                                            BorderSide(color: Colors.white12))),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromRGBO(120, 139, 255, 1.0)),
+                              ),
+                              onPressed: () => _servicioEditar(context),
+                            ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 5),
-                          height: 40,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            child: Text('Cancelar'),
-                            onPressed: () => _navegarCancelar(context),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              );
-            }
-          },
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              child: Text('Volver'),
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side:
+                                            BorderSide(color: Colors.white12))),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromRGBO(199, 199, 183, 1.0)),
+                              ),
+                              onPressed: () => _navegarCancelar(context),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }
+            },
+          ),
         ));
   }
 
@@ -124,11 +179,13 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
     return await provider.getServicio(widget.id);
   }
 
-  void _servicioAgregar(BuildContext context) {
-    var provider = new ServiciosProvider();
-    provider.serviciosEditar(comentarioCtrl.text, montoCtrl.text,
-        fechaCtrl.text, fotoCtrl.text, widget.id.toString());
-    Navigator.pop(context);
+  void _servicioEditar(BuildContext context) {
+    if (_formKey.currentState.validate()) {
+      var provider = new ServiciosProvider();
+      provider.serviciosEditar(comentarioCtrl.text, montoCtrl.text,
+          fechaCtrl.text, fotoCtrl.text, widget.id.toString());
+      Navigator.pop(context);
+    }
   }
 
   void _navegarCancelar(BuildContext context) {

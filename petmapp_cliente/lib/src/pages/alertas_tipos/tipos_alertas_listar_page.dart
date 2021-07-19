@@ -29,11 +29,9 @@ class _TipoAlertaListarPageState extends State<TipoAlertaListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Tipos de Alertas'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -58,9 +56,9 @@ class _TipoAlertaListarPageState extends State<TipoAlertaListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
-                            title: Text(
-                                snapshot.data[index]['tipo_alerta'].toString()),
+                            leading: Icon(MdiIcons.alertCircle),
+                            title:
+                                Text(snapshot.data[index]['nombre'].toString()),
                             onTap: () {},
                           ),
                           actions: [
@@ -95,8 +93,18 @@ class _TipoAlertaListarPageState extends State<TipoAlertaListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegartiposalertaAgregar(context),
-                          child: Text('Agregar'))),
+                        onPressed: () => _navegartiposalertaAgregar(context),
+                        child: Text('Agregar Tipos de Alertas'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],

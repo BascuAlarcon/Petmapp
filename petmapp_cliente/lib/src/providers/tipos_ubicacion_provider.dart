@@ -7,16 +7,14 @@ class TipoUbicacionProvider {
   var apiUrl = new UrlProvider().url();
 
 // AGREGAR UBICACION //
-  Future<http.Response> tipoAgregar(
-    String tipoUbicacion,
-  ) async {
+  Future<http.Response> tipoAgregar(  String nombre) async {
     var urlRequest = apiUrl + 'tiposUbicacion';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(<String, String>{
-          'tipo_ubicacion': tipoUbicacion,
+        body: jsonEncode(<String, String>{ 
+          'nombre': nombre
         }));
     return respuesta;
   }
@@ -38,16 +36,14 @@ class TipoUbicacionProvider {
 
   // EDITAR ALERTA //
   Future<http.Response> tipoEditar(
-    int idTipo,
-    String tipoUbicacion,
-  ) async {
+      int idTipo,   String nombre) async {
     var urlRequest = apiUrl + 'tiposUbicacion/$idTipo';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(<String, String>{
-          'tipo_ubicacion': tipoUbicacion,
+        body: jsonEncode(<String, String>{ 
+          'nombre': nombre
         }));
     return respuesta;
   }

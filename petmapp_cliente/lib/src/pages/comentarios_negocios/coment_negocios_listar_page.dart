@@ -26,6 +26,7 @@ class _ComentarioNegocioListarPageState
     cargarDatosUsuario();
   }
 
+  final _formKey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -35,84 +36,87 @@ class _ComentarioNegocioListarPageState
                 child: Icon(MdiIcons.arrowBottomLeft),
                 onPressed: () => Navigator.pop(context))),
       ),
-      body: FutureBuilder(
-        future: _fetch(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: Text('No data'));
-          } else {
-            List<dynamic> safeCards = snapshot.data;
-            return Column(
-              children: [
-                // LISTA COMENTARIOS//
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () => _refresh(),
-                    child: ListView.separated(
-                      itemCount: safeCards.length,
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
-                      itemBuilder: (context, index) {
-                        return Slidable(
-                          actionPane: SlidableDrawerActionPane(),
-                          actionExtentRatio: 0.25,
-                          child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
-                            title: Text(
-                                snapshot.data[index]['descripcion'].toString()),
-                            onTap: () {},
-                          ),
-                          actions: [
-                            rut ==
-                                    snapshot.data[index]['usuario_rut']
-                                        .toString()
-                                ? IconSlideAction(
-                                    caption: 'Editar',
-                                    color: Colors.yellow,
-                                    icon: MdiIcons.pencil,
-                                    onTap: () => _navegarcomentariosEditar(
-                                        context, snapshot.data[index]['id']),
-                                  )
-                                : Text(''),
-                          ],
-                          secondaryActions: [
-                            rut ==
-                                    snapshot.data[index]['usuario_rut']
-                                        .toString()
-                                ? IconSlideAction(
-                                    caption: 'Borrar',
-                                    color: Colors.red,
-                                    icon: MdiIcons.trashCan,
-                                    onTap: () => _mostrarConfirmacion(
-                                        context, snapshot.data, index),
-                                  )
-                                : Text(''),
-                          ],
-                        );
-                      },
+      body: Form(
+        key: _formKey,
+        child: FutureBuilder(
+          future: _fetch(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: Text('No data'));
+            } else {
+              List<dynamic> safeCards = snapshot.data;
+              return Column(
+                children: [
+                  // LISTA COMENTARIOS//
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () => _refresh(),
+                      child: ListView.separated(
+                        itemCount: safeCards.length,
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                        itemBuilder: (context, index) {
+                          return Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            actionExtentRatio: 0.25,
+                            child: ListTile(
+                              leading: Icon(MdiIcons.soccer),
+                              title: Text(snapshot.data[index]['descripcion']
+                                  .toString()),
+                              onTap: () {},
+                            ),
+                            actions: [
+                              rut ==
+                                      snapshot.data[index]['usuario_rut']
+                                          .toString()
+                                  ? IconSlideAction(
+                                      caption: 'Editar',
+                                      color: Colors.yellow,
+                                      icon: MdiIcons.pencil,
+                                      onTap: () => _navegarcomentariosEditar(
+                                          context, snapshot.data[index]['id']),
+                                    )
+                                  : Text(''),
+                            ],
+                            secondaryActions: [
+                              rut ==
+                                      snapshot.data[index]['usuario_rut']
+                                          .toString()
+                                  ? IconSlideAction(
+                                      caption: 'Borrar',
+                                      color: Colors.red,
+                                      icon: MdiIcons.trashCan,
+                                      onTap: () => _mostrarConfirmacion(
+                                          context, snapshot.data, index),
+                                    )
+                                  : Text(''),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
 
-                // LISTA comentariosnegocio //
-                // BOTON AGREGAR //
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () => _navegarComentariosAgregar(
-                                context,
-                              ),
-                          child: Text('Agregar un comentario'))),
-                )
-                // BOTON AGREGAR //
-              ],
-            );
-          }
-        },
+                  // LISTA comentariosnegocio //
+                  // BOTON AGREGAR //
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        height: 40,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                            onPressed: () => _navegarComentariosAgregar(
+                                  context,
+                                ),
+                            child: Text('Agregar un comentario'))),
+                  )
+                  // BOTON AGREGAR //
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }

@@ -33,7 +33,8 @@ class HogarController extends Controller
         $hogar->descripcion = $request->descripcion;
         $hogar->foto = $request->foto;
         $hogar->usuario_rut = $request->usuario_rut;
-        $hogar->localizacion = $request->localizacion;
+        $hogar->latitud = $request->latitud;
+        $hogar->longitud = $request->longitud;
         $hogar->save();
     }
 
@@ -62,7 +63,8 @@ class HogarController extends Controller
         $hogar->direccion = $request->direccion;
         $hogar->descripcion = $request->descripcion;
         $hogar->foto = $request->foto; 
-        $hogar->localizacion = $request->localizacion;
+        $hogar->latitud = $request->latitud;
+        $hogar->longitud = $request->longitud;
         $hogar->save();
     }
 

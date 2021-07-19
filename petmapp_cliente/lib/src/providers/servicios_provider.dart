@@ -23,7 +23,7 @@ class ServiciosProvider {
 
   // AGREGAR publicaciones //
   Future<http.Response> serviciosAgregar(String comentario, String monto,
-      String fecha, String foto, String idPeticion) async {
+      String boleta, String fecha, String foto, String idPeticion) async {
     var urlRequest = apiUrl + 'servicios';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -36,6 +36,15 @@ class ServiciosProvider {
           'fecha': fecha,
           'peticion_id': idPeticion
         }));
+    var urlRequestPeticion = apiUrl + 'peticiones/$idPeticion/monto';
+    var respuestaPeticion = await http.post(Uri.parse(urlRequestPeticion),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{
+          'boleta': boleta,
+        }));
+    print(respuestaPeticion);
     return respuesta;
   }
 
@@ -69,6 +78,26 @@ class ServiciosProvider {
       return json.decode(response.body);
     } else {
       return new LinkedHashMap<String, dynamic>();
+    }
+  }
+
+  // LISTAR SERVICIOS POR PETICION //
+  Future<List<dynamic>> serviciosPeticion(id) async {
+    var urlRequest = apiUrl + 'peticiones/$id/servicios';
+    var response = await http.get(
+      Uri.parse(urlRequest),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        return json.decode(response.body);
+      } else {
+        return new List<dynamic>();
+      }
+    } else {
+      return new List<dynamic>();
     }
   }
 }

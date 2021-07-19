@@ -3,10 +3,12 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
+import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 
 class PeticionMostrarPage extends StatefulWidget {
   final int idPeticion;
-  PeticionMostrarPage({this.idPeticion});
+  final int rutUsuario;
+  PeticionMostrarPage({this.idPeticion, this.rutUsuario});
 
   @override
   _PeticionMostrarPageState createState() => _PeticionMostrarPageState();
@@ -20,60 +22,95 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Peticion número ${widget.idPeticion}'),
+          centerTitle: true,
+          title: Text('Petición de cuidado'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
-        body: Container(
-          width: double.infinity,
-          margin: EdgeInsets.all(10),
-          child: FutureBuilder(
-            future: _fetch(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Text('Loading...');
-              } else {
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        ListTile(
-                            title: Text(
-                                'Usuario: ${snapshot.data['usuario_rut']}'),
-                            subtitle: Text(
-                              'VER PERFIL DEL USUARIO',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            leading: Icon(MdiIcons.account),
-                            tileColor: Colors.blue,
-                            onTap: () {}),
-                        Divider(color: Colors.black),
-                        Expanded(
-                          child: ListTile(
-                            title: Text(
-                                'Fecha de la petición: ${snapshot.data['created_at']}'),
-                          ),
+        body: Column(
+          children: [
+            _datosUsuario(),
+            _datosPeticion(),
+          ],
+        ));
+  }
+
+  Widget _datosPeticion() {
+    return Expanded(
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.all(10),
+        child: FutureBuilder(
+          future: _fetch(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('Loading...');
+            } else {
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Text('Datos de la peticion'),
+                      Expanded(
+                        child: ListTile(
+                          title: Text(
+                              'Fecha de la petición: ${snapshot.data['fecha_inicio']}'),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              height: 40,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                  onPressed: () => _mostrarConfirmacion(
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () => _mostrarConfirmacion(
                                       context,
                                       snapshot.data['fecha_inicio'],
                                       snapshot.data['fecha_fin'],
-                                      snapshot.data['precio_total']),
-                                  child: Text('Responder Petición'))),
-                        )
-                      ],
-                    ),
+                                    ),
+                                child: Text('Responder Petición'))),
+                      )
+                    ],
                   ),
-                );
-              }
-            },
-          ),
-        ));
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _datosUsuario() {
+    return Expanded(
+      child: Container(
+          child: FutureBuilder(
+              future: _fetchUsuario(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text('loading...');
+                } else {
+                  return Card(
+                      child: ListView(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image(
+                          image: NetworkImage(
+                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                          height: 200,
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(snapshot.data['name']),
+                        subtitle: Text(
+                            'Mostrar número de notas, promedio notas, datos, etc...'),
+                      )
+                    ],
+                  ));
+                }
+              })),
+    );
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
@@ -81,7 +118,12 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
     return await provider.getpeticion(widget.idPeticion);
   }
 
-  _mostrarConfirmacion(BuildContext context, fechaInicio, fechaFin, precio) {
+  Future<LinkedHashMap<String, dynamic>> _fetchUsuario() async {
+    var provider = UsuarioProvider();
+    return await provider.mostrarUsuario(widget.rutUsuario);
+  }
+
+  _mostrarConfirmacion(BuildContext context, fechaInicio, fechaFin) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -100,20 +142,19 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                         color: Theme.of(context).accentColor,
                       )),
                   onPressed: () =>
-                      peticionResponder('3', fechaInicio, fechaFin, precio)),
+                      peticionResponder('3', fechaInicio, fechaFin)),
               ElevatedButton(
                   child: Text('Si'),
                   onPressed: () =>
-                      peticionResponder('2', fechaInicio, fechaFin, precio))
+                      peticionResponder('2', fechaInicio, fechaFin))
             ],
           );
         });
   }
 
-  void peticionResponder(String respuesta, fechaInicio, fechaFin, precio) {
+  void peticionResponder(String respuesta, fechaInicio, fechaFin) {
     var provider = PeticionProvider();
-    provider.peticionRespuesta(widget.idPeticion, respuesta,
-        fechaInicio.toString(), fechaFin.toString(), precio.toString());
+    provider.peticionRespuesta(widget.idPeticion, respuesta);
     Navigator.of(context).pop();
   }
 }

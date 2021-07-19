@@ -28,8 +28,7 @@ class ComentarioNegocioController extends Controller
     {
         $comentarioNegocio = new ComentarioNegocio();
         $comentarioNegocio->descripcion = $request->descripcion ;
-        $comentarioNegocio->fecha_emision = $request->fecha_emision ;   
-        $comentarioNegocio->foto = $request->foto ;
+        $comentarioNegocio->fecha_emision = $request->fecha_emision ;    
         $comentarioNegocio->usuario_rut = $request->usuario_rut ;
         $comentarioNegocio->negocio_id = $request->negocio_id ;
         $comentarioNegocio->save();
@@ -56,8 +55,7 @@ class ComentarioNegocioController extends Controller
     public function update(Request $request, ComentarioNegocio $comentarioNegocio)
     {
         $comentarioNegocio->descripcion = $request->descripcion ;
-        $comentarioNegocio->fecha_emision = $request->fecha_emision ;
-        $comentarioNegocio->foto = $request->foto ;  
+        $comentarioNegocio->fecha_emision = $request->fecha_emision ; 
         $comentarioNegocio->save();
     }
 

@@ -33,7 +33,8 @@ class HogarProvider {
       String direccion,
       String descripcion,
       String foto,
-      String localizacion,
+      String longitud,
+      String latitud,
       String rut) async {
     var urlRequest = apiUrl + 'hogares';
     var respuesta = await http.post(Uri.parse(urlRequest),
@@ -46,7 +47,8 @@ class HogarProvider {
           'direccion': direccion,
           'descripcion': descripcion,
           'foto': foto,
-          'localizacion': localizacion,
+          'longitud': longitud,
+          'latitud': latitud,
           'usuario_rut': rut
         }));
     return respuesta;
@@ -59,7 +61,9 @@ class HogarProvider {
       String disponibilidad,
       String direccion,
       String descripcion,
-      String foto) async {
+      String foto,
+      String longitud,
+      String latitud) async {
     var urlRequest = apiUrl + 'hogares/$idhogar';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -71,6 +75,8 @@ class HogarProvider {
           'direccion': direccion,
           'descripcion': descripcion,
           'foto': foto,
+          'longitud': longitud,
+          'latitid': latitud
         }));
     return respuesta;
   }

@@ -82,20 +82,22 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
           separatorBuilder: (context, index) => Divider(),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(
-                  'ID de la petición  ${peticiones[index]['id'].toString()}'),
+              title:
+                  Text('Fecha de inicio: ${peticiones[index]['fecha_inicio']}'),
               subtitle: Text(
                   'Rut del usuario que hizo la petición ${peticiones[index]['usuario_rut'].toString()}'),
-              onTap: () => _navegarPeticion(context, peticiones[index]['id']),
+              onTap: () => _navegarPeticion(context, peticiones[index]['id'],
+                  peticiones[index]['usuario_rut']),
             );
           });
     }
   }
 
-  _navegarPeticion(BuildContext context, int id) {
+  _navegarPeticion(BuildContext context, int idPeticion, int rutUsuario) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
       return PeticionMostrarPage(
-        idPeticion: id,
+        idPeticion: idPeticion,
+        rutUsuario: rutUsuario,
       );
     });
     Navigator.push(context, route);

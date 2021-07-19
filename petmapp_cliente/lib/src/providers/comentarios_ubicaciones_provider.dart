@@ -37,8 +37,16 @@ class ComentarioUbicacionProvider {
   }
 
   // AGREGAR hogares //
-  Future<http.Response> comentarioAgregar(String descripcion,
-      String fechaEmision, String foto, String ubicacionId, String rut) async {
+  Future<http.Response> comentarioAgregar(
+      String descripcion, String ubicacionId, String rut) async {
+    DateTime fechaEmision = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      DateTime.now().hour,
+      DateTime.now().minute,
+      DateTime.now().second,
+    );
     var urlRequest = apiUrl + 'comentariosUbicacion';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -46,8 +54,7 @@ class ComentarioUbicacionProvider {
         },
         body: jsonEncode(<String, String>{
           'descripcion': descripcion,
-          'fecha_emision': fechaEmision,
-          'foto': foto,
+          'fecha_emision': fechaEmision.toString(),
           'ubicacion_id': ubicacionId,
           'usuario_rut': rut
         }));
@@ -55,8 +62,16 @@ class ComentarioUbicacionProvider {
   }
 
   // EDITAR hogares //
-  Future<http.Response> comentarioEditar(int idComentario, String descripcion,
-      String fechaEmision, String foto) async {
+  Future<http.Response> comentarioEditar(
+      int idComentario, String descripcion) async {
+    DateTime fechaEmision = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      DateTime.now().hour,
+      DateTime.now().minute,
+      DateTime.now().second,
+    );
     var urlRequest = apiUrl + 'comentariosUbicacion/$idComentario';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -64,8 +79,7 @@ class ComentarioUbicacionProvider {
         },
         body: jsonEncode(<String, String>{
           'descripcion': descripcion,
-          'fecha_emision': fechaEmision,
-          'foto': foto,
+          'fecha_emision': fechaEmision.toString(),
         }));
     return respuesta;
   }

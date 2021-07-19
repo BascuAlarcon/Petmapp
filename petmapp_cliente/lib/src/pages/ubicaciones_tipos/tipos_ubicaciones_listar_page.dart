@@ -27,11 +27,9 @@ class _TipoUbicacionListarPageState extends State<TipoUbicacionListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tipos de Ubicaciones'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Tipo de ubicaciones'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -56,9 +54,9 @@ class _TipoUbicacionListarPageState extends State<TipoUbicacionListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
-                            title: Text(snapshot.data[index]['tipo_ubicacion']
-                                .toString()),
+                            leading: Icon(MdiIcons.store),
+                            title:
+                                Text(snapshot.data[index]['nombre'].toString()),
                             onTap: () {},
                           ),
                           actions: [
@@ -93,8 +91,18 @@ class _TipoUbicacionListarPageState extends State<TipoUbicacionListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegartiposalertaAgregar(context),
-                          child: Text('Agregar'))),
+                        onPressed: () => _navegartiposAgregar(context),
+                        child: Text('Agregar Tipos de Ubicaciones'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -115,7 +123,7 @@ class _TipoUbicacionListarPageState extends State<TipoUbicacionListarPage> {
     return await provider.tipoListar();
   }
 
-  void _navegartiposalertaAgregar(BuildContext context) {
+  void _navegartiposAgregar(BuildContext context) {
     var route =
         new MaterialPageRoute(builder: (context) => TipoUbicacionAgregarPage());
     Navigator.push(context, route).then((value) {

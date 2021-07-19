@@ -28,8 +28,7 @@ class ComentarioUbicacionController extends Controller
     {
         $comentarioUbicacion = new ComentarioUbicacion();
         $comentarioUbicacion->descripcion = $request->descripcion ;
-        $comentarioUbicacion->fecha_emision = $request->fecha_emision ;
-        $comentarioUbicacion->foto = $request->foto ;
+        $comentarioUbicacion->fecha_emision = $request->fecha_emision ; 
         $comentarioUbicacion->ubicacion_id = $request->ubicacion_id ;
         $comentarioUbicacion->usuario_rut = $request->usuario_rut ;
         $comentarioUbicacion->save();
@@ -56,8 +55,7 @@ class ComentarioUbicacionController extends Controller
     public function update(Request $request, ComentarioUbicacion $comentarioUbicacion)
     {
         $comentarioUbicacion->descripcion = $request->descripcion ;
-        $comentarioUbicacion->fecha_emision = $request->fecha_emision ;
-        $comentarioUbicacion->foto = $request->foto ; 
+        $comentarioUbicacion->fecha_emision = $request->fecha_emision ; 
         $comentarioUbicacion->save();
     }
 

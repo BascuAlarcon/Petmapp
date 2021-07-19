@@ -3,9 +3,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:petmapp_cliente/src/pages/hogar/hogar_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/hogar/hogar_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/hogar/hogar_mostrar_page.dart';
-import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/peticiones/peticion_editar_page.dart';
-import 'package:petmapp_cliente/src/pages/peticiones/peticion_listar_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
@@ -32,6 +29,8 @@ class _HogarListarPageState extends State<HogarListarPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis Hogares'),
+        centerTitle: true,
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         leading: Container(
             child: ElevatedButton(
                 child: Icon(MdiIcons.arrowBottomLeft),
@@ -101,8 +100,18 @@ class _HogarListarPageState extends State<HogarListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegarhogaresAgregar(context),
-                          child: Text('Agregar'))),
+                        onPressed: () => _navegarhogaresAgregar(context),
+                        child: Text('Agregar Hogar'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],

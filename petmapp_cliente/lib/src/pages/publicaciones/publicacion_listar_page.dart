@@ -31,11 +31,9 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Publicaciones disponibles'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Lista de Publicaciones'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -62,10 +60,12 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
                             actionPane: SlidableDrawerActionPane(),
                             actionExtentRatio: 0.25,
                             child: ListTile(
-                              leading: Icon(MdiIcons.soccer),
+                              leading: Icon(MdiIcons.clipboardText),
                               title: Text(snapshot.data[index]['descripcion']),
                               onTap: () => _navegarPublicacion(
-                                  context, snapshot.data[index]['id']),
+                                  context,
+                                  snapshot.data[index]['id'],
+                                  snapshot.data[index]['usuario_rut']),
                             ),
                           );
                         }
@@ -82,9 +82,18 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () =>
-                              _navegarpublicacionesAgregar(context),
-                          child: Text('Agregar publicaciones'))),
+                        onPressed: () => _navegarpublicacionesAgregar(context),
+                        child: Text('Agregar Publicación'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -161,10 +170,11 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
         });
   }
 
-  _navegarPublicacion(BuildContext context, int id) {
+  _navegarPublicacion(BuildContext context, int id, int rut) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
       return PublicacionMostrarPage(
         idPublicacion: id,
+        rutUsuario: rut,
       );
     });
     Navigator.push(context, route);

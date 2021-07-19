@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/pages/usuario/perfil_usuario_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_evaluaciones_publicaciones_page.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
+import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 
 class UsuarioListarPage extends StatefulWidget {
@@ -15,11 +19,9 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Usuarios'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Usuarios'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -49,18 +51,30 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
                               title: Text(
                                 snapshot.data[index]['email'],
                               ),
-                              subtitle: snapshot.data[index]['perfil_id'] == 1
-                                  ? Text(snapshot.data[index]['name'],
-                                      style: TextStyle(color: Colors.redAccent))
-                                  : Text(snapshot.data[index]['name']),
-                              onTap: () {}),
+                              trailing: Icon(MdiIcons.arrowRight),
+                              subtitle: snapshot.data[index]
+                                          ['promedio_evaluaciones'] ==
+                                      null
+                                  ? Text('Sin evaluaciones :)')
+                                  : Text('Promedio de notas: ' +
+                                      snapshot.data[index]
+                                              ['promedio_evaluaciones']
+                                          .toString()),
+                              onTap: () => _navegarUsuarioEvaluaciones(
+                                  context, snapshot.data[index]['rut'])),
+                          actions: [
+                            IconSlideAction(
+                                caption: 'Borrar',
+                                color: Colors.red,
+                                icon: MdiIcons.trashCan,
+                                onTap: () => _mostrarConfirmacion(
+                                    context, snapshot.data[index]['rut']))
+                          ],
                         );
                       },
                     ),
                   ),
                 ),
-
-                // LISTA USUARIOS //
               ],
             );
           }
@@ -77,5 +91,71 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
   Future<List<dynamic>> _fetch() async {
     var provider = new UsuarioProvider();
     return await provider.getUsuarios();
+  }
+
+  _navegarUsuarioEvaluaciones(BuildContext context, rut) {
+    var route = new MaterialPageRoute(
+        builder: (context) => PerfilPublicacionPage(
+            rut) /* UsuarioEvaluacionesListarPage(rut: rut) */);
+    Navigator.push(context, route).then((value) {
+      setState(() {});
+    });
+  }
+
+  //    ELIMINAR UN USUARIO     //
+  // MUCHO OJO CON NO DEJAR LA CAGA //
+  void _usuarioBorrar(int rut) async {
+    // ELIMINAR EL USUARIO //
+    var userProvider = new UsuarioProvider();
+    await userProvider.usuarioBorrar(rut);
+    // ELIMINAR PUBLICACIONES DEL USUARIO //
+    var publicacionProvider = new PublicacionProvider();
+    var publicaciones = await publicacionProvider.publicacionListar();
+    for (var publicacion in publicaciones) {
+      if (publicacion['usuario_rut'] == rut) {
+        await publicacionProvider.publicacionesBorrar(publicacion['id']);
+      }
+    }
+    // ELIMINAR PETICIONES DEL USUARIO //
+    var peticionProvider = new PeticionProvider();
+    var peticiones = await peticionProvider.peticionListar();
+    for (var peticion in peticiones) {
+      if (peticion['usuario_rut'] == rut) {
+        await peticionProvider.peticionesBorrar(peticion['id']);
+      }
+    }
+    // ELIMINAR COMENTARIOS //
+    // ELIMINAR ALERTAS //
+    // NO ELIMINAR NADA MÁS EN CASO DE QUE VUELVA //
+  }
+
+  _mostrarConfirmacion(BuildContext context, int rut) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirmar Borrado'),
+            content: Text('¿Desea borrar este usuario?'),
+            actions: [
+              MaterialButton(
+                  child: Text('Cancelar',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              ElevatedButton(
+                child: Text('Borrar'),
+                onPressed: () {
+                  setState(() {
+                    _usuarioBorrar(rut);
+                  });
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
 
 class ComentariosAlertaEditarPage extends StatefulWidget {
@@ -14,97 +15,113 @@ class ComentariosAlertaEditarPage extends StatefulWidget {
 class _ComentariosAlertaEditarPageState
     extends State<ComentariosAlertaEditarPage> {
 // Controllers //
-  TextEditingController fechaEmisionCtrl = new TextEditingController();
-  TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromRGBO(247, 247, 247, 1.0),
         appBar: AppBar(
-          title: Text('Editar ubicacions'),
+          centerTitle: true,
+          title: Text('Editar comentario'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
-        body: FutureBuilder(
-            future: _fetch(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Text('No hay data'),
-                );
-              } else {
-                fotoCtrl.text = snapshot.data['foto'];
-                descripcionCtrl.text = snapshot.data['descripcion'];
-                fechaEmisionCtrl.text = snapshot.data['fecha_emision'];
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: fechaEmisionCtrl,
-                              decoration: InputDecoration(
-                                  labelText: 'Tipo Ubicacion',
-                                  hintText: 'Tipo Ubicacion',
-                                  suffixIcon: Icon(Icons.flag)),
+        body: Form(
+          key: _formKey,
+          child: FutureBuilder(
+              future: _fetch(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Text('No hay data'),
+                  );
+                } else {
+                  descripcionCtrl.text = snapshot.data['descripcion'];
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: descripcionCtrl,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    labelText: 'Comentario',
+                                    hintText: 'Agrege su comentario',
+                                    suffixIcon: Icon(MdiIcons.messageText)),
+                                validator: (valor) {
+                                  if (valor == null || valor.isEmpty) {
+                                    return 'Debe agregar su comentario';
+                                  }
+                                  if (valor.length < 10) {
+                                    return 'Comentario muy corto';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: fotoCtrl,
-                              decoration: InputDecoration(
-                                  labelText: 'Foto',
-                                  hintText: 'Foto',
-                                  suffixIcon: Icon(Icons.flag)),
-                            ),
-                          ),
-                          Divider(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: descripcionCtrl,
-                              decoration: InputDecoration(
-                                  labelText: 'Descripcion',
-                                  hintText: 'Descripcion',
-                                  suffixIcon: Icon(Icons.flag)),
-                            ),
-                          ),
-                          Divider(),
-                        ],
+                            Divider(),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            height: 40,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              child: Text('Editar  ubicacion'),
-                              onPressed: () => _comentarioEditar(context),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('Guardar comentario'),
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color.fromRGBO(120, 139, 255, 1.0)),
+                                ),
+                                onPressed: () => _comentarioEditar(context),
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            height: 40,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              child: Text('Cancelar'),
-                              onPressed: () => _navegarCancelar(context),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('Volver'),
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color.fromRGBO(199, 199, 183, 1.0)),
+                                ),
+                                onPressed: () => _navegarCancelar(context),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              }
-            }));
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                }
+              }),
+        ));
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
@@ -113,14 +130,12 @@ class _ComentariosAlertaEditarPageState
   }
 
   void _comentarioEditar(BuildContext context) {
-    var provider = new ComentarioAlertaProvider();
-    provider.comentarioEditar(
-      widget.id,
-      descripcionCtrl.text,
-      fechaEmisionCtrl.text,
-      fotoCtrl.text,
-    ); // usamos un controller //
-    Navigator.pop(context);
+    if (_formKey.currentState.validate()) {
+      var provider = new ComentarioAlertaProvider();
+      provider.comentarioEditar(
+          widget.id, descripcionCtrl.text); // usamos un controller //
+      Navigator.pop(context);
+    }
   }
 
   void _navegarCancelar(BuildContext context) {

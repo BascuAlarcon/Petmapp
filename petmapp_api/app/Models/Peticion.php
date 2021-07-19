@@ -24,6 +24,6 @@ class Peticion extends Model
         return $this->hasMany('App\Models\Servicio', 'peticion_id', 'id');
     } 
     public function mascotas(){
-        return $this->belongsToMany('App\Models\Mascotas');
+        return $this->belongsToMany('App\Models\Mascota');
     }
 }

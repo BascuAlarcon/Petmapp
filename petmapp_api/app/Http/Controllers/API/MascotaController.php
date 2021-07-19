@@ -30,12 +30,13 @@ class MascotaController extends Controller
         $mascota->nombre = $request->nombre;
         $mascota->sexo = $request->sexo;
         $mascota->estirilizacion = $request->estirilizacion; 
-        $mascota->fecha_nacimiento = $request->fecha_nacimiento; 
+        $mascota->fecha_nacimiento =   $request->fecha_nacimiento; 
         $mascota->condicion_medica = $request->condicion_medica; 
         $mascota->microchip = $request->microchip;
         $mascota->alimentos = $request->alimentos; 
         $mascota->personalidad = $request->personalidad; 
         $mascota->raza_id = $request->raza_id;
+        $mascota->foto = $request->foto;
         $mascota->usuario_rut = $request->usuario_rut; 
         $mascota->save();
     }
@@ -61,12 +62,14 @@ class MascotaController extends Controller
     public function update(Request $request, Mascota $mascota)
     {
         $mascota->nombre = $request->nombre; 
+        $mascota->sexo = $request->sexo;
         $mascota->estirilizacion = $request->estirilizacion; 
         $mascota->fecha_nacimiento = $request->fecha_nacimiento; 
         $mascota->condicion_medica = $request->condicion_medica; 
         $mascota->microchip = $request->microchip;
         $mascota->alimentos = $request->alimentos; 
         $mascota->personalidad = $request->personalidad; 
+        $mascota->raza_id = $request->raza_id;
         $mascota->save();
     }
 

@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
   bool _isLoading = false;
+  bool _credencialesValidas = true;
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
@@ -106,6 +107,16 @@ class _LoginPageState extends State<LoginPage> {
               hintStyle: TextStyle(color: Colors.white70),
             ),
           ),
+          _credencialesValidas == false
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Credenciales Invalidas',
+                      style: TextStyle(color: Colors.red)),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(''),
+                )
         ],
       ),
     );
@@ -193,11 +204,11 @@ class _LoginPageState extends State<LoginPage> {
     var respuesta = await provider.login(email, password);
     // en caso de que este todo OK, respuesta deberÃ­a tener un access_token
     if (respuesta['access_token'] == null) {
-      print('no hay access_token');
-    } else {
       setState(() {
         _isLoading = false;
       });
+      _credencialesValidas = false;
+    } else {
       // TRAER A TODOS LOS USUARIOS //
       var usuarios = await provider.getUsuarios();
       // COMPARAR EMAIL DE LISTA CON USUARIO CON EL USUARIO DEL CONTROLLER
@@ -243,7 +254,9 @@ class _LoginPageState extends State<LoginPage> {
           ]);
         }
       }
-
+      setState(() {
+        _isLoading = false;
+      });
       sharedPreferences.setString("token", respuesta['access_token']);
       var route = new MaterialPageRoute(builder: (context) => MainPage());
       Navigator.push(context, route);

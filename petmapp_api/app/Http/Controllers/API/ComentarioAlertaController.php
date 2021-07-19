@@ -28,11 +28,10 @@ class ComentarioAlertaController extends Controller
     {
         $comentarioAlerta = new ComentarioAlerta();
         $comentarioAlerta->descripcion= $request->descripcion;
-        $comentarioAlerta->fecha_emision = $request->fecha_emision ;
-        $comentarioAlerta->foto = $request->foto ;
+        $comentarioAlerta->fecha_emision = $request->fecha_emision ; 
         $comentarioAlerta->alerta_id = $request->alerta_id ;
         $comentarioAlerta->usuario_rut = $request->usuario_rut ;
-        $comentarioAlerta->save();
+        $comentarioAlerta->save(); 
     }
 
     /**
@@ -55,9 +54,7 @@ class ComentarioAlertaController extends Controller
      */
     public function update(Request $request, ComentarioAlerta $comentarioAlerta)
     {
-        $comentarioAlerta->descripcion= $request->descripcion;
-        $comentarioAlerta->fecha_emision = $request->fecha_emision ;
-        $comentarioAlerta->foto = $request->foto ; 
+        $comentarioAlerta->descripcion= $request->descripcion;  
         $comentarioAlerta->save();
     }
 

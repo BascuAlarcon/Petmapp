@@ -19,11 +19,9 @@ class _EspecieListarPageState extends State<EspecieListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetmApp'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Especies'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -49,16 +47,53 @@ class _EspecieListarPageState extends State<EspecieListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                              leading: Icon(MdiIcons.soccer),
+                              leading: Icon(MdiIcons.paw),
                               title: Text(snapshot.data[index]['nombre']),
                               onTap: () {}),
+                          actions: [
+                            IconSlideAction(
+                              caption: 'Editar',
+                              color: Colors.yellow,
+                              icon: MdiIcons.pencil,
+                              onTap: () => _navegarEspecieEditar(
+                                  context, snapshot.data[index]['id']),
+                            )
+                          ],
+                          secondaryActions: [
+                            IconSlideAction(
+                              caption: 'Borrar',
+                              color: Colors.red,
+                              icon: MdiIcons.trashCan,
+                              onTap: () => _mostrarConfirmacion(
+                                  context, snapshot.data, index),
+                            ),
+                          ],
                         );
                       },
                     ),
                   ),
                 ),
-
-                // LISTA Especies//
+// BOTON AGREGAR //
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      height: 40,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _navegarEspecieAgregar(context),
+                        child: Text('Agregar Especie'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
+                )
+                // BOTON AGREGAR //
               ],
             );
           }
@@ -75,5 +110,60 @@ class _EspecieListarPageState extends State<EspecieListarPage> {
   Future<List<dynamic>> _fetch() async {
     var provider = new EspecieProvider();
     return await provider.especieListar();
+  }
+
+  void _navegarEspecieAgregar(BuildContext context) {
+    var route =
+        new MaterialPageRoute(builder: (context) => EspeciesAgregarPage());
+    Navigator.push(context, route).then((value) {
+      setState(() {});
+    });
+  }
+
+  void _navegarEspecieEditar(BuildContext context, int idEspecie) {
+    var route = new MaterialPageRoute(
+        builder: (context) => EspecieEditarPage(
+              idEspecie: idEspecie,
+            ));
+    Navigator.push(context, route).then((value) {
+      setState(
+          () {}); // cuando se devuelva el navigator con un pop, que resfresque //
+    });
+  }
+
+  void _especieBorrar(int id) async {
+    var provider = new EspecieProvider();
+    await provider.especieBorrar(id);
+  }
+
+  _mostrarConfirmacion(BuildContext context, dynamic data, int index) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirmar Borrado'),
+            content: Text('¿Desea borrar la especie ${data[index]['nombre']}?'),
+            actions: [
+              MaterialButton(
+                  child: Text('Cancelar',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              ElevatedButton(
+                child: Text('Borrar'),
+                onPressed: () {
+                  setState(() {
+                    _especieBorrar(data[index]['id']);
+                    data.removeAt(index);
+                  });
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

@@ -116,29 +116,46 @@
 77-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:46:13-44
 78            android:value="2" />
 78-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:47:13-30
-79        <!-- Needs to be explicitly declared on P+ -->
-80        <uses-library
-80-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
-81            android:name="org.apache.http.legacy"
-81-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
-82            android:required="false" />
-82-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
-83
-84        <activity
-84-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
-85            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-85-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
-86            android:exported="false"
-86-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
-87            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-87-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
-88
-89        <meta-data
-89-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
-90            android:name="com.google.android.gms.version"
-90-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
-91            android:value="@integer/google_play_services_version" />
-91-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
-92    </application>
-93
-94</manifest>
+79
+80        <provider
+80-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
+81            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+81-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
+82            android:authorities="com.example.petmapp_cliente.flutter.image_provider"
+82-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
+83            android:exported="false"
+83-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
+84            android:grantUriPermissions="true" >
+84-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
+85            <meta-data
+85-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
+86                android:name="android.support.FILE_PROVIDER_PATHS"
+86-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
+87                android:resource="@xml/flutter_image_picker_file_paths" />
+87-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
+88        </provider> <!-- Needs to be explicitly declared on P+ -->
+89        <uses-library
+89-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
+90            android:name="org.apache.http.legacy"
+90-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
+91            android:required="false" />
+91-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
+92
+93        <activity
+93-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
+94            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+94-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
+95            android:exported="false"
+95-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
+96            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+96-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
+97
+98        <meta-data
+98-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
+99            android:name="com.google.android.gms.version"
+99-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
+100            android:value="@integer/google_play_services_version" />
+100-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
+101    </application>
+102
+103</manifest>

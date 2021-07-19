@@ -16,82 +16,129 @@ class _RazaEditarPageState extends State<RazaEditarPage> {
 // Controllers //
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Editar Razas'),
+          centerTitle: true,
+          title: Text('Editar raza'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
-        body: FutureBuilder(
-            future: _fetch(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: Text('No hay data'),
-                );
-              } else {
-                nombreCtrl.text = snapshot.data['nombre'];
-                descripcionCtrl.text = snapshot.data['descripcion'];
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: nombreCtrl,
-                              decoration: InputDecoration(
-                                  labelText: 'Nombre',
-                                  hintText: 'Nombre de la raza',
-                                  suffixIcon: Icon(Icons.flag)),
+        body: Form(
+          key: _formKey,
+          child: FutureBuilder(
+              future: _fetch(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Text('No hay data'),
+                  );
+                } else {
+                  nombreCtrl.text = snapshot.data['nombre'];
+                  descripcionCtrl.text = snapshot.data['descripcion'];
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: nombreCtrl,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    labelText: 'Nombre',
+                                    hintText: 'Nombre de la raza',
+                                    suffixIcon: Icon(Icons.flag)),
+                                validator: (valor) {
+                                  if (valor == null || valor.isEmpty) {
+                                    return 'Debe agregar un nombre';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: descripcionCtrl,
-                              decoration: InputDecoration(
-                                  labelText: 'Descripcion',
-                                  hintText: 'Descripcion de la raza',
-                                  suffixIcon: Icon(Icons.flag)),
+                            Divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: descripcionCtrl,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    labelText: 'Descripcion',
+                                    hintText: 'Descripcion de la raza',
+                                    suffixIcon: Icon(Icons.flag)),
+                                validator: (valor) {
+                                  if (valor == null || valor.isEmpty) {
+                                    return 'Debe agregar una descripcion';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                          Divider()
-                        ],
+                            Divider()
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            height: 40,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              child: Text('Editar  Raza'),
-                              onPressed: () => _razaEditar(context),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('Guardar Cambios'),
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color.fromRGBO(120, 139, 255, 1.0)),
+                                ),
+                                onPressed: () => _razaEditar(context),
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5),
-                            height: 40,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              child: Text('Cancelar'),
-                              onPressed: () => _navegarCancelar(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              }
-            }));
+                            Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                child: Text('Cancelar'),
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color.fromRGBO(199, 199, 183, 1.0)),
+                                ),
+                                onPressed: () => _navegarCancelar(context),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                }
+              }),
+        ));
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
@@ -100,9 +147,11 @@ class _RazaEditarPageState extends State<RazaEditarPage> {
   }
 
   void _razaEditar(BuildContext context) {
-    var provider = new RazasProvider();
-    provider.razaEditar(widget.idRaza, nombreCtrl.text, descripcionCtrl.text);
-    Navigator.pop(context);
+    if (_formKey.currentState.validate()) {
+      var provider = new RazasProvider();
+      provider.razaEditar(widget.idRaza, nombreCtrl.text, descripcionCtrl.text);
+      Navigator.pop(context);
+    }
   }
 
   void _navegarCancelar(BuildContext context) {

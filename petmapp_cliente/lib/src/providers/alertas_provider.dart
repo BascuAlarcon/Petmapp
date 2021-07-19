@@ -6,16 +6,24 @@ import 'package:petmapp_cliente/src/providers/url_provider.dart';
 class AlertaProvider {
   var apiUrl = new UrlProvider().url();
 
+  DateTime ultimaActividad = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    DateTime.now().hour,
+    DateTime.now().minute,
+    DateTime.now().second,
+  );
+
 // AGREGAR MASCOTA //
   Future<http.Response> alertaAgregar(
       String rut,
       String tipoAlerta,
-      String foto,
+      dynamic foto,
       String descripcion,
       String direccion,
-      String localizacion,
-      String habilitado,
-      String ultimaActividad) async {
+      String latitud,
+      String longitud) async {
     var urlRequest = apiUrl + 'alertas';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -27,9 +35,9 @@ class AlertaProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion,
-          'habilitado': habilitado,
-          'ultima_actividad': ultimaActividad
+          'latitud': latitud,
+          'longitud': longitud,
+          'ultima_actividad': ultimaActividad.toString()
         }));
     return respuesta;
   }
@@ -56,9 +64,8 @@ class AlertaProvider {
       String foto,
       String descripcion,
       String direccion,
-      String localizacion,
-      String habilitado,
-      String ultimaActividad) async {
+      String latitud,
+      String longitud) async {
     var urlRequest = apiUrl + 'alertas/$idAlerta';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -69,9 +76,10 @@ class AlertaProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion,
-          'habilitado': habilitado,
-          'ultima_actividad': ultimaActividad
+          'latitud': latitud,
+          'longitud': longitud,
+          'habilitado': 1.toString(),
+          'ultima_actividad': ultimaActividad.toString()
         }));
     return respuesta;
   }

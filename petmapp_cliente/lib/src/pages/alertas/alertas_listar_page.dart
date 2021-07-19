@@ -7,6 +7,7 @@ import 'package:petmapp_cliente/src/pages/alertas/alertas_mostrar_page.dart';
 import 'package:petmapp_cliente/src/pages/comentarios_alertas/coment_alertas_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/alertas_provider.dart';
+import 'package:petmapp_cliente/src/providers/tipos_alerta_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AlertaListarPage extends StatefulWidget {
@@ -22,21 +23,22 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
   String name = '';
   String rut = '';
   String perfil = '';
+  var _tipos = []..length = 500;
+  var _nombres = []..length = 500;
 
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _cargarTipo();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Alertas Existentes'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
+        centerTitle: true,
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -60,12 +62,38 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
                           actionExtentRatio: 0.25,
                           child: ListTile(
                             leading: Icon(MdiIcons.soccer),
-                            title: Text(snapshot.data[index]['descripcion']),
-                            subtitle: Text(
-                                'tipo de alerta ${snapshot.data[index]['tipo_alerta_id'].toString()}'),
+                            title: Text(snapshot.data[index]['foto']),
+                            subtitle: Text(_nombres[snapshot.data[index]
+                                ['tipo_alerta_id']]),
                             onTap: () => _navegarComentariosAlerta(
                                 context, snapshot.data[index]['id']),
                           ),
+                          actions: [
+                            rut ==
+                                    snapshot.data[index]['usuario_rut']
+                                        .toString()
+                                ? IconSlideAction(
+                                    caption: 'Editar',
+                                    color: Colors.yellow,
+                                    icon: MdiIcons.pencil,
+                                    onTap: () => _navegarAlertasEditar(
+                                        context, snapshot.data[index]['id']),
+                                  )
+                                : Text(''),
+                          ],
+                          secondaryActions: [
+                            rut ==
+                                    snapshot.data[index]['usuario_rut']
+                                        .toString()
+                                ? IconSlideAction(
+                                    caption: 'Borrar',
+                                    color: Colors.red,
+                                    icon: MdiIcons.trashCan,
+                                    onTap: () => _mostrarConfirmacion(
+                                        context, snapshot.data, index),
+                                  )
+                                : Text(''),
+                          ],
                         );
                       },
                     ),
@@ -80,8 +108,18 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegaralertasAgregar(context),
-                          child: Text('Agregar alertas'))),
+                        onPressed: () => _navegaralertasAgregar(context),
+                        child: Text('Agregar Alerta'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -129,7 +167,64 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
       rut = sharedPreferencess.getStringList('usuario')[0];
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
-      perfil = sharedPreferencess.getStringList('usuario')[4];
+      perfil = sharedPreferencess.getStringList('usuario')[3];
+    });
+  }
+
+  void _navegarAlertasEditar(BuildContext context, int id) {
+    var route = new MaterialPageRoute(
+        builder: (context) => AlertaEditarPage(
+              idalerta: id,
+            ));
+    Navigator.push(context, route).then((value) {
+      setState(() {});
+    });
+  }
+
+  void _alertasBorrar(int id) async {
+    var provider = new AlertaProvider();
+    await provider.alertaBorrar(id);
+  }
+
+  _mostrarConfirmacion(BuildContext context, dynamic data, int index) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirmar Borrado'),
+            content: Text('¿Desea borrar es alerta?'),
+            actions: [
+              MaterialButton(
+                  child: Text('Cancelar',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              ElevatedButton(
+                child: Text('Borrar'),
+                onPressed: () {
+                  setState(() {
+                    _alertasBorrar(data[index]['id']);
+                    data.removeAt(index);
+                  });
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  _cargarTipo() async {
+    var provider = TipoAlertaProvider();
+    var tipos = await provider.tipoListar();
+    tipos.forEach((tipo) {
+      setState(() {
+        _tipos.add(tipo['id']);
+        _nombres[tipo['id']] = tipo['nombre'];
+      });
     });
   }
 }

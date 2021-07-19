@@ -31,7 +31,8 @@ class UbicacionController extends Controller
         $ubicacion->descripcion = $request->descripcion ;
         $ubicacion->foto = $request->foto ;
         $ubicacion->direccion = $request->direccion ;
-        $ubicacion->localizacion = $request->localizacion ;
+        $ubicacion->latitud = $request->latitud;
+        $ubicacion->longitud = $request->longitud;
         $ubicacion->tipo_ubicacion_id = $request->tipo_ubicacion ;
         $ubicacion->save();
     }
@@ -59,7 +60,8 @@ class UbicacionController extends Controller
         $ubicacion->descripcion = $request->descripcion ;
         $ubicacion->foto = $request->foto ;
         $ubicacion->direccion = $request->direccion ;
-        $ubicacion->localizacion = $request->localizacion ;
+        $ubicacion->latitud = $request->latitud;
+        $ubicacion->longitud = $request->longitud;
         $ubicacion->tipo_ubicacion_id = $request->tipo_ubicacion  ;
         $ubicacion->save();
     }

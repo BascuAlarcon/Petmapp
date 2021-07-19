@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Peticion;
-use App\Models\Evaluacion;
+use App\Models\Mascota;
 use App\Models\Servicio;
 use Illuminate\Http\Request;
 
@@ -30,13 +30,31 @@ class PeticionController extends Controller
     {
         $peticion = new Peticion();
         $peticion->fecha_inicio = $request->fecha_inicio;
-        $peticion->fecha_fin = $request->fecha_fin;
-        // $peticion->precio_total = $request->precio_total;
-        $peticion->estado = 1;
-        // $peticion->boleta = $request->boleta; 
+        $peticion->fecha_fin = $request->fecha_fin; 
+        $peticion->descripcion = $request->descripcion; 
+        $peticion->estado = 1; 
         $peticion->usuario_rut = $request->usuario_rut;
         $peticion->publicacion_id = $request->publicacion_id;
+        //$peticion->precio_total = $request->precio_total;
+        //$peticion->nota = $request->nota;
+        //$peticion->comentario = $request->comentario;
         $peticion->save();
+        // TABLA M:N PETICION MASCOTA
+        if($request->mascota1 != null){
+            $peticion->mascotas()->attach($request->mascota1);      
+        }
+        if($request->mascota2 != null){ 
+            $peticion->mascotas()->attach($request->mascota2);
+        }
+        if($request->mascota3 != null){ 
+            $peticion->mascotas()->attach($request->mascota3);
+        }
+        if($request->mascota4 != null){ 
+            $peticion->mascotas()->attach($request->mascota4);
+        }
+        if($request->mascota5 != null){ 
+            $peticion->mascotas()->attach($request->mascota5);
+        }  
     }
 
     /**
@@ -60,13 +78,10 @@ class PeticionController extends Controller
     public function update(Request $request, Peticion $peticion)
     {
         $peticion->fecha_inicio = $request->fecha_inicio;
-        $peticion->fecha_fin = $request->fecha_fin;
-        $peticion->precio_total = $request->precio_total;
-        $peticion->estado = $request->estado;
-        $peticion->boleta = $request->boleta; 
-        $peticion->save();
-        // TABLA M:N PETICION MASCOTA
-        // $petidion->mascotas()->attach($request->mascota);    
+        $peticion->fecha_fin = $request->fecha_fin;  
+        $peticion->descripcion = $request->descripcion; 
+        //$peticion->precio_total = $request->precio_total;
+        $peticion->save(); 
     }
 
     /**
@@ -83,6 +98,17 @@ class PeticionController extends Controller
     public function respuesta(Request $request, Peticion $peticion){ 
         $peticion->estado = $request->estado; 
         $peticion->save();
+    }
+
+    public function comentario(Request $request, Peticion $peticion){ 
+        $peticion->comentario = $request->comentario; 
+        $peticion->nota = $request->nota; 
+        $peticion->save();
+    }
+
+    public function monto(Request $request, Peticion $peticion){  
+        $peticion->boleta = $request->boleta;
+        $peticion->save();  
     }
  
     public function servicios($peticion){ 

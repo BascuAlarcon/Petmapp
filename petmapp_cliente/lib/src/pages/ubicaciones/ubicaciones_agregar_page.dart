@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
 import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,13 +16,17 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
   String email = '';
   String name = '';
   String rut = '';
-
+  String ubicacion = '';
+  var _tipos = <DropdownMenuItem>[];
+  var _valorSeleccionado;
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _cargarTipos();
   }
 
+  final _formKey = GlobalKey<FormState>();
 // Controllers //
   TextEditingController tipoAlertaCtrl = new TextEditingController();
   TextEditingController fotoCtrl = new TextEditingController();
@@ -32,109 +38,146 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Agregar Alerta'),
+          centerTitle: true,
+          title: Text('Agregar una ubicación'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: tipoAlertaCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Tipo Ubicacion',
-                          hintText: 'Tipo Ubicacion',
-                          suffixIcon: Icon(Icons.flag)),
+        body: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    _crearCampoTipo(),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: fotoCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Foto',
+                            hintText: 'Foto',
+                            suffixIcon: Icon(MdiIcons.camera)),
+                      ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: fotoCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Foto',
-                          hintText: 'Foto',
-                          suffixIcon: Icon(Icons.flag)),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: descripcionCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Descripcion',
+                            hintText: 'Descripcion',
+                            suffixIcon: Icon(MdiIcons.tagText)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar una descripción';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: descripcionCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Descripcion',
-                          hintText: 'Descripcion',
-                          suffixIcon: Icon(Icons.flag)),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: direccionCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Direccion',
+                            hintText: 'Direccion',
+                            suffixIcon: Icon(MdiIcons.mapMarker)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar la dirección';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: direccionCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Direccion',
-                          hintText: 'Direccion',
-                          suffixIcon: Icon(Icons.flag)),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: localizacionCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Localizacion',
+                            hintText: 'Localizacion',
+                            suffixIcon: Icon(Icons.flag)),
+                      ),
                     ),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: localizacionCtrl,
-                      decoration: InputDecoration(
-                          labelText: 'Localizacion',
-                          hintText: 'Localizacion',
-                          suffixIcon: Icon(Icons.flag)),
-                    ),
-                  ),
-                  Divider(),
-                ],
+                    Divider(),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Container(
-                    margin: EdgeInsets.only(bottom: 5),
-                    height: 40,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      child: Text('Agregar ubicacions'),
-                      onPressed: () => _ubicacionsAgregar(context),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 5),
-                    height: 40,
-                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(4.0),
+                    height: 45,
+                    width: 180,
                     child: ElevatedButton(
                       child: Text('Cancelar'),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromRGBO(199, 199, 183, 1.0)),
+                      ),
                       onPressed: () => _navegarCancelar(context),
                     ),
                   ),
-                ],
-              ),
-            )
-          ],
+                  Container(
+                    margin: EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(4.0),
+                    height: 45,
+                    width: 180,
+                    child: ElevatedButton(
+                      child: Text('Agregar Ubicación'),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromRGBO(120, 139, 255, 1.0)),
+                      ),
+                      onPressed: () => _ubicacionAgregar(context),
+                    ),
+                  ),
+                ]),
+              )
+            ],
+          ),
         ));
   }
 
-  void _ubicacionsAgregar(BuildContext context) {
-    var provider = new UbicacionProvider();
-    provider.ubicacionAgregar(
-        tipoAlertaCtrl.text,
-        fotoCtrl.text,
-        descripcionCtrl.text,
-        direccionCtrl.text,
-        localizacionCtrl.text); // usamos un controller //
-    Navigator.pop(context);
+  void _ubicacionAgregar(BuildContext context) {
+    if (_formKey.currentState.validate()) {
+      var provider = new UbicacionProvider();
+      provider.ubicacionAgregar(
+          ubicacion,
+          fotoCtrl.text,
+          descripcionCtrl.text,
+          direccionCtrl.text,
+          localizacionCtrl.text); // usamos un controller //
+      Navigator.pop(context);
+    }
   }
 
   void _navegarCancelar(BuildContext context) {
@@ -151,6 +194,44 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
       rut = sharedPreferencess.getStringList('usuario')[0];
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
+    });
+  }
+
+  Widget _crearCampoTipo() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButtonFormField(
+        value: _valorSeleccionado,
+        items: _tipos,
+        hint: Text('Tipo de la ubicacion'),
+        decoration: InputDecoration(
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0))),
+        onChanged: (value) {
+          setState(() {
+            print(value);
+            ubicacion = value.toString();
+            _valorSeleccionado = value;
+          });
+        },
+        validator: (valor) {
+          if (valor == null) {
+            return 'Seleccione un valor';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  _cargarTipos() async {
+    var provider = new TipoUbicacionProvider();
+    var tipos = await provider.tipoListar();
+    tipos.forEach((tipo) {
+      setState(() {
+        _tipos.add(
+            DropdownMenuItem(child: Text(tipo['nombre']), value: tipo['id']));
+      });
     });
   }
 }

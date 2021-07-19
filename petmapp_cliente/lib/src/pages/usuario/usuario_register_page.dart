@@ -18,6 +18,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailRegex =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+  final _rutRegex = r"^(\d{1,2}(?:\.\d{1,3}){2}-[\dkK])$";
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +93,10 @@ class _RegistrarPageState extends State<RegistrarPage> {
           if (value.isEmpty) {
             return 'Indique Rut';
           }
+          // CALCULO VERIFICADOR //
+          /* if (!RegExp(_rutRegex).hasMatch(value)) {
+            return 'Rut invalido';
+          } */
           return null;
         },
       ),

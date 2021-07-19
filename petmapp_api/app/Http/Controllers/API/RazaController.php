@@ -35,7 +35,7 @@ class RazaController extends Controller
         $raza = new Raza();
         $raza->nombre = $request->nombre;   
         $raza->descripcion = $request->descripcion;
-        $raza->especie_id = 2;
+        $raza->especie_id = $request->especie_id;
         $raza->save(); 
     }
 

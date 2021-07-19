@@ -37,8 +37,16 @@ class ComentarioAlertaProvider {
   }
 
   // AGREGAR hogares //
-  Future<http.Response> comentarioAgregar(String descripcion,
-      String fechaEmision, String foto, String alertaId, String rut) async {
+  Future<http.Response> comentarioAgregar(
+      String descripcion, String alertaId, String rut) async {
+    DateTime fechaEmision = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      DateTime.now().hour,
+      DateTime.now().minute,
+      DateTime.now().second,
+    );
     var urlRequest = apiUrl + 'comentariosAlerta';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -46,17 +54,25 @@ class ComentarioAlertaProvider {
         },
         body: jsonEncode(<String, String>{
           'descripcion': descripcion,
-          'fecha_emision': fechaEmision,
-          'foto': foto,
+          'fecha_emision': fechaEmision.toString(),
           'alerta_id': alertaId,
           'usuario_rut': rut
         }));
+    var urlRequestAlerta = apiUrl + 'alertas/$alertaId/ultima';
+    // TESTEAR ESTO //
+    var respuestaAlerta = await http.post(Uri.parse(urlRequestAlerta),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(
+            <String, String>{'ultima_actividad': fechaEmision.toString()}));
+    print(respuestaAlerta.statusCode);
     return respuesta;
   }
 
   // EDITAR hogares //
-  Future<http.Response> comentarioEditar(int idComentario, String descripcion,
-      String fechaEmision, String foto) async {
+  Future<http.Response> comentarioEditar(
+      int idComentario, String descripcion) async {
     var urlRequest = apiUrl + 'comentariosAlerta/$idComentario';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -64,8 +80,6 @@ class ComentarioAlertaProvider {
         },
         body: jsonEncode(<String, String>{
           'descripcion': descripcion,
-          'fecha_emision': fechaEmision,
-          'foto': foto,
         }));
     return respuesta;
   }

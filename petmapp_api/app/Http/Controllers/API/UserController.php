@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'me', 'login','register', 'logout', 'show', 'editarPerfil', 'destroy' , 'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login','register', 'logout', 'show', 'editarPerfil', 'destroy' , 'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'evaluacion']]);
     }
 
     /**
@@ -124,8 +124,15 @@ class UserController extends Controller
         $usuario->sexo = $request->sexo; 
         $usuario->fecha_nacimiento = $request->fecha_nacimiento;
         $usuario->foto = $request->foto;
-        $usuario->numero_telefonico = $request->numero_telefonico; 
+        $usuario->numero_telefonico = $request->numero_telefonico;      
         $usuario->save();
+         
+    }
+
+    public function evaluacion( Request $request, Usuario $usuario){
+        $usuario->promedio_evaluaciones = $request->promedio_evaluaciones; 
+        $usuario->save();
+        return response()->json(['status'=>'ok' ,'data'=>$request->promedio_evaluaciones], 200);
     }
 
     /**
@@ -168,4 +175,6 @@ class UserController extends Controller
         $peticiones = $user->peticiones;
         return $peticiones;
     }
+
+     
 }

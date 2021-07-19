@@ -29,12 +29,12 @@ class NegocioController extends Controller
     {
         $negocio = new Negocio();
         $negocio->nombre = $request->nombre ;
-        $negocio->descripcion = $request->descripcion ;
-        $negocio->horario = $request->horario ;
+        $negocio->descripcion = $request->descripcion ; 
         $negocio->direccion = $request->direccion ;
         $negocio->foto = $request->foto ;
         $negocio->tipo_id = $request->tipo_id ;
-        $negocio->localizacion = $request->localizacion;
+        $negocio->latitud = $request->latitud;
+        $negocio->longitud = $request->longitud;
         $negocio->save();   
     }
 
@@ -59,12 +59,12 @@ class NegocioController extends Controller
     public function update(Request $request, Negocio $negocio)
     {
         $negocio->nombre = $request->nombre ;
-        $negocio->descripcion = $request->descripcion ;
-        $negocio->horario = $request->horario ;
+        $negocio->descripcion = $request->descripcion ; 
         $negocio->direccion = $request->direccion ;
         $negocio->foto = $request->foto ;
         $negocio->tipo_id = $request->tipo_id ;
-        $negocio->localizacion = $request->localizacion;
+        $negocio->latitud = $request->latitud;
+        $negocio->longitud = $request->longitud;
         $negocio->save();
     }
 

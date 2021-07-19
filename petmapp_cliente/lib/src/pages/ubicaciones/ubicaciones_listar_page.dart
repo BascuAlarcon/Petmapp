@@ -6,6 +6,7 @@ import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_agregar_page.d
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_mostrar_page.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
 import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,21 +23,22 @@ class _UbicacionesListarPageState extends State<UbicacionesListarPage> {
   String name = '';
   String rut = '';
   String perfil = '';
+  var _tipos = []..length = 500;
+  var _nombres = []..length = 500;
 
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _cargarTipo();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ubicaciones que hay'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Ubicaciones existentes'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -59,10 +61,10 @@ class _UbicacionesListarPageState extends State<UbicacionesListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
+                            leading: Icon(MdiIcons.homeMapMarker),
                             title: Text(snapshot.data[index]['descripcion']),
-                            subtitle: Text(
-                                'tipo de ubicacion ${snapshot.data[index]['tipo_ubicacion_id'].toString()}'),
+                            subtitle: Text(_nombres[snapshot.data[index]
+                                ['tipo_ubicacion_id']]),
                             onTap: () => _navegarComentariosUbicacion(
                                 context, snapshot.data[index]['id']),
                           ),
@@ -102,8 +104,18 @@ class _UbicacionesListarPageState extends State<UbicacionesListarPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegarubicacionesAgregar(context),
-                          child: Text('Agregar ubicaciones'))),
+                        onPressed: () => _navegarubicacionesAgregar(context),
+                        child: Text('Agregar Ubicaciones'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -198,6 +210,17 @@ class _UbicacionesListarPageState extends State<UbicacionesListarPage> {
       email = sharedPreferencess.getStringList('usuario')[1];
       name = sharedPreferencess.getStringList('usuario')[2];
       perfil = sharedPreferencess.getStringList('usuario')[3];
+    });
+  }
+
+  _cargarTipo() async {
+    var provider = TipoUbicacionProvider();
+    var tipos = await provider.tipoListar();
+    tipos.forEach((tipo) {
+      setState(() {
+        _tipos.add(tipo['id']);
+        _nombres[tipo['id']] = tipo['nombre'];
+      });
     });
   }
 }

@@ -63,6 +63,22 @@ class UsuarioProvider {
     }
   }
 
+  Future<List<dynamic>> obtenerUsuario(int rut) async {
+    var urlRequest = apiUrl + 'auth/usuarios/$rut';
+    var response = await http.get(Uri.parse(urlRequest));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      return List<dynamic>();
+    }
+  }
+
+  // BORRAR USUARIO //
+  Future<http.Response> usuarioBorrar(int rut) async {
+    var urlRequest = apiUrl + 'auth/usuarios/' + rut.toString();
+    return await http.delete(Uri.parse(urlRequest));
+  }
+
   // EDITAR USUARIO //
   Future<http.Response> perfilEditar(String rut, String email, String name,
       String sexo, String fechaNacimiento, String foto, String numero) async {
@@ -78,7 +94,8 @@ class UsuarioProvider {
           'sexo': sexo,
           'fecha_nacimiento': fechaNacimiento,
           'foto': foto,
-          'numero_telefonico': numero
+          'numero_telefonico': numero,
+          // 'promedio_evaluaciones': null
         }));
     return respuesta;
   }
@@ -93,7 +110,6 @@ class UsuarioProvider {
         'Authorization': 'Bearer $token'
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);
@@ -114,7 +130,6 @@ class UsuarioProvider {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print(response.body);
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);
@@ -134,7 +149,6 @@ class UsuarioProvider {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    print(response.body);
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);
@@ -156,7 +170,6 @@ class UsuarioProvider {
         'Authorization': 'Bearer $token'
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);
@@ -178,7 +191,6 @@ class UsuarioProvider {
         'Authorization': 'Bearer $token'
       },
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);

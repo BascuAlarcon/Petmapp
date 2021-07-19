@@ -26,8 +26,8 @@ class TipoController extends Controller
      */
     public function store(Request $request)
     {
-        $tipo = new Tipo();
-        $tipo->tipo_negocio = $request->tipo_negocio ;
+        $tipo = new Tipo(); 
+        $tipo->nombre = $request->nombre;
         $tipo->save();
     }
 
@@ -50,8 +50,8 @@ class TipoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Tipo $tipo)
-    {
-        $tipo->tipo_negocio = $request->tipo_negocio ;
+    { 
+        $tipo->nombre = $request->nombre;
         $tipo->save();
     }
 

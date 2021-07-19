@@ -26,8 +26,8 @@ class TipoUbicacionController extends Controller
      */
     public function store(Request $request)
     {
-        $tipo = new TipoUbicacion();
-        $tipo->tipo_ubicacion = $request->tipo_ubicacion ;
+        $tipo = new TipoUbicacion(); 
+        $tipo->nombre = $request->nombre;
         $tipo->save();
     }
 
@@ -50,8 +50,8 @@ class TipoUbicacionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TipoUbicacion $tipoUbicacion)
-    {
-        $tipoUbicacion->tipo_ubicacion = $request->tipo_ubicacion ;
+    { 
+        $tipoUbicacion->nombre = $request->nombre;
         $tipoUbicacion->save();
     }
 

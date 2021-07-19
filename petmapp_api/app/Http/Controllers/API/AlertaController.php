@@ -31,8 +31,9 @@ class AlertaController extends Controller
         $alerta->foto = $request->foto;
         $alerta->descripcion = $request->descripcion;
         $alerta->direccion = $request->direccion;
-        $alerta->localizacion = $request->localizacion;
-        $alerta->habilitado = $request->habilitado;
+        $alerta->latitud = $request->latitud;
+        $alerta->longitud = $request->longitud;
+        $alerta->habilitado = 1;
         $alerta->ultima_actividad = $request->ultima_actividad;
         $alerta->usuario_rut = $request->usuario_rut;
         $alerta->tipo_alerta_id = $request->tipo_alerta;   
@@ -51,7 +52,7 @@ class AlertaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     *  Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Alerta  $alerta
@@ -63,7 +64,8 @@ class AlertaController extends Controller
         $alerta->foto = $request->foto;
         $alerta->descripcion = $request->descripcion;
         $alerta->direccion = $request->direccion;
-        $alerta->localizacion = $request->localizacion;
+        $alerta->latitud = $request->latitud;
+        $alerta->longitud = $request->longitud;
         $alerta->habilitado = $request->habilitado;
         $alerta->ultima_actividad = $request->ultima_actividad;  
         $alerta->save();
@@ -85,4 +87,8 @@ class AlertaController extends Controller
         return $comentario;
     }
  
+    public function ultima(Alerta $alerta, Request $request){
+        $alerta->ultima_actividad = $request->ultima_actividad;
+        $alerta->save();    
+    }
 }

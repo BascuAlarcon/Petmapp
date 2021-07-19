@@ -27,14 +27,18 @@ class RazasProvider {
   }
 
   // AGREGAR RAZAS //
-  Future<http.Response> razaAgregar(String nombre, String descripcion) async {
+  Future<http.Response> razaAgregar(
+      String nombre, String descripcion, String especie) async {
     var urlRequest = apiUrl + 'razas';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(
-            <String, String>{'nombre': nombre, 'descripcion': descripcion}));
+        body: jsonEncode(<String, String>{
+          'nombre': nombre,
+          'descripcion': descripcion,
+          'especie_id': especie
+        }));
     return respuesta;
   }
 
