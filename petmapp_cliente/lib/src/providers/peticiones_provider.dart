@@ -29,10 +29,10 @@ class PeticionProvider {
       String fecha_inicio,
       String fecha_fin,
       List mascotas,
+      String precioTotal,
       String usuario_rut,
       String publicacion_id) async {
     var urlRequest = apiUrl + 'peticiones';
-    print(mascotas.length);
     if (mascotas.length == 1) {
       var respuesta = await http.post(Uri.parse(urlRequest),
           headers: <String, String>{
@@ -43,6 +43,8 @@ class PeticionProvider {
             'fecha_fin': fecha_fin,
             'usuario_rut': usuario_rut,
             'publicacion_id': publicacion_id,
+            'precio_total': precioTotal,
+            'boleta': precioTotal,
             'descripcion': descripcion,
             'mascota1': mascotas[0].id.toString()
           }));
@@ -59,6 +61,7 @@ class PeticionProvider {
             'fecha_fin': fecha_fin,
             'usuario_rut': usuario_rut,
             'publicacion_id': publicacion_id,
+            'precio_total': precioTotal,
             'descripcion': descripcion,
             'mascota1': mascotas[0].id.toString(),
             'mascota2': mascotas[1].id.toString()
@@ -76,6 +79,7 @@ class PeticionProvider {
             'fecha_fin': fecha_fin,
             'usuario_rut': usuario_rut,
             'publicacion_id': publicacion_id,
+            'precio_total': precioTotal,
             'descripcion': descripcion,
             'mascota1': mascotas[0].id.toString(),
             'mascota2': mascotas[1].id.toString(),
@@ -94,6 +98,7 @@ class PeticionProvider {
             'fecha_fin': fecha_fin,
             'usuario_rut': usuario_rut,
             'publicacion_id': publicacion_id,
+            'precio_total': precioTotal,
             'descripcion': descripcion,
             'mascota1': mascotas[0].id.toString(),
             'mascota2': mascotas[1].id.toString(),
@@ -113,6 +118,7 @@ class PeticionProvider {
             'fecha_fin': fecha_fin,
             'usuario_rut': usuario_rut,
             'publicacion_id': publicacion_id,
+            'precio_total': precioTotal,
             'descripcion': descripcion,
             'mascota1': mascotas[0].id.toString(),
             'mascota2': mascotas[1].id.toString(),
@@ -148,7 +154,7 @@ class PeticionProvider {
 
   // ENTREGAR DATOS PARA EL FORMULARIO DE EDITAR //
   Future<LinkedHashMap<String, dynamic>> getpeticion(int idpeticion) async {
-    var urlRequest = apiUrl + 'peticiones/$idpeticion';
+    var urlRequest = apiUrl + 'peticiones/$idpeticion/mascotas';
     var response = await http.get(Uri.parse(urlRequest));
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -179,5 +185,27 @@ class PeticionProvider {
         body: jsonEncode(
             <String, String>{'comentario': comentario, 'nota': nota}));
     return respuesta;
+  }
+
+  Future<http.Response> peticionTerminada(String id, String estado) async {
+    int idpeticion = int.tryParse(id);
+    var urlRequest = apiUrl + 'peticiones/$idpeticion/termino';
+    var respuesta = await http.post(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{'estado': estado}));
+    return respuesta;
+  }
+
+  Future<LinkedHashMap<String, dynamic>> mascotasPeticion(
+      int idPeticion) async {
+    var urlRequest = apiUrl + 'peticiones/$idPeticion/mascotas';
+    var response = await http.get(Uri.parse(urlRequest));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      return new LinkedHashMap<String, dynamic>();
+    }
   }
 }

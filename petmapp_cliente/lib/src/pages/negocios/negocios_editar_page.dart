@@ -1,5 +1,7 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/negocios_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
@@ -22,7 +24,9 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController localizacionCtrl = new TextEditingController();
+  TextEditingController latitudCtrl = new TextEditingController();
+  TextEditingController longitudCtrl = new TextEditingController();
+
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController horarioCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -52,7 +56,8 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
                   fotoCtrl.text = snapshot.data['foto'];
                   descripcionCtrl.text = snapshot.data['descripcion'];
                   direccionCtrl.text = snapshot.data['direccion'];
-                  localizacionCtrl.text = snapshot.data['localizacion'];
+                  latitudCtrl.text = snapshot.data['latitud'];
+                  longitudCtrl.text = snapshot.data['longitud'];
                   nombreCtrl.text = snapshot.data['nombre'];
                   return Column(
                     children: [
@@ -60,20 +65,6 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
                         child: ListView(
                           children: [
                             _crearCampoTipo(),
-                            Divider(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: fotoCtrl,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    labelText: 'Foto',
-                                    hintText: 'Foto',
-                                    suffixIcon: Icon(MdiIcons.camera)),
-                              ),
-                            ),
                             Divider(),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -118,13 +109,33 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
-                                controller: localizacionCtrl,
+                                controller: longitudCtrl,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(20.0)),
-                                    labelText: 'Localizacion',
-                                    hintText: 'Localizacion del negocio',
+                                    labelText: 'longutd',
+                                    hintText: 'longutd del negocio',
+                                    suffixIcon: Icon(Icons.flag)),
+                                validator: (valor) {
+                                  if (valor.isEmpty || valor == null) {
+                                    return 'Debe ingresar las coordenadas';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: latitudCtrl,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    labelText: 'latitud',
+                                    hintText: 'latitudn del negocio',
                                     suffixIcon: Icon(Icons.flag)),
                                 validator: (valor) {
                                   if (valor.isEmpty || valor == null) {
@@ -158,6 +169,8 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
                               ),
                             ),
                             Divider(),
+                            _crearCampoFoto(),
+                            _mostrarImagen(snapshot.data['foto'])
                           ],
                         ),
                       ),
@@ -217,6 +230,40 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
         ));
   }
 
+  Widget _crearCampoFoto() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RaisedButton(
+          onPressed: () => tomarFoto(ImageSource.gallery),
+          child: Text('Seleccionar foto'),
+        ));
+  }
+
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
+  int caso = 0;
+
+  Widget _mostrarImagen(foto) {
+    return FadeInImage(
+        image: caso == 0
+            ? FileImage(File(foto))
+            : FileImage(File(_imagefile.path)),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover);
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      pickedFile == null ? null : _imagefile = pickedFile;
+      _imagefile == null ? null : caso = 1;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
+  }
+
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
     var provider = NegocioProvider();
     return await provider.getNegocio(widget.id);
@@ -231,7 +278,8 @@ class _NegocioEditarPageState extends State<NegocioEditarPage> {
           fotoCtrl.text,
           descripcionCtrl.text,
           direccionCtrl.text,
-          localizacionCtrl.text,
+          latitudCtrl.text,
+          longitudCtrl.text,
           nombreCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }

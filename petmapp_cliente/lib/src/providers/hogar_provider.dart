@@ -76,7 +76,7 @@ class HogarProvider {
           'descripcion': descripcion,
           'foto': foto,
           'longitud': longitud,
-          'latitid': latitud
+          'latitud': latitud
         }));
     return respuesta;
   }

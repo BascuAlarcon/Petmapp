@@ -5,6 +5,7 @@ import 'package:petmapp_cliente/src/pages/Models/mascotaModel.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PeticionesAgregarPage extends StatefulWidget {
@@ -18,12 +19,13 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
   SharedPreferences sharedPreferences;
   String email = '';
   String rut = '';
-
+  DateTime _fechaInicio = DateTime.now();
+  DateTime _fechaFin = DateTime.now();
   List<MascotaModel> listaMascotas = [];
   List<MascotaModel> mascotasSeleccionadas = [];
+  int tarifa, precioTotal;
 
   bool _validate = false;
-  DateTime _fechaInicio;
 
   @override
   void initState() {
@@ -36,7 +38,6 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
   TextEditingController fechaInicioCtrl = new TextEditingController();
   TextEditingController fechaFinCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
-  TextEditingController precioTotalCtrl = new TextEditingController();
   TextEditingController boletaCtrl = new TextEditingController();
   TextEditingController estadoCtrl = new TextEditingController();
   TextEditingController idPublicacionCtrl = new TextEditingController();
@@ -77,19 +78,7 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
                 child: TextFormField(
                   controller: fechaInicioCtrl,
                   onTap: () {
-                    showDatePicker(
-                            context: context,
-                            initialDate: fechaInicioCtrl == null
-                                ? DateTime.now()
-                                : _fechaInicio,
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now())
-                        .then((value) => setState(() {
-                              _fechaInicio = value;
-                              fechaInicioCtrl.text = DateFormat('yyyy-MM-dd')
-                                  .format(value)
-                                  .toString();
-                            }));
+                    _mostrarFechaInicio(context);
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -106,18 +95,17 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: fechaFinCtrl,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                      labelText: 'Fecha Fin',
-                      hintText: 'Fecha Fin',
-                      suffixIcon: Icon(MdiIcons.calendarRange)),
-                  validator: (valor) {
-                    if (valor.isEmpty || valor == null) {
-                      return 'Debe ingresar una localizacion';
-                    }
-                    return null;
+                  onTap: () {
+                    _mostrarFechaFin(context);
                   },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0)),
+                    labelText: 'Fecha de fin del cuidado',
+                    hintText: 'Fecha de fin',
+                    suffixIcon: Icon(Icons.date_range),
+                    errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                  ),
                 ),
               ),
               Divider(),
@@ -190,6 +178,7 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
   }
 
   void _peticionAgregar(BuildContext context) {
+    calcularPrecio();
     if (_formKey.currentState.validate()) {
       var provider = new PeticionProvider();
       provider.peticionAgregar(
@@ -197,11 +186,66 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
           fechaInicioCtrl.text,
           fechaFinCtrl.text,
           mascotasSeleccionadas,
+          precioTotal.toString(),
           rut,
           widget.idPublicacion.toString());
-
       Navigator.pop(context);
     }
+  }
+
+  String calcularPrecio() {
+    _buscarTarifa();
+    int daysBetween(DateTime inicio, DateTime fin) {
+      inicio = DateTime(inicio.year, inicio.month, inicio.day);
+      fin = DateTime(fin.year, fin.month, fin.day);
+      return (fin.difference(inicio).inHours / 24).round();
+    }
+
+    _fechaInicio = DateTime.parse(fechaInicioCtrl.text);
+    _fechaFin = DateTime.parse(fechaFinCtrl.text);
+    final dias = daysBetween(_fechaInicio, _fechaFin);
+    precioTotal = dias * tarifa;
+  }
+
+  void _buscarTarifa() async {
+    var provider = PublicacionProvider();
+    var publicaciones = await provider.publicacionListar();
+    for (var publicacion in publicaciones) {
+      if (publicacion['id'] == widget.idPublicacion) {
+        tarifa = publicacion['tarifa'];
+      }
+    }
+  }
+
+  Future _mostrarFechaInicio(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate:
+                fechaInicioCtrl.text == null ? DateTime.now() : _fechaInicio,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2023))
+        .then((value) => setState(() {
+              if (value != null) {
+                _fechaInicio = value;
+                fechaInicioCtrl.text =
+                    DateFormat('yyyy-MM-dd').format(value).toString();
+              }
+            }));
+  }
+
+  Future _mostrarFechaFin(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate: DateTime.parse(fechaInicioCtrl.text),
+            firstDate: DateTime.parse(fechaInicioCtrl.text),
+            lastDate: DateTime(2023))
+        .then((value) => setState(() {
+              if (value != null) {
+                _fechaFin = value;
+                fechaFinCtrl.text =
+                    DateFormat('yyyy-MM-dd').format(value).toString();
+              }
+            }));
   }
 
   void _navegarCancelar(BuildContext context) {

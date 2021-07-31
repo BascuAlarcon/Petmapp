@@ -81,14 +81,18 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
           itemCount: peticiones.length,
           separatorBuilder: (context, index) => Divider(),
           itemBuilder: (context, index) {
-            return ListTile(
-              title:
-                  Text('Fecha de inicio: ${peticiones[index]['fecha_inicio']}'),
-              subtitle: Text(
-                  'Rut del usuario que hizo la petición ${peticiones[index]['usuario_rut'].toString()}'),
-              onTap: () => _navegarPeticion(context, peticiones[index]['id'],
-                  peticiones[index]['usuario_rut']),
-            );
+            return peticiones[index]['estado'] == 3
+                ? Text('')
+                : ListTile(
+                    title: Text(
+                        'Fecha de inicio: ${peticiones[index]['fecha_inicio']}'),
+                    subtitle: Text(
+                        'Rut del usuario que hizo la petición ${peticiones[index]['usuario_rut'].toString()}'),
+                    onTap: () => _navegarPeticion(
+                        context,
+                        peticiones[index]['id'],
+                        peticiones[index]['usuario_rut']),
+                  );
           });
     }
   }

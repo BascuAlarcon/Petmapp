@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
@@ -73,6 +74,7 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: tarifaCtrl,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
@@ -177,8 +179,8 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
   void _publicacionAgregar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new PublicacionProvider();
-      provider.publicacionAgregar("", descripcionCtrl.text, tarifaCtrl.text,
-          rut); // usamos un controller //
+      provider.publicacionAgregar(descripcionCtrl.text, tarifaCtrl.text, rut,
+          _hogar); // usamos un controller //
       Navigator.pop(context);
     }
   }

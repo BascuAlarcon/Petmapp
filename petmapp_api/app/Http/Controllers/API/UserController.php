@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'me', 'login','register', 'logout', 'show', 'editarPerfil', 'destroy' , 'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'evaluacion']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login','register', 'logout', 'show', 'editarPerfil', 'destroy' , 'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'evaluacion', 'cambiar', 'deshabilitar']]);
     }
 
     /**
@@ -108,8 +108,8 @@ class UserController extends Controller
     public function show(Usuario $usuario)
     {
         return $usuario;
-    }
-
+    } 
+     
     /**
      * Update the specified resource in storage.
      *
@@ -125,14 +125,25 @@ class UserController extends Controller
         $usuario->fecha_nacimiento = $request->fecha_nacimiento;
         $usuario->foto = $request->foto;
         $usuario->numero_telefonico = $request->numero_telefonico;      
-        $usuario->save();
-         
+        $usuario->save(); 
     }
 
     public function evaluacion( Request $request, Usuario $usuario){
         $usuario->promedio_evaluaciones = $request->promedio_evaluaciones; 
         $usuario->save();
         return response()->json(['status'=>'ok' ,'data'=>$request->promedio_evaluaciones], 200);
+    }
+
+    public function cambiar(Request $request, Usuario $usuario)
+    {
+        $usuario->password = bcrypt($request->password);
+        $usuario->save(); 
+        return response()->json(['status'=>'ok' ,'data'=>$request->password], 200);
+    }
+
+    public function deshabilitar(Request $request, Usuario $usuario){
+        $usuario->perfil_id = $request->perfil_id;
+        $usuario->save();
     }
 
     /**

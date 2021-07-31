@@ -58,7 +58,7 @@ class _ComentariosUbicacionEditarPageState
                                   if (valor == null || valor.isEmpty) {
                                     return 'Debe agregar su comentario';
                                   }
-                                  if (valor.length < 10) {
+                                  if (valor.length < 5) {
                                     return 'Comentario muy corto';
                                   }
                                   return null;

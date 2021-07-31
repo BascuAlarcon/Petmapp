@@ -14,15 +14,11 @@ class MenuItem {
 class MenuItems {
   static const List<MenuItem> itemsFirst = [
     itemConfig,
-    itemEditar,
     itemSalir,
   ];
 
   static const itemConfig =
       MenuItem(text: 'Configuracion', icon: Icons.settings);
-
-  static const itemEditar =
-      MenuItem(text: 'Editar Perfil', icon: Icons.emoji_people);
 
   static const itemSalir = MenuItem(text: 'Cerrar Sesión', icon: Icons.logout);
 }

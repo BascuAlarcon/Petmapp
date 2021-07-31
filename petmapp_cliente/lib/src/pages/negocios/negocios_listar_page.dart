@@ -5,6 +5,7 @@ import 'package:petmapp_cliente/src/pages/comentarios_negocios/coment_negocios_l
 import 'package:petmapp_cliente/src/pages/negocios/negocios_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios/negocios_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_editar_page.dart';
+import 'package:petmapp_cliente/src/providers/comentarios_negocios_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/negocios_provider.dart';
 import 'package:petmapp_cliente/src/providers/razas_provider.dart';
@@ -163,6 +164,11 @@ class _NegociosListarPageState extends State<NegociosListarPage> {
 
   void _negociosBorrar(int id) async {
     var provider = new NegocioProvider();
+    var comentariosProvider = new ComentarioNegocioProvider();
+    var comentarios = await comentariosProvider.comentarioNegocioListar(id);
+    for (var comentario in comentarios) {
+      await comentariosProvider.comentarioBorrar(comentario['id']);
+    }
     await provider.negocioBorrar(id);
   }
 

@@ -5,11 +5,14 @@ import 'package:petmapp_cliente/src/pages/hogar/hogar_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/hogar/hogar_mostrar_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
+import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HogarListarPage extends StatefulWidget {
-  HogarListarPage({Key key}) : super(key: key);
+  final int idPeticion, estado, idHogar;
+  HogarListarPage({this.estado, this.idPeticion, this.idHogar});
 
   @override
   _HogarListarPageState createState() => _HogarListarPageState();
@@ -17,7 +20,7 @@ class HogarListarPage extends StatefulWidget {
 
 class _HogarListarPageState extends State<HogarListarPage> {
   SharedPreferences sharedPreferences;
-  String token = '';
+  String rut, token = '';
 
   @override
   void initState() {
@@ -31,10 +34,6 @@ class _HogarListarPageState extends State<HogarListarPage> {
         title: Text('Mis Hogares'),
         centerTitle: true,
         backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -69,22 +68,26 @@ class _HogarListarPageState extends State<HogarListarPage> {
                                 snapshot.data[index]['id']),
                           ),
                           actions: [
-                            IconSlideAction(
-                              caption: 'Editar',
-                              color: Colors.yellow,
-                              icon: MdiIcons.pencil,
-                              onTap: () => _navegarhogaresEditar(
-                                  context, snapshot.data[index]['id']),
-                            )
+                            snapshot.data[index]['id'] != widget.idHogar
+                                ? IconSlideAction(
+                                    caption: 'Editar',
+                                    color: Colors.yellow,
+                                    icon: MdiIcons.pencil,
+                                    onTap: () => _navegarhogaresEditar(
+                                        context, snapshot.data[index]['id']),
+                                  )
+                                : Text('Accion no permitida')
                           ],
                           secondaryActions: [
-                            IconSlideAction(
-                              caption: 'Borrar',
-                              color: Colors.red,
-                              icon: MdiIcons.trashCan,
-                              onTap: () => _mostrarConfirmacion(
-                                  context, snapshot.data, index),
-                            ),
+                            snapshot.data[index]['id'] != widget.idHogar
+                                ? IconSlideAction(
+                                    caption: 'Borrar',
+                                    color: Colors.red,
+                                    icon: MdiIcons.trashCan,
+                                    onTap: () => _mostrarConfirmacion(
+                                        context, snapshot.data, index),
+                                  )
+                                : Text('Accion no permitida')
                           ],
                         );
                       },
@@ -136,8 +139,9 @@ class _HogarListarPageState extends State<HogarListarPage> {
     var route =
         new MaterialPageRoute(builder: (context) => HogaresAgregarPage());
     Navigator.push(context, route).then((value) {
-      setState(
-          () {}); // cuando se devuelva el navigator con un pop, que resfresque //
+      setState(() {
+        print('refresh');
+      });
     });
   }
 
@@ -202,7 +206,10 @@ class _HogarListarPageState extends State<HogarListarPage> {
     setState(() {
       /* listaDatos = sharedPreferencess.getStringList("usuario");
       print(listaDatos); */
+      rut = sharedPreferencess.getStringList('usuario')[0];
       token = sharedPreferencess.getStringList('usuario')[4];
     });
   }
+
+  bool _mostrar;
 }

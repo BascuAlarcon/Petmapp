@@ -12,7 +12,8 @@ class NegocioProvider {
       String foto,
       String descripcion,
       String direccion,
-      String localizacion,
+      String latitud,
+      String longitud,
       String nombre) async {
     var urlRequest = apiUrl + 'negocios';
     var respuesta = await http.post(Uri.parse(urlRequest),
@@ -24,7 +25,8 @@ class NegocioProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion,
+          'latitud': latitud,
+          'longitud': longitud,
           'nombre': nombre
         }));
     return respuesta;
@@ -52,7 +54,8 @@ class NegocioProvider {
       String foto,
       String descripcion,
       String direccion,
-      String localizacion,
+      String latitud,
+      String longitud,
       String nombre) async {
     var urlRequest = apiUrl + 'negocios/$idNegocio';
     var respuesta = await http.put(Uri.parse(urlRequest),
@@ -64,7 +67,8 @@ class NegocioProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion,
+          'latitud': latitud,
+          'longitud': longitud,
           'nombre': nombre,
         }));
     return respuesta;

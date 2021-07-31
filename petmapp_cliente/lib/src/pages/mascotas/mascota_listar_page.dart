@@ -6,12 +6,15 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/mascotas/mascota_editar_page.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MascotaListarPage extends StatefulWidget {
-  MascotaListarPage({Key key}) : super(key: key);
+  final mascotas;
+  MascotaListarPage({this.mascotas});
 
   @override
   _MascotaListarPageState createState() => _MascotaListarPageState();
@@ -43,6 +46,8 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
   @override
   void initState() {
     super.initState();
+    /* print(widget.mascotas[1]['id']);
+    print(widget.mascotas[1]); */
     getSharedPreferences();
   }
 
@@ -298,5 +303,28 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
           );
     });
     Navigator.push(context, route);
+  }
+
+  bool _mostrar;
+
+  _comprobarPeticionPublicacion(mascota) async {
+    var peticionProvider = PeticionProvider();
+    var publicacionProvider = PublicacionProvider();
+    var publicaciones = await publicacionProvider.publicacionListar();
+    var peticiones = await peticionProvider.peticionListar();
+    _mostrar = true;
+    for (var peticion in peticiones) {
+      if (peticion['usuario_rut'] == rut) {
+        if (peticion['estado'] == 2) {}
+        // TRAER LAS MASCOTAS DE LA TABLA PIVOTE Y COMPARAR
+        // if (peticion['mascota'] == mascota['id']) {
+        for (var publicacion in publicaciones) {
+          if (publicacion['peticion_id'] == peticion['id']) {
+            _mostrar = false;
+          }
+        }
+        // }
+      }
+    }
   }
 }

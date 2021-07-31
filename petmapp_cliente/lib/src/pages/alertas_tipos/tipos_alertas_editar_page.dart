@@ -14,7 +14,7 @@ class TipoAlertaEditarPage extends StatefulWidget {
 }
 
 class _TipoAlertaEditarPageState extends State<TipoAlertaEditarPage> {
-// Controllers // 
+// Controllers //
   TextEditingController nombreCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
@@ -35,13 +35,13 @@ class _TipoAlertaEditarPageState extends State<TipoAlertaEditarPage> {
                   return Center(
                     child: Text('No hay data'),
                   );
-                } else { 
+                } else {
                   nombreCtrl.text = snapshot.data['nombre'];
                   return Column(
                     children: [
                       Expanded(
                         child: ListView(
-                          children: [  
+                          children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
@@ -56,6 +56,9 @@ class _TipoAlertaEditarPageState extends State<TipoAlertaEditarPage> {
                                 validator: (valor) {
                                   if (valor == null || valor.isEmpty) {
                                     return 'Debe agregar un nombre';
+                                  }
+                                  if (valor.length < 3) {
+                                    return 'El nombre debe contener al menos 3 cáraceteres';
                                   }
                                   return null;
                                 },
@@ -128,8 +131,8 @@ class _TipoAlertaEditarPageState extends State<TipoAlertaEditarPage> {
   void _hogarEditar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new TipoAlertaProvider();
-      provider.tipoEditar(widget.id,  
-          nombreCtrl.text); // usamos un controller //
+      provider.tipoEditar(
+          widget.id, nombreCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }
   }

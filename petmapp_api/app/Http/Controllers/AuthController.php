@@ -51,11 +51,12 @@ class AuthController extends Controller
         $user->rut = $request->rut;
         $user->name = $request->name;
         $user->email = $request->email; 
+        $user->foto = 'xD';
         $user->password = bcrypt($request->password);
         $user->perfil_id = 2;
         $user->save();
         return response()->json(['status'=>'ok' ,'data'=>$user], 200);
-    }
+    } 
 
     public function editar(Request $request, Usuario $user)
     {  

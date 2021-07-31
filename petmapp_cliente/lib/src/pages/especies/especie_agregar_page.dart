@@ -45,6 +45,9 @@ class _EspeciesAgregarPageState extends State<EspeciesAgregarPage> {
                           if (valor == null || valor.isEmpty) {
                             return 'Debe agregar una especie';
                           }
+                          if (valor.length < 3) {
+                            return 'Nombre muy corto';
+                          }
                           return null;
                         },
                       ),
@@ -63,6 +66,9 @@ class _EspeciesAgregarPageState extends State<EspeciesAgregarPage> {
                         validator: (valor) {
                           if (valor == null || valor.isEmpty) {
                             return 'Debe agregar una descripcion';
+                          }
+                          if (valor.length < 5) {
+                            return 'Descripcion muy corta';
                           }
                           return null;
                         },

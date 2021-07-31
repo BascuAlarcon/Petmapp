@@ -208,8 +208,8 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
               if (valor.isEmpty || valor == null) {
                 return 'Indique una descripción';
               }
-              if (valor.length < 10) {
-                return 'La descripción debe contener al menos 10 cáracteres';
+              if (valor.length < 5) {
+                return 'La descripción debe contener al menos 5 cáracteres';
               }
               return null;
             }));
@@ -271,8 +271,8 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
               if (valor.isEmpty || valor == null) {
                 return 'Indique una direccion';
               }
-              if (valor.length < 10) {
-                return 'La dirección debe contener al menos 10 cáracteres';
+              if (valor.length < 5) {
+                return 'La dirección debe contener al menos 5 cáracteres';
               }
               return null;
             }));

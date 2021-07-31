@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 
 class RegistrarPage extends StatefulWidget {
@@ -15,6 +15,11 @@ class _RegistrarPageState extends State<RegistrarPage> {
   TextEditingController password2Ctrl = TextEditingController();
   TextEditingController nombreCtrl = TextEditingController();
   TextEditingController rutCtrl = TextEditingController();
+  TextEditingController otpCtrl = TextEditingController();
+  bool submitValid = false;
+  bool existenciaRut = false;
+  bool existenciaEmail = false;
+
   final _formKey = GlobalKey<FormState>();
   final _emailRegex =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
@@ -60,6 +65,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
                 _txtRut(),
                 _txtNombre(),
                 _txtEmail(),
+                //_txtCodigo(),
                 _txtPassword(),
                 _txtPassword2(),
                 _btnRegistrar()
@@ -90,6 +96,8 @@ class _RegistrarPageState extends State<RegistrarPage> {
           hintStyle: TextStyle(color: Colors.white70),
         ),
         validator: (value) {
+          //_calcularDigitoVerificador(rutCtrl.text);
+          //_comprobarExistenciaRut(rutCtrl.text);
           if (value.isEmpty) {
             return 'Indique Rut';
           }
@@ -103,17 +111,56 @@ class _RegistrarPageState extends State<RegistrarPage> {
     );
   }
 
+  _comprobarExistenciaRut(rut) async {
+    var provider = UsuarioProvider();
+    var usuarios = await provider.getUsuarios();
+    for (var usuario in usuarios) {
+      if (usuario['rut'] == rut) {
+        existenciaRut = true;
+      }
+    }
+  }
+
+  _calcularDigitoVerificador(String rut) {
+    var digitoVerificador = rut.replaceRange(0, 11, "");
+    var verificador1 = int.tryParse(digitoVerificador);
+    rut = rut.replaceRange(2, 3, "");
+    rut = rut.replaceRange(5, 6, "");
+    rut = rut.replaceRange(8, 10, "");
+    var digitoRut = rut.trim().split("");
+    int sumaTotal = 0;
+    int contador = 7;
+    for (var multiplicador = 2; contador >= 0;) {
+      sumaTotal = sumaTotal + (int.parse(digitoRut[contador]) * multiplicador);
+      if (multiplicador == 7) {
+        multiplicador = 2;
+      } else {
+        multiplicador++;
+      }
+      contador--;
+    }
+    num truncado = (sumaTotal ~/ 11);
+    num casi = truncado * 11;
+    num verificador2 = sumaTotal - casi;
+    print(verificador2);
+    if (verificador1 == verificador2) {}
+  }
+
   Widget _txtEmail() {
     return Container(
       margin: EdgeInsets.only(top: 5.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 1.0),
       child: TextFormField(
         controller: emailCtrl,
-        keyboardType: TextInputType.emailAddress,
+        // keyboardType: TextInputType.emailAddress,
         style: TextStyle(color: Colors.white70),
         decoration: InputDecoration(
           icon: Icon(Icons.email, color: Colors.white70),
           hintText: "Email",
+          /* suffixIcon: TextButton(
+            child: Text('Enviar verificacion'),
+            onPressed: () => sendOtp(),
+          ), */
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide(color: Colors.white70)),
@@ -123,6 +170,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
           hintStyle: TextStyle(color: Colors.white70),
         ),
         validator: (value) {
+          _comprobarExistenciaEmail(emailCtrl.text);
           if (value.isEmpty) {
             return 'Indique Email';
           }
@@ -133,6 +181,43 @@ class _RegistrarPageState extends State<RegistrarPage> {
         },
       ),
     );
+  }
+
+  Widget _txtCodigo() {
+    return Container(
+      margin: EdgeInsets.only(top: 5.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 1.0),
+      child: TextFormField(
+        controller: otpCtrl,
+        keyboardType: TextInputType.number,
+        style: TextStyle(color: Colors.white70),
+        decoration: InputDecoration(
+          icon: Icon(Icons.email, color: Colors.white70),
+          hintText: "Codigo",
+          suffixIcon: TextButton(
+            child: Text('Validar'),
+            onPressed: () => verify(),
+          ),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: BorderSide(color: Colors.white70)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: BorderSide(color: Colors.white70)),
+          hintStyle: TextStyle(color: Colors.white70),
+        ),
+      ),
+    );
+  }
+
+  _comprobarExistenciaEmail(email) async {
+    var provider = UsuarioProvider();
+    var usuarios = await provider.getUsuarios();
+    for (var usuario in usuarios) {
+      if (usuario['email'] == email) {
+        existenciaEmail = true;
+      }
+    }
   }
 
   Widget _txtNombre() {
@@ -236,10 +321,14 @@ class _RegistrarPageState extends State<RegistrarPage> {
         child: Text('Crear Cuenta',
             style: TextStyle(color: Colors.black, fontFamily: 'Raleway')),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
-            signUp(rutCtrl.text, emailCtrl.text, passwordCtrl.text,
-                nombreCtrl.text);
-            Navigator.of(context).pop();
+          if (existenciaEmail == true || existenciaRut == true) {
+            Text('Usuario ya existente');
+          } else {
+            if (_formKey.currentState.validate()) {
+              signUp(rutCtrl.text, emailCtrl.text, passwordCtrl.text,
+                  nombreCtrl.text);
+              Navigator.of(context).pop();
+            }
           }
         },
       ),
@@ -249,5 +338,28 @@ class _RegistrarPageState extends State<RegistrarPage> {
   signUp(String rut, String email, String password, String nombre) async {
     var provider = UsuarioProvider();
     return await provider.registrar(rut, email, password, nombre);
+  }
+
+  void verify() {
+    var res = (EmailAuth.validate(
+        receiverMail: emailCtrl.text, userOTP: otpCtrl.text));
+    if (res) {
+      print('OTP VERIFICADO');
+    } else {
+      print('CODIGO INVALIDO');
+    }
+  }
+
+  void sendOtp() async {
+    EmailAuth.sessionName = "Test Session";
+    bool result = await EmailAuth.sendOtp(receiverMail: emailCtrl.text);
+    if (result) {
+      print('Otp Sent');
+      /* setState(() {
+        submitValid = true;
+      }); */
+    } else {
+      print('Otp dont sent');
+    }
   }
 }

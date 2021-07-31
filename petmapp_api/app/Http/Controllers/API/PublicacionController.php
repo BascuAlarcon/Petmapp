@@ -31,7 +31,7 @@ class PublicacionController extends Controller
         $publicacion->descripcion = $request->descripcion;
         $publicacion->tarifa = $request->tarifa;
         $publicacion->usuario_rut = $request->usuario_rut;
-        $publicacion->hogar_id = $request->hogar_id;
+        $publicacion->hogar_id = $request->hogar_id; 
         $publicacion->save();
     }
 

@@ -1,14 +1,19 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/pages/Models/mascotaModel.dart';
+import 'package:petmapp_cliente/src/pages/main_page.dart';
+import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
+import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PeticionEditarPage extends StatefulWidget {
   final int idPeticion;
-  PeticionEditarPage({this.idPeticion});
+  final int idPublicacion;
+  PeticionEditarPage({this.idPeticion, this.idPublicacion});
   @override
   _PeticionEditarPageState createState() => _PeticionEditarPageState();
 }
@@ -22,9 +27,12 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
   SharedPreferences sharedPreferences;
   String email = '';
   String rut = '';
+  int tarifa, precioTotal;
   List<MascotaModel> listaMascotas = [];
   List<MascotaModel> mascotasSeleccionadas = [];
-
+  DateTime _fechaInicio = DateTime.now();
+  DateTime _fechaFin = DateTime.now();
+  bool _validate = false;
   @override
   void initState() {
     super.initState();
@@ -79,13 +87,23 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
                             ),
                             Divider(),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(17.0),
                               child: TextFormField(
                                 controller: fechaInicioCtrl,
+                                onTap: () {
+                                  _mostrarFechaInicio(context);
+                                },
                                 decoration: InputDecoration(
-                                    labelText: 'Fecha Inicio',
-                                    hintText: 'Fecha Inicio',
-                                    suffixIcon: Icon(Icons.flag)),
+                                  border: OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  labelText: 'Fecha de inicio del cuidado',
+                                  hintText: 'Fecha de inicio',
+                                  suffixIcon: Icon(Icons.date_range),
+                                  errorText: _validate
+                                      ? 'Value Can\'t Be Empty'
+                                      : null,
+                                ),
                               ),
                             ),
                             Divider(),
@@ -93,12 +111,25 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
                                 controller: fechaFinCtrl,
+                                onTap: () {
+                                  _mostrarFechaFin(context);
+                                },
                                 decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
                                     labelText: 'Fecha Fin',
                                     hintText: 'Fecha Fin',
-                                    suffixIcon: Icon(Icons.flag)),
+                                    suffixIcon: Icon(MdiIcons.calendarRange)),
+                                validator: (valor) {
+                                  if (valor.isEmpty || valor == null) {
+                                    return 'Debe ingresar una localizacion';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
+                            Divider(),
                           ],
                         ),
                       ),
@@ -147,6 +178,33 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
         ));
   }
 
+  Future _mostrarFechaInicio(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate:
+                fechaInicioCtrl.text == null ? DateTime.now() : _fechaInicio,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2023))
+        .then((value) => setState(() {
+              _fechaInicio = value;
+              fechaInicioCtrl.text =
+                  DateFormat('yyyy-MM-dd').format(value).toString();
+            }));
+  }
+
+  Future _mostrarFechaFin(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate: DateTime.parse(fechaInicioCtrl.text),
+            firstDate: DateTime.parse(fechaInicioCtrl.text),
+            lastDate: DateTime(2023))
+        .then((value) => setState(() {
+              _fechaFin = value;
+              fechaFinCtrl.text =
+                  DateFormat('yyyy-MM-dd').format(value).toString();
+            }));
+  }
+
   // TRAER DATOS DE SHARED PREFERENCES //
   Future<void> cargarDatosUsuario() async {
     SharedPreferences sharedPreferencess =
@@ -171,15 +229,31 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
   }
 
   void _peticionEditar(BuildContext context) {
+    calcularPrecio();
     if (_formKey.currentState.validate()) {
       var provider = new PeticionProvider();
-      provider.peticionEditar(
+      // ELIMINAMOS LA PETICION Y LA TABLA PIVOTE
+      provider.peticionesBorrar(widget.idPeticion);
+      // LA CREAMOS DENUEVO
+      provider.peticionAgregar(
+          descripcionCtrl.text,
+          fechaInicioCtrl.text,
+          fechaFinCtrl.text,
+          mascotasSeleccionadas,
+          precioTotal.toString(),
+          rut,
+          widget.idPublicacion.toString());
+
+      /* provider.peticionEditar(
         widget.idPeticion,
         descripcionCtrl.text,
         fechaInicioCtrl.text,
         fechaFinCtrl.text,
-      );
-      Navigator.pop(context);
+      ); */
+      var route = new MaterialPageRoute(builder: (context) => MainPage());
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => MainPage()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -218,5 +292,29 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
         });
       },
     );
+  }
+
+  String calcularPrecio() {
+    _buscarTarifa();
+    int daysBetween(DateTime inicio, DateTime fin) {
+      inicio = DateTime(inicio.year, inicio.month, inicio.day);
+      fin = DateTime(fin.year, fin.month, fin.day);
+      return (fin.difference(inicio).inHours / 24).round();
+    }
+
+    _fechaInicio = DateTime.parse(fechaInicioCtrl.text);
+    _fechaFin = DateTime.parse(fechaFinCtrl.text);
+    final dias = daysBetween(_fechaInicio, _fechaFin);
+    precioTotal = dias * tarifa;
+  }
+
+  void _buscarTarifa() async {
+    var provider = PublicacionProvider();
+    var publicaciones = await provider.publicacionListar();
+    for (var publicacion in publicaciones) {
+      if (publicacion['id'] == widget.idPublicacion) {
+        tarifa = publicacion['tarifa'];
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
@@ -36,14 +37,18 @@ class _PerfilCuidadoPageState extends State<PerfilCuidadoPage> {
                   return Card(
                       child: ListView(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image(
-                          image: NetworkImage(
-                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                      Container(
+                          width: 200,
                           height: 200,
-                        ),
-                      ),
+                          child: CircleAvatar(
+                              child: ClipOval(
+                                  child: snapshot.data['foto'] != 'xD'
+                                      ? Image(
+                                          image: FileImage(
+                                              File(snapshot.data['foto'])))
+                                      : Image(
+                                          image: NetworkImage(
+                                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
                       ListTile(
                         title: Text(snapshot.data['rut'].toString()),
                         subtitle: Text(

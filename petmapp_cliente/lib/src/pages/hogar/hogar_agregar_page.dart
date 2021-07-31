@@ -108,6 +108,9 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
                           if (valor.isEmpty || valor == null) {
                             return 'Debe ingresar una dirección';
                           }
+                          if (valor.length < 5) {
+                            return 'Direccion muy corta';
+                          }
                           return null;
                         },
                       ),
@@ -127,12 +130,13 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
                           if (valor.isEmpty || valor == null) {
                             return 'Debe ingresar una descripcion';
                           }
+                          if (valor.length < 5) {
+                            return 'Descripcion muy corta';
+                          }
                           return null;
                         },
                       ),
                     ),
-                    Divider(),
-                    _crearCampoFoto(),
                     Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -172,6 +176,7 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
                       ),
                     ),
                     Divider(),
+                    _crearCampoFoto(),
                     _mostrarImagen()
                   ],
                 ),

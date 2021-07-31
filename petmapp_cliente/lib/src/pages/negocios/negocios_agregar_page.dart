@@ -34,7 +34,8 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController localizacionCtrl = new TextEditingController();
+  TextEditingController latitudCtrl = new TextEditingController();
+  TextEditingController longitudCtrl = new TextEditingController();
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController horarioCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -96,12 +97,31 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        controller: localizacionCtrl,
+                        controller: longitudCtrl,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'Localizacion',
-                            hintText: 'Localizacion del negocio',
+                            labelText: 'longutd',
+                            hintText: 'longutd del negocio',
+                            suffixIcon: Icon(Icons.flag)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar las coordenadas';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: latitudCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'latitud',
+                            hintText: 'latitudn del negocio',
                             suffixIcon: Icon(Icons.flag)),
                         validator: (valor) {
                           if (valor.isEmpty || valor == null) {
@@ -231,7 +251,8 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
           foto,
           descripcionCtrl.text,
           direccionCtrl.text,
-          localizacionCtrl.text,
+          latitudCtrl.text,
+          longitudCtrl.text,
           nombreCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }

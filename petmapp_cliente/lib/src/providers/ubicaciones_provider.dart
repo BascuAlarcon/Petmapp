@@ -7,8 +7,13 @@ class UbicacionProvider {
   var apiUrl = new UrlProvider().url();
 
 // AGREGAR UBICACION //
-  Future<http.Response> ubicacionAgregar(String tipoUbicacion, String foto,
-      String descripcion, String direccion, String localizacion) async {
+  Future<http.Response> ubicacionAgregar(
+      String tipoUbicacion,
+      String foto,
+      String descripcion,
+      String direccion,
+      String latitud,
+      String longitud) async {
     var urlRequest = apiUrl + 'ubicaciones';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -19,7 +24,8 @@ class UbicacionProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion
+          'latitud': latitud,
+          'longitud': longitud
         }));
     return respuesta;
   }
@@ -46,7 +52,8 @@ class UbicacionProvider {
       String foto,
       String descripcion,
       String direccion,
-      String localizacion) async {
+      String latitud,
+      String longitud) async {
     var urlRequest = apiUrl + 'ubicaciones/$idUbicacion';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -57,7 +64,8 @@ class UbicacionProvider {
           'foto': foto,
           'descripcion': descripcion,
           'direccion': direccion,
-          'localizacion': localizacion
+          'latitud': latitud,
+          'longitud': longitud
         }));
     return respuesta;
   }

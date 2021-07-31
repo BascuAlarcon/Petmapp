@@ -35,7 +35,8 @@ class PeticionController extends Controller
         $peticion->estado = 1; 
         $peticion->usuario_rut = $request->usuario_rut;
         $peticion->publicacion_id = $request->publicacion_id;
-        //$peticion->precio_total = $request->precio_total;
+        $peticion->precio_total = $request->precio_total;
+        $peticion->boleta = $request->boleta;
         //$peticion->nota = $request->nota;
         //$peticion->comentario = $request->comentario;
         $peticion->save();
@@ -91,12 +92,18 @@ class PeticionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Peticion $peticion)
-    {
-        $peticion->delete(); 
+    { 
+         response($peticion->mascotas()->detach());
+         $peticion->delete();  
     }
 
     public function respuesta(Request $request, Peticion $peticion){ 
         $peticion->estado = $request->estado; 
+        $peticion->save();
+    }
+
+    public function termino(Request $request, Peticion $peticion){
+        $peticion->estado = $request->estado;
         $peticion->save();
     }
 
@@ -114,5 +121,10 @@ class PeticionController extends Controller
     public function servicios($peticion){ 
         $servicios = Servicio::where('peticion_id', $peticion)->get();
         return $servicios;   
+    }
+
+    public function mascotas(Peticion $peticion){
+        $peticion->load('mascotas'); 
+        return $peticion;
     }
 }

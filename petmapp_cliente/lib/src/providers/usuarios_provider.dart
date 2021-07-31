@@ -30,7 +30,6 @@ class UsuarioProvider {
     var response = await http.post(Uri.parse(urlRequest),
         body: {"email": email, "password": password});
     if (response.statusCode == 200) {
-      print(response.body);
       return json.decode(response.body);
     } else {
       return new LinkedHashMap<String, dynamic>();
@@ -222,5 +221,28 @@ class UsuarioProvider {
     } else {
       return new List<dynamic>();
     }
+  }
+
+  // EDITAR USUARIO //
+  Future<http.Response> cambiarPassword(String password, String rut) async {
+    var rutEdit = int.tryParse(rut);
+    var urlRequest = apiUrl + 'auth/usuarios/$rutEdit/cambiar';
+    var respuesta = await http.put(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{'password': password}));
+    return respuesta;
+  }
+
+  Future<http.Response> deshabilitar(String rut, String perfilId) async {
+    var rutEdit = int.tryParse(rut);
+    var urlRequest = apiUrl + 'auth/usuarios/$rutEdit/deshabilitar';
+    var respuesta = await http.put(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{'perfil_id': perfilId}));
+    return respuesta;
   }
 }

@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ComentarioUbicacion extends Model
 {
     use HasFactory;
-    protected $table = "comentarios_ubicaciones";
-    use SoftDeletes;
+    protected $table = "comentarios_ubicaciones"; 
 
     public function ubicacion(){
         return $this->belongsTo('App\Models\Ubicacion');

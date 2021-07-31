@@ -5,6 +5,7 @@ import 'package:petmapp_cliente/src/pages/comentarios_ubicaciones/coment_ubicaci
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_mostrar_page.dart';
+import 'package:petmapp_cliente/src/providers/comentarios_ubicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
 import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
@@ -156,6 +157,11 @@ class _UbicacionesListarPageState extends State<UbicacionesListarPage> {
 
   void _ubicacionesBorrar(int id) async {
     var provider = new UbicacionProvider();
+    var comentariosProvider = new ComentarioUbicacionProvider();
+    var comentarios = await comentariosProvider.comentarioUbicacionListar(id);
+    for (var comentario in comentarios) {
+      await comentariosProvider.comentarioBorrar(comentario['id']);
+    }
     await provider.ubicacionBorrar(id);
   }
 

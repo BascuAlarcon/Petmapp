@@ -81,8 +81,10 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                   alimentosCtrl.text = snapshot.data['alimentos'];
                   personalidadCtrl.text = snapshot.data['personalidad'];
                   _valorEsterilizacion = snapshot.data['estirilizacion'];
-                  // _valorCondicion = snapshot.data['condicion_medica'];
+                  //_valorCondicion = snapshot.data['condicion_medica'];
                   _valorMicrochip = snapshot.data['microchip'];
+                  _valorSeleccionado2 = snapshot.data['sexo'];
+                  // _valorSeleccionado3 = snapshot.data['raza_id'];
                   return Stack(children: <Widget>[
                     Column(
                       children: [

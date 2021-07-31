@@ -1,19 +1,13 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/alertas/alertas_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/alertas_tipos/tipos_alertas_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/especies/especie_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/mascotas/mascota_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/hogar/hogares_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/negocios/negocios_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios/negocios_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones_tipos/tipos_ubicaciones_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/mis_alertas_listar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/mis_publicaciones_usuario_listar.dart';
-import 'package:petmapp_cliente/src/pages/usuario/usuario_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
@@ -95,6 +89,17 @@ class _AdministradorPagePageState extends State<AdministradorPagePage> {
                                         child: Text('Razas'),
                                         onPressed: () =>
                                             _navegarRazas(context))))),
+                        Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                height: 40,
+                                width: double.infinity,
+                                child: Tooltip(
+                                    message: 'Alertass Existentes',
+                                    child: ElevatedButton(
+                                        child: Text('Alertas'),
+                                        onPressed: () =>
+                                            _navegarListarAlertas(context))))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
@@ -194,9 +199,6 @@ class _AdministradorPagePageState extends State<AdministradorPagePage> {
             MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
             (Route<dynamic> route) => false);
         break;
-      case MenuItems.itemEditar:
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => UsuarioEditarPage(widget.rutUsuario)));
     }
   }
 
@@ -220,6 +222,11 @@ class _AdministradorPagePageState extends State<AdministradorPagePage> {
   _navegarListarUbicaciones(BuildContext context) {
     var route =
         new MaterialPageRoute(builder: (context) => UbicacionesListarPage());
+    Navigator.push(context, route);
+  }
+
+  _navegarListarAlertas(BuildContext context) {
+    var route = new MaterialPageRoute(builder: (context) => AlertaListarPage());
     Navigator.push(context, route);
   }
 

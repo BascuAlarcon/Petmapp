@@ -17,145 +17,166 @@
 15    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 15-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:4:1-75
 15-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:4:18-72
-16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include required permissions for Google Maps API to run. -->
+16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 16-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:5:1-77
 16-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:5:18-74
-17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-17-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:5-79
-17-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:22-76
-18
-19    <uses-feature
-19-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
-20        android:glEsVersion="0x00020000"
-20-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
-21        android:required="true" />
-21-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
-22
-23    <application
-23-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:6:4-48:19
-24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-24-->[androidx.core:core:1.1.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:18-86
-25        android:debuggable="true"
-26        android:icon="@mipmap/ic_launcher"
-26-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:9:9-43
-27        android:label="petmapp_cliente"
-27-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:7:9-40
-28        android:usesCleartextTraffic="true" >
-28-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:8:9-44
+17    <uses-permission android:name="android.permission.WAKE_LOCK" />
+17-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:6:1-64
+17-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:6:18-61
+18    <uses-permission android:name="android.permission.READ_SMS" />
+18-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-67
+18-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:7:22-64
+19    <uses-permission android:name="android.permission.SEND_SMS" />
+19-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:8:5-67
+19-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:8:22-64
+20    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+20-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:9:5-70
+20-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:9:22-67
+21    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+21-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-75
+21-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:10:22-72
+22    <uses-permission android:name="android.permission.READ_CONTACTS" />
+22-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-72
+22-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-69
+23    <uses-permission android:name="android.permission.READ_PROFILE" /> <!-- Include required permissions for Google Maps API to run. -->
+23-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:12:5-71
+23-->[:sms] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\sms\intermediates\library_manifest\debug\AndroidManifest.xml:12:22-68
+24    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+24-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:5-79
+24-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:23:22-76
+25
+26    <uses-feature
+26-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:26:5-28:35
+27        android:glEsVersion="0x00020000"
+27-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:27:9-41
+28        android:required="true" />
+28-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:28:9-32
 29
-30        <!--
-31             <meta-data android:name="com.google.android.geo.API_KEY"
-32               android:value="AIzaSyCQGdcwFflG11DX8aXvXj4jM4wAoXOCnLk"/>
-33        -->
-34        <meta-data
-34-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:12:9-13:73
-35            android:name="com.google.android.geo.API_KEY"
-35-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:12:20-65
-36            android:value="AIzaSyBMmrmZgl13qldBX5yjZHVCpb8rMQ6BGvM" />
-36-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:13:16-71
-37
-38        <activity
-38-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:14:9-42:20
-39            android:name="com.example.petmapp_cliente.MainActivity"
-39-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:15:13-41
-40            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-40-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:18:13-163
-41            android:hardwareAccelerated="true"
-41-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:19:13-47
-42            android:launchMode="singleTop"
-42-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:16:13-43
-43            android:theme="@style/LaunchTheme"
-43-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:17:13-47
-44            android:windowSoftInputMode="adjustResize" >
-44-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:20:13-55
-45
-46            <!--
-47                 Specifies an Android theme to apply to this Activity as soon as
-48                 the Android process has started. This theme is visible to the user
-49                 while the Flutter UI initializes. After that, this theme continues
-50                 to determine the Window background behind the Flutter UI.
-51            -->
-52            <meta-data
-52-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:25:13-28:17
-53                android:name="io.flutter.embedding.android.NormalTheme"
-53-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:26:15-70
-54                android:resource="@style/NormalTheme" />
-54-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:27:15-52
-55            <!--
-56                 Displays an Android View that continues showing the launch screen
-57                 Drawable until Flutter paints its first frame, then this splash
-58                 screen fades out. A splash screen is useful to avoid any visual
-59                 gap between the end of Android's launch screen and the painting of
-60                 Flutter's first frame.
-61            -->
-62            <meta-data
-62-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:34:13-37:17
-63                android:name="io.flutter.embedding.android.SplashScreenDrawable"
-63-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:35:15-79
-64                android:resource="@drawable/launch_background" />
-64-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:36:15-61
-65
-66            <intent-filter>
-66-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:38:13-41:29
-67                <action android:name="android.intent.action.MAIN" />
-67-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:39:17-68
-67-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:39:25-66
-68
-69                <category android:name="android.intent.category.LAUNCHER" />
-69-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:40:17-76
-69-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:40:27-74
-70            </intent-filter>
-71        </activity>
-72        <!--
-73             Don't delete the meta-data below.
-74             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
-75        -->
-76        <meta-data
-76-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:45:9-47:33
-77            android:name="flutterEmbedding"
-77-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:46:13-44
-78            android:value="2" />
-78-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:47:13-30
-79
-80        <provider
-80-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
-81            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
-81-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
-82            android:authorities="com.example.petmapp_cliente.flutter.image_provider"
-82-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
-83            android:exported="false"
-83-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
-84            android:grantUriPermissions="true" >
-84-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
-85            <meta-data
-85-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
-86                android:name="android.support.FILE_PROVIDER_PATHS"
-86-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
-87                android:resource="@xml/flutter_image_picker_file_paths" />
-87-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
-88        </provider> <!-- Needs to be explicitly declared on P+ -->
-89        <uses-library
-89-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
-90            android:name="org.apache.http.legacy"
-90-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
-91            android:required="false" />
-91-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
-92
-93        <activity
-93-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
-94            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-94-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
-95            android:exported="false"
-95-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
-96            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-96-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
-97
-98        <meta-data
-98-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
-99            android:name="com.google.android.gms.version"
-99-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
-100            android:value="@integer/google_play_services_version" />
-100-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
-101    </application>
-102
-103</manifest>
+30    <application
+30-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:7:4-49:19
+31        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+31-->[androidx.core:core:1.1.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\2e94107f30f39be366a17347c2bf100b\core-1.1.0\AndroidManifest.xml:24:18-86
+32        android:debuggable="true"
+33        android:icon="@mipmap/ic_launcher"
+33-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:10:9-43
+34        android:label="petmapp_cliente"
+34-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:8:9-40
+35        android:usesCleartextTraffic="true" >
+35-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:9:9-44
+36
+37        <!--
+38             <meta-data android:name="com.google.android.geo.API_KEY"
+39               android:value="AIzaSyCQGdcwFflG11DX8aXvXj4jM4wAoXOCnLk"/>
+40        -->
+41        <meta-data
+41-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:13:9-14:73
+42            android:name="com.google.android.geo.API_KEY"
+42-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:13:20-65
+43            android:value="AIzaSyBMmrmZgl13qldBX5yjZHVCpb8rMQ6BGvM" />
+43-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:14:16-71
+44
+45        <activity
+45-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:15:9-43:20
+46            android:name="com.example.petmapp_cliente.MainActivity"
+46-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:16:13-41
+47            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+47-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:19:13-163
+48            android:hardwareAccelerated="true"
+48-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:20:13-47
+49            android:launchMode="singleTop"
+49-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:17:13-43
+50            android:theme="@style/LaunchTheme"
+50-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:18:13-47
+51            android:windowSoftInputMode="adjustResize" >
+51-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:21:13-55
+52
+53            <!--
+54                 Specifies an Android theme to apply to this Activity as soon as
+55                 the Android process has started. This theme is visible to the user
+56                 while the Flutter UI initializes. After that, this theme continues
+57                 to determine the Window background behind the Flutter UI.
+58            -->
+59            <meta-data
+59-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:26:13-29:17
+60                android:name="io.flutter.embedding.android.NormalTheme"
+60-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:27:15-70
+61                android:resource="@style/NormalTheme" />
+61-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:28:15-52
+62            <!--
+63                 Displays an Android View that continues showing the launch screen
+64                 Drawable until Flutter paints its first frame, then this splash
+65                 screen fades out. A splash screen is useful to avoid any visual
+66                 gap between the end of Android's launch screen and the painting of
+67                 Flutter's first frame.
+68            -->
+69            <meta-data
+69-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:35:13-38:17
+70                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+70-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:36:15-79
+71                android:resource="@drawable/launch_background" />
+71-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:37:15-61
+72
+73            <intent-filter>
+73-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:39:13-42:29
+74                <action android:name="android.intent.action.MAIN" />
+74-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:40:17-68
+74-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:40:25-66
+75
+76                <category android:name="android.intent.category.LAUNCHER" />
+76-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:41:17-76
+76-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:41:27-74
+77            </intent-filter>
+78        </activity>
+79        <!--
+80             Don't delete the meta-data below.
+81             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+82        -->
+83        <meta-data
+83-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:46:9-48:33
+84            android:name="flutterEmbedding"
+84-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:47:13-44
+85            android:value="2" />
+85-->C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\android\app\src\main\AndroidManifest.xml:48:13-30
+86
+87        <provider
+87-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:8:9-16:20
+88            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+88-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:13-82
+89            android:authorities="com.example.petmapp_cliente.flutter.image_provider"
+89-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:13-74
+90            android:exported="false"
+90-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-37
+91            android:grantUriPermissions="true" >
+91-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-47
+92            <meta-data
+92-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-15:75
+93                android:name="android.support.FILE_PROVIDER_PATHS"
+93-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
+94                android:resource="@xml/flutter_image_picker_file_paths" />
+94-->[:image_picker] C:\Users\Bascu\Documents\GitHub\Petmapp\petmapp_cliente\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
+95        </provider> <!-- Needs to be explicitly declared on P+ -->
+96        <uses-library
+96-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:33:9-35:40
+97            android:name="org.apache.http.legacy"
+97-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:34:13-50
+98            android:required="false" />
+98-->[com.google.android.gms:play-services-maps:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\c5de8972dacd649c27c247c9e16de3ac\jetified-play-services-maps-17.0.0\AndroidManifest.xml:35:13-37
+99
+100        <activity
+100-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:23:9-26:75
+101            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+101-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:24:13-79
+102            android:exported="false"
+102-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:25:13-37
+103            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+103-->[com.google.android.gms:play-services-base:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\7c879cb157fab2c9a5d74c3d70fd64e3\jetified-play-services-base-17.0.0\AndroidManifest.xml:26:13-72
+104
+105        <meta-data
+105-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:23:9-25:69
+106            android:name="com.google.android.gms.version"
+106-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:24:13-58
+107            android:value="@integer/google_play_services_version" />
+107-->[com.google.android.gms:play-services-basement:17.0.0] C:\Users\Bascu\.gradle\caches\transforms-2\files-2.1\3c8e7eb3d21ac94d08f658f6d8a1c9f3\jetified-play-services-basement-17.0.0\AndroidManifest.xml:25:13-66
+108    </application>
+109
+110</manifest>

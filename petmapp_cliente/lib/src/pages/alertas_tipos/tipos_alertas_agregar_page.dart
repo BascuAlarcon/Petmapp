@@ -14,7 +14,7 @@ class TipoAlertaAgregarPage extends StatefulWidget {
 }
 
 class _TipoAlertaAgregarPageState extends State<TipoAlertaAgregarPage> {
-// Controllers // 
+// Controllers //
   TextEditingController nombreCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
@@ -37,7 +37,7 @@ class _TipoAlertaAgregarPageState extends State<TipoAlertaAgregarPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      child: Column(children: <Widget>[ 
+                      child: Column(children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
@@ -51,6 +51,9 @@ class _TipoAlertaAgregarPageState extends State<TipoAlertaAgregarPage> {
                             validator: (valor) {
                               if (valor == null || valor.isEmpty) {
                                 return 'Debe agregar un nombre para el tipo';
+                              }
+                              if (valor.length < 3) {
+                                return 'El nombre debe contener al menos 3 cáraceteres';
                               }
                               return null;
                             },
@@ -115,8 +118,7 @@ class _TipoAlertaAgregarPageState extends State<TipoAlertaAgregarPage> {
   void _hogarAgregar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new TipoAlertaProvider();
-      provider.tipoAgregar(
-            nombreCtrl.text); // usamos un controller //
+      provider.tipoAgregar(nombreCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }
   }

@@ -229,18 +229,43 @@ class _LoginPageState extends State<LoginPage> {
           rut = rut.toString();
           var peticiones = await provider.getPeticiones(token);
           for (var peticion in peticiones) {
-            if (peticion['estado'] == 2) {
-              // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
-              estado = 2;
+            if (peticion['estado'] == 2 ||
+                peticion['estado'] == 5 ||
+                peticion['estado'] == 6 ||
+                peticion['estado'] == 7) {
+              if (peticion['nota'] == null || peticion['nota'] != 11) {
+                // ??
+                if (DateTime.parse(peticion['fecha_inicio'])
+                            .compareTo(DateTime.now()) <
+                        0 &&
+                    (DateTime.parse(peticion['fecha_fin'])
+                            .compareTo(DateTime.now()) <
+                        0)) {
+                  estado = 2;
+                }
+              }
             }
           }
           var publicaciones = await provider.publicacionListar(token);
           for (var publicacion in publicaciones) {
             var peticioness = await provider.peticionListar2(publicacion['id']);
             for (var peticione in peticioness) {
-              if (peticione['estado'] == 2) {
-                // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
-                estado = 2;
+              if (peticione['publicacion_id'] == publicacion['id']) {
+                if (peticione['estado'] == 2 ||
+                    peticione['estado'] == 5 ||
+                    peticione['estado'] == 6 ||
+                    peticione['estado'] == 7) {
+                  if (peticione['nota'] == null || peticione['nota'] != 11) {
+                    if (DateTime.parse(peticione['fecha_inicio'])
+                                .compareTo(DateTime.now()) <
+                            0 &&
+                        (DateTime.parse(peticione['fecha_fin'])
+                                .compareTo(DateTime.now()) <
+                            0)) {
+                      estado = 2;
+                    }
+                  }
+                }
               }
             }
           }
@@ -262,4 +287,6 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(context, route);
     }
   }
+
+  _validarFechas() {}
 }

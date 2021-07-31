@@ -28,19 +28,17 @@ class PublicacionProvider {
 
   // AGREGAR publicaciones //
   Future<http.Response> publicacionAgregar(
-      String coordenadas, String descripcion, String tarifa, String rut) async {
+      String descripcion, String tarifa, String rut, String hogar) async {
     var urlRequest = apiUrl + 'publicaciones';
-    var coor = coordenadas.split(';');
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
-          'latitude': coor[0],
-          'longitude': coor[1],
           'descripcion': descripcion,
           'tarifa': tarifa,
-          'usuario_rut': rut
+          'usuario_rut': rut,
+          'hogar_id': hogar
         }));
     return respuesta;
   }

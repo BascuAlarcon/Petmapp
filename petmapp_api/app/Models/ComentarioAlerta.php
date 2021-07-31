@@ -9,8 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ComentarioAlerta extends Model
 {
     use HasFactory;
-    protected $table = "comentarios_alertas";
-    use SoftDeletes;
+    protected $table = "comentarios_alertas"; 
 
     public function alerta(){
         return $this->belongsTo('App\Models\Alerta');

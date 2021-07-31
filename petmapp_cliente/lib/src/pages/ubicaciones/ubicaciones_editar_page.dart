@@ -1,5 +1,7 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
@@ -21,7 +23,8 @@ class _UbicacionEditarPageState extends State<UbicacionEditarPage> {
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController localizacionCtrl = new TextEditingController();
+  TextEditingController latitudCtrl = new TextEditingController();
+  TextEditingController longitudCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -49,27 +52,14 @@ class _UbicacionEditarPageState extends State<UbicacionEditarPage> {
                   fotoCtrl.text = snapshot.data['foto'];
                   descripcionCtrl.text = snapshot.data['descripcion'];
                   direccionCtrl.text = snapshot.data['direccion'];
-                  localizacionCtrl.text = snapshot.data['localizacion'];
+                  latitudCtrl.text = snapshot.data['latitud'];
+                  longitudCtrl.text = snapshot.data['longitud'];
                   return Column(
                     children: [
                       Expanded(
                         child: ListView(
                           children: [
                             _crearCampoTipo(),
-                            Divider(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                controller: fotoCtrl,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    labelText: 'Foto',
-                                    hintText: 'Foto',
-                                    suffixIcon: Icon(MdiIcons.camera)),
-                              ),
-                            ),
                             Divider(),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -111,20 +101,37 @@ class _UbicacionEditarPageState extends State<UbicacionEditarPage> {
                               ),
                             ),
                             Divider(),
+                            Divider(),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
-                                controller: localizacionCtrl,
+                                controller: latitudCtrl,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(20.0)),
-                                    labelText: 'Localizacion',
-                                    hintText: 'Localizacion',
+                                    labelText: 'latitud',
+                                    hintText: 'latitud',
                                     suffixIcon: Icon(Icons.flag)),
                               ),
                             ),
                             Divider(),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                controller: longitudCtrl,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    labelText: 'longitud',
+                                    hintText: 'longitud',
+                                    suffixIcon: Icon(Icons.flag)),
+                              ),
+                            ),
+                            Divider(),
+                            _crearCampoFoto(),
+                            _mostrarImagen(snapshot.data['foto'])
                           ],
                         ),
                       ),
@@ -184,6 +191,40 @@ class _UbicacionEditarPageState extends State<UbicacionEditarPage> {
         ));
   }
 
+  Widget _crearCampoFoto() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RaisedButton(
+          onPressed: () => tomarFoto(ImageSource.gallery),
+          child: Text('Seleccionar foto'),
+        ));
+  }
+
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
+  int caso = 0;
+
+  Widget _mostrarImagen(foto) {
+    return FadeInImage(
+        image: caso == 0
+            ? FileImage(File(foto))
+            : FileImage(File(_imagefile.path)),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover);
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      pickedFile == null ? null : _imagefile = pickedFile;
+      _imagefile == null ? null : caso = 1;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
+  }
+
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
     var provider = UbicacionProvider();
     return await provider.getUbicacion(widget.idubicacion);
@@ -198,7 +239,8 @@ class _UbicacionEditarPageState extends State<UbicacionEditarPage> {
           fotoCtrl.text,
           descripcionCtrl.text,
           direccionCtrl.text,
-          localizacionCtrl.text); // usamos un controller //
+          latitudCtrl.text,
+          longitudCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }
   }

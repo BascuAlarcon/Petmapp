@@ -11,12 +11,14 @@ import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_agregar_page
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/administrador_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuidado_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/usuario_mi_perfil_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/cuenta/usuario_mi_perfil_page.dart';
 // import 'package:petmapp_cliente/src/pages/usuario/usuario_perfil_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +51,8 @@ class _MainPageState extends State<MainPage> {
   // final Location location = Location();
   String _addrees, _dateTime;
 
+  bool servicioFinalizado;
+
   SharedPreferences sharedPreferences;
   String email = '';
   String token = '';
@@ -58,6 +62,17 @@ class _MainPageState extends State<MainPage> {
   String perfil = '';
   bool habilitado = false;
   var listaDatos;
+
+  // DATA USUARIO
+  var tipoUsuario;
+  var idData;
+  var idDataPublicacion;
+  var _ultimoDia = false;
+  var rutOtro;
+  var estadoPeticion;
+  var nota;
+  var idHogar;
+  var mascotas;
 
   Position _position;
   Address _direccion;
@@ -94,6 +109,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _traerData();
     publicacionListarr(context);
     checkLoginStatus();
     /* setCustomMarker(); */
@@ -209,13 +225,13 @@ class _MainPageState extends State<MainPage> {
                           style: TextStyle(
                               color: Colors.white, fontFamily: 'Raleway')),
                       onTap: () => _navegarPublicaciones(context)),
-                  estado == "2"
+                  servicioFinalizado == false
                       ? ListTile(
                           trailing: Icon(Icons.keyboard_arrow_right_outlined),
                           title: Text('Cuidados',
                               style: TextStyle(
                                   color: Colors.white, fontFamily: 'Raleway')),
-                          onTap: () {},
+                          onTap: () => _navegarCuidado(context),
                         )
                       : ListTile(
                           title: Text('Cuidados',
@@ -230,7 +246,7 @@ class _MainPageState extends State<MainPage> {
                           title: Text('Administrador',
                               style: TextStyle(
                                   color: Colors.white, fontFamily: 'Raleway')),
-                          onTap: () {})
+                          onTap: () => _navegarAdministrador(context))
                       : Text(''),
                   perfil == "1"
                       ? ListTile(
@@ -559,14 +575,38 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  void _navegarCuidado(BuildContext context) {
+    _traerData();
+    var route = new MaterialPageRoute(
+        builder: (context) => CuidadoPage(
+              widData: idData,
+              wrutUsuario: rutOtro,
+              wtipoUsuario: tipoUsuario,
+              wultimoDia: _ultimoDia,
+              westado: estadoPeticion,
+              widDataPublicacion: idDataPublicacion,
+              wnota: nota,
+            ));
+    Navigator.push(context, route).then((value) {
+      setState(() {
+        _traerData();
+        if (nota != null || nota != 11) {
+          servicioFinalizado = true;
+        }
+      });
+    });
+  }
+
   void _navegarRazas(BuildContext context) {
     var route = new MaterialPageRoute(builder: (context) => RazaListarPage());
     Navigator.push(context, route);
   }
 
   void _navegarPublicaciones(BuildContext context) {
-    var route =
-        new MaterialPageRoute(builder: (context) => PublicacionListarPage());
+    var route = new MaterialPageRoute(
+        builder: (context) => PublicacionListarPage(
+              idPublicacion: idDataPublicacion,
+            ));
     Navigator.push(context, route);
   }
 
@@ -580,14 +620,24 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _navegarUsuarioPerfil(BuildContext context) {
+    _traerData();
     var route = new MaterialPageRoute(
         builder: (context) => UsuarioPerfilPage(
               rutUsuario: int.tryParse(rut),
+              widDataPeticion: idData,
+              wrutOtro: rutOtro,
+              wtipoUsuario: tipoUsuario,
+              wultimoDia: _ultimoDia,
+              westado: estadoPeticion,
+              widDataPublicacion: idDataPublicacion,
+              wnota: nota,
+              widHogar: idHogar,
+              mascotas: mascotas,
             ));
     Navigator.push(context, route).then((value) {
       setState(() {
         comprobarDatos();
-        cargarDatosUsuario();
+        _traerData();
       });
     });
   }
@@ -604,18 +654,8 @@ class _MainPageState extends State<MainPage> {
       token = sharedPreferencess.getStringList('usuario')[4];
       estado = sharedPreferencess.getStringList('usuario')[5];
     });
-    var provider = UsuarioProvider();
-    var usuario = await provider.mostrarUsuario(int.tryParse(rut));
-    var hogarProvider = HogarProvider();
-    var hogares = await hogarProvider.hogarListar();
-    for (var hogar in hogares) {
-      if (hogar['usuario_rut'].toString() == rut) {
-        if (usuario['fechaNacimiento'] != null ||
-            usuario['sexo'] != null ||
-            usuario['numero_telefonico'] != null) {
-          habilitado = true;
-        }
-      }
+    if (estado == 2.toString()) {
+      servicioFinalizado = false;
     }
   }
 
@@ -641,6 +681,12 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
+  _navegarAdministrador(BuildContext context) {
+    var route =
+        new MaterialPageRoute(builder: (context) => AdministradorPagePage());
+    Navigator.push(context, route);
+  }
+
   Future<void> comprobarDatos() async {
     var provider = UsuarioProvider();
     var usuario = await provider.mostrarUsuario(int.tryParse(rut));
@@ -652,8 +698,103 @@ class _MainPageState extends State<MainPage> {
       habilitado = false;
     }
   }
+
+  _traerData() async {
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    var providerPublicacion = PublicacionProvider();
+    var publicaciones = await providerPublicacion.publicacionListar();
+
+    var condicional = 0;
+    for (var peticion in peticiones) {
+      // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
+      if (peticion['estado'] == 2 ||
+          peticion['estado'] == 5 ||
+          peticion['estado'] == 6 ||
+          peticion['estado'] == 7) {
+        condicional = 1;
+        // buscamos si es el dueño
+        DateTime today = DateTime.now();
+        DateTime fechaFin = DateTime.tryParse(peticion['fecha_fin']);
+        if (peticion['estado'] == 7 && fechaFin.compareTo(today) < 0) {
+          provider.peticionTerminada(peticion['id'].toString(), '4');
+        }
+        if (peticion['usuario_rut'].toString() == rut) {
+          servicioFinalizado = false;
+          tipoUsuario = 1;
+          idData = peticion['id'];
+          nota = peticion['nota'];
+          estadoPeticion = peticion['estado'];
+          var peticionMascota = await provider.mascotasPeticion(peticion['id']);
+          mascotas = peticionMascota['mascotas'];
+          for (var publicacion in publicaciones) {
+            if (publicacion['id'] == peticion['publicacion_id']) {
+              rutOtro = publicacion['usuario_rut'];
+              idDataPublicacion = publicacion['id'];
+              idHogar = publicacion['hogar_id'];
+              DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
+              var today = DateTime.now();
+              if (fechaFin.compareTo(today) < 0) {
+                _ultimoDia = true;
+              }
+            }
+          }
+        }
+        // buscamos si es el cuidador
+        for (var publicacion in publicaciones) {
+          if (publicacion['usuario_rut'].toString() == rut &&
+              publicacion['id'] == peticion['publicacion_id']) {
+            tipoUsuario = 2;
+            servicioFinalizado = false;
+            for (var peticion in peticiones) {
+              if (publicacion['id'] == peticion['publicacion_id']) {
+                if (peticion['estado'] == 2 ||
+                    peticion['estado'] == 5 ||
+                    peticion['estado'] == 6 ||
+                    peticion['estado'] == 7) {
+                  idDataPublicacion = publicacion['id'];
+                  idHogar = publicacion['hogar_id'];
+                  rutOtro = peticion['usuario_rut'];
+                  idData = peticion['id'];
+                  var peticionMascota =
+                      await provider.mascotasPeticion(peticion['id']);
+                  mascotas = peticionMascota['mascotas'];
+                  estadoPeticion = peticion['estado'];
+                  nota = publicacion['nota'];
+                  DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
+                  var today = DateTime.now();
+                  if (fechaFin.compareTo(today) < 0) {
+                    _ultimoDia = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+      } else {
+        if (condicional == 0) {
+          tipoUsuario = null;
+          idData = null;
+          idDataPublicacion = null;
+          idHogar = null;
+          rutOtro = null;
+          estadoPeticion = null;
+          nota = null;
+          mascotas = null;
+        }
+      }
+    }
+  }
 }
 
+/*  var tipoUsuario;
+  var idData;
+  var idDataPublicacion;
+  var _ultimoDia = false;
+  var rutOtro;
+  var estadoPeticion;
+  var nota;
+  var idHogar; */
 void _navegarAlertas(BuildContext context) {
   var route = new MaterialPageRoute(builder: (context) => AlertaListarPage());
   Navigator.push(context, route);
@@ -667,11 +808,6 @@ _navegarUbicaciones(BuildContext context) {
 
 _navegarNegocios(BuildContext context) {
   var route = new MaterialPageRoute(builder: (context) => NegociosListarPage());
-  Navigator.push(context, route);
-}
-
-void _navegarCuidado(BuildContext context) {
-  var route = new MaterialPageRoute(builder: (context) => CuidadoPage());
   Navigator.push(context, route);
 }
 
@@ -770,4 +906,18 @@ Future<List<dynamic>> publicacionListarr(context) async {
       }
     }
   }
+
+  // SACAR ESTE CÓDIGO //
+  /* _validarFechaFin(var idPeticion) async {
+    bool terminado = false;
+    DateTime fechaFin;  
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    for (var peticion in peticiones) {
+      fechaFin = DateTime.parse(peticion['fecha_fin']);
+      if (fechaFin.compareTo(DateTime.now()) > 0 && peticion['estado'] == 2) {
+        return await provider.peticionTerminada(peticion['id'], '4');
+      }
+    }
+  } */
 }

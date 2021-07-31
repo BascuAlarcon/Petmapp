@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
 import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
@@ -32,7 +35,8 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController localizacionCtrl = new TextEditingController();
+  TextEditingController latitudCtrl = new TextEditingController();
+  TextEditingController longitudCtrl = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,19 +54,6 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
                 child: ListView(
                   children: [
                     _crearCampoTipo(),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: fotoCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'Foto',
-                            hintText: 'Foto',
-                            suffixIcon: Icon(MdiIcons.camera)),
-                      ),
-                    ),
                     Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -105,16 +96,31 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        controller: localizacionCtrl,
+                        controller: latitudCtrl,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'Localizacion',
-                            hintText: 'Localizacion',
+                            labelText: 'latitud',
+                            hintText: 'latitud',
                             suffixIcon: Icon(Icons.flag)),
                       ),
                     ),
                     Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: longitudCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'longitud',
+                            hintText: 'longitud',
+                            suffixIcon: Icon(Icons.flag)),
+                      ),
+                    ),
+                    Divider(),
+                    _crearCampoFoto(),
+                    _mostrarImagen()
                   ],
                 ),
               ),
@@ -167,15 +173,49 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
         ));
   }
 
+  Widget _crearCampoFoto() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RaisedButton(
+          onPressed: () => tomarFoto(ImageSource.gallery),
+          child: Text('Seleccionar foto'),
+        ));
+  }
+
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
+
+  Widget _mostrarImagen() {
+    return FadeInImage(
+        image: _imagefile == null
+            ? NetworkImage(
+                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+            : FileImage(File(_imagefile.path)),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover);
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      _imagefile = pickedFile;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
+  }
+
   void _ubicacionAgregar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new UbicacionProvider();
       provider.ubicacionAgregar(
           ubicacion,
-          fotoCtrl.text,
+          foto,
           descripcionCtrl.text,
           direccionCtrl.text,
-          localizacionCtrl.text); // usamos un controller //
+          latitudCtrl.text,
+          longitudCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }
   }

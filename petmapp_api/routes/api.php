@@ -50,6 +50,7 @@ Route::get('razas/{raza}/mascotas', 'App\Http\Controllers\API\RazaController@mas
 Route::get('especies/{especie}/razas', 'App\Http\Controllers\API\EspecieController@razas');
 Route::get('publicaciones/{publicacion}/peticiones', 'App\Http\Controllers\API\PublicacionController@peticiones');
 Route::get('publicaciones/{publicacion}/peticioness', 'App\Http\Controllers\API\PublicacionController@peticiones2');
+Route::get('peticiones/{peticion}/mascotas', 'App\Http\Controllers\API\PeticionController@mascotas');
 /* Route::get('peticiones/{peticion}/evaluaciones', 'App\Http\Controllers\API\PeticionController@evaluaciones'); */
 Route::get('peticiones/{peticion}/servicios', 'App\Http\Controllers\API\PeticionController@servicios'); 
 Route::get('negocios/{negocio}/comentarios', 'App\Http\Controllers\API\NegocioController@comentarios');
@@ -60,6 +61,7 @@ Route::post('publicaciones/{publicacion}/comentario', 'App\Http\Controllers\API\
 Route::post('peticiones/{peticion}/comentario', 'App\Http\Controllers\API\PeticionController@comentario');   
 Route::post('peticiones/{peticion}/respuesta', 'App\Http\Controllers\API\PeticionController@respuesta'); 
 Route::post('peticiones/{peticion}/monto', 'App\Http\Controllers\API\PeticionController@monto'); 
+Route::post('peticiones/{peticion}/termino', 'App\Http\Controllers\API\PeticionController@termino'); 
  
 // Editar campo última actividad de tabla Alerta //
 Route::post('alertas/{alerta}/ultima', 'App\Http\Controllers\API\AlertaController@ultima'); 
@@ -85,5 +87,7 @@ Route::group([
     Route::put('usuarios/{usuario}',            [UserController::class, 'editarPerfil']);
     Route::delete('usuarios/{usuario}',         [UserController::class, 'destroy']);
     Route::put('usuarios/{usuario}/evaluacion', [UserController::class, 'evaluacion']); 
+    Route::put('usuarios/{usuario}/cambiar',    [UserController::class, 'cambiar']); 
+    Route::put('usuarios/{usuario}/deshabilitar',    [UserController::class, 'deshabilitar']); 
      
 });

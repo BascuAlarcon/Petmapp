@@ -1,6 +1,9 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:petmapp_cliente/src/providers/servicios_provider.dart';
 
 class ServiciosEditarPage extends StatefulWidget {
@@ -12,7 +15,8 @@ class ServiciosEditarPage extends StatefulWidget {
 
 class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
   @override
-
+  bool _validate = false;
+  DateTime _fecha;
 // Controllers //
   TextEditingController comentarioCtrl = new TextEditingController();
   TextEditingController montoCtrl = new TextEditingController();
@@ -41,6 +45,7 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
                 montoCtrl.text = snapshot.data['monto'].toString();
                 fechaCtrl.text = snapshot.data['fecha'];
                 fotoCtrl.text = snapshot.data['foto'];
+                //_fecha = DateTime.parse(snapshot.data['fecha_nacimiento']);
                 return Column(
                   children: [
                     Expanded(
@@ -87,33 +92,26 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
                           ),
                           Divider(),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(17.0),
                             child: TextFormField(
                               controller: fechaCtrl,
+                              onTap: () {
+                                _mostrarFecha(context);
+                              },
                               decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  labelText: 'fecha',
-                                  hintText: 'fecha',
-                                  suffixIcon: Icon(Icons.flag)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                labelText: 'Fecha de inicio del cuidado',
+                                hintText: 'Fecha de inicio',
+                                suffixIcon: Icon(Icons.date_range),
+                                errorText:
+                                    _validate ? 'Value Can\'t Be Empty' : null,
+                              ),
                             ),
                           ),
                           Divider(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              controller: fotoCtrl,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  labelText: 'foto',
-                                  hintText: 'foto',
-                                  suffixIcon: Icon(Icons.flag)),
-                            ),
-                          ),
-                          Divider(),
+                          _crearCampoFoto(),
+                          _mostrarImagen(snapshot.data['foto'])
                         ],
                       ),
                     ),
@@ -174,6 +172,53 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
         ));
   }
 
+  Future _mostrarFecha(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now())
+        .then((value) => setState(() {
+              _fecha = value;
+              fechaCtrl.text =
+                  DateFormat('yyyy-MM-dd').format(value).toString();
+            }));
+  }
+
+  Widget _crearCampoFoto() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RaisedButton(
+          onPressed: () => tomarFoto(ImageSource.gallery),
+          child: Text('Seleccionar foto'),
+        ));
+  }
+
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
+  int caso = 0;
+
+  Widget _mostrarImagen(foto) {
+    return FadeInImage(
+        image: caso == 0
+            ? FileImage(File(foto))
+            : FileImage(File(_imagefile.path)),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover);
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      pickedFile == null ? null : _imagefile = pickedFile;
+      _imagefile == null ? null : caso = 1;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
+  }
+
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
     var provider = ServiciosProvider();
     return await provider.getServicio(widget.id);
@@ -182,8 +227,12 @@ class _ServiciosEditarPageState extends State<ServiciosEditarPage> {
   void _servicioEditar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new ServiciosProvider();
-      provider.serviciosEditar(comentarioCtrl.text, montoCtrl.text,
-          fechaCtrl.text, fotoCtrl.text, widget.id.toString());
+      provider.serviciosEditar(
+          comentarioCtrl.text,
+          montoCtrl.text,
+          fechaCtrl.text,
+          foto == null ? fotoCtrl.text : foto,
+          widget.id.toString());
       Navigator.pop(context);
     }
   }

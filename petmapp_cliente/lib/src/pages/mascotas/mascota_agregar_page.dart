@@ -1,11 +1,8 @@
-import 'dart:collection';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:petmapp_cliente/src/providers/especie_provider.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
-import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -207,26 +204,18 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                                       initialDate: fechaNacimientoCtrl == null
                                           ? DateTime.now()
                                           : _fechaNacimiento,
-                                      firstDate: DateTime(1900),
+                                      firstDate: DateTime(2000),
                                       lastDate: DateTime.now())
                                   .then((value) => setState(() {
-                                        _fechaNacimiento = value;
-                                        fechaNacimientoCtrl.text =
-                                            DateFormat('yyyy-MM-dd')
-                                                .format(value)
-                                                .toString();
+                                        if (value != null) {
+                                          _fechaNacimiento = value;
+                                          fechaNacimientoCtrl.text =
+                                              DateFormat('yyyy-MM-dd')
+                                                  .format(value)
+                                                  .toString();
+                                        }
                                       }));
-                              // fechaNacimientoCtrl.text =
-                              //     DateFormat('dd-MM-yyyy')
-                              //         .format(_fechaNacimiento)
-                              //         .toString();
                             },
-                            /* validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor ingrese un nombre';
-                                }
-                                return null;
-                              }, */
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0)),

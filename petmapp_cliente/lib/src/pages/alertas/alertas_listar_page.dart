@@ -5,6 +5,7 @@ import 'package:petmapp_cliente/src/pages/alertas/alertas_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/alertas/alertas_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/alertas/alertas_mostrar_page.dart';
 import 'package:petmapp_cliente/src/pages/comentarios_alertas/coment_alertas_listar_page.dart';
+import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_alerta_provider.dart';
@@ -19,6 +20,8 @@ class AlertaListarPage extends StatefulWidget {
 
 class _AlertaListarPageState extends State<AlertaListarPage> {
   SharedPreferences sharedPreferences;
+  DateTime _ultimaActividad;
+  int diasPasados;
   String email = '';
   String name = '';
   String rut = '';
@@ -31,6 +34,7 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
     super.initState();
     cargarDatosUsuario();
     _cargarTipo();
+    comprobarEstadoAlertas();
   }
 
   Widget build(BuildContext context) {
@@ -183,6 +187,11 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
 
   void _alertasBorrar(int id) async {
     var provider = new AlertaProvider();
+    var comentariosProvider = new ComentarioAlertaProvider();
+    var comentarios = await comentariosProvider.comentarioAlertaListar(id);
+    for (var comentario in comentarios) {
+      await comentariosProvider.comentarioBorrar(comentario['id']);
+    }
     await provider.alertaBorrar(id);
   }
 
@@ -226,5 +235,30 @@ class _AlertaListarPageState extends State<AlertaListarPage> {
         _nombres[tipo['id']] = tipo['nombre'];
       });
     });
+  }
+
+  // ACÁ SE COMPRUEBA QUE LA ALERTA CULIA TENGA MENOS DE 1 SEMANA VIVA
+
+  void comprobarEstadoAlertas() async {
+    var provider = AlertaProvider();
+    var alertas = await provider.alertaListar();
+    for (var alerta in alertas) {
+      diasPasados = calcularDias(alerta['ultima_actividad']);
+      if (diasPasados > 7) {
+        await provider.alertaBorrar(alerta['id']);
+      }
+    }
+  }
+
+  int calcularDias(ultimaActividad) {
+    int daysBetween(DateTime ultimaActividad, DateTime hoy) {
+      ultimaActividad = DateTime(
+          ultimaActividad.year, ultimaActividad.month, ultimaActividad.day);
+      hoy = DateTime(hoy.year, hoy.month, hoy.day);
+      return (hoy.difference(ultimaActividad).inHours / 24).round();
+    }
+
+    _ultimaActividad = DateTime.parse(ultimaActividad);
+    return daysBetween(_ultimaActividad, DateTime.now());
   }
 }

@@ -60,6 +60,7 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
                   latitudCtrl.text = snapshot.data['latitud'];
                   _valorTipo = snapshot.data['tipo_hogar'];
                   _valorDisponibilidad = snapshot.data['disponibilidad_patio'];
+                  snapshot.data['foto'] == null ? caso = 2 : caso = 0;
                   //_imagefile.path = snapshot.data['foto'];
                   return Column(
                     children: [
@@ -128,6 +129,9 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
                                   if (valor.isEmpty || valor == null) {
                                     return 'Debe ingresar una dirección';
                                   }
+                                  if (valor.length < 5) {
+                                    return 'Direccion muy corta';
+                                  }
                                   return null;
                                 },
                               ),
@@ -147,6 +151,9 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
                                 validator: (valor) {
                                   if (valor.isEmpty || valor == null) {
                                     return 'Debe ingresar una descripcion';
+                                  }
+                                  if (valor.length < 5) {
+                                    return 'Descripcion muy corta';
                                   }
                                   return null;
                                 },
@@ -194,7 +201,11 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
                             ),
                             Divider(),
                             _crearCampoFoto(),
-                            _mostrarImagen(snapshot.data['foto'])
+                            caso == 0
+                                ? _mostrarImagen(snapshot.data['foto'])
+                                : Text(''),
+                            caso == 1 ? _mostrarImagen('example') : Text(''),
+                            caso == 2 ? Text('') : Text('')
                           ],
                         ),
                       ),
@@ -266,7 +277,7 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
   PickedFile _imagefile;
   String foto;
   final ImagePicker _picker = ImagePicker();
-  int caso = 0;
+  int caso = 2;
 
   Widget _mostrarImagen(foto) {
     return FadeInImage(

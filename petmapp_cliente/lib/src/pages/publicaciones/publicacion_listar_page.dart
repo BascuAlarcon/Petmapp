@@ -4,12 +4,14 @@ import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_agregar_page
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_mostrar_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PublicacionListarPage extends StatefulWidget {
-  PublicacionListarPage({Key key}) : super(key: key);
+  final int idPublicacion;
+  PublicacionListarPage({this.idPublicacion});
 
   @override
   _PublicacionListarPageState createState() => _PublicacionListarPageState();
@@ -21,6 +23,8 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
   String name = '';
   String rut = '';
   String perfil = '';
+  bool mostrar = true;
+  int contador = 0;
 
   @override
   void initState() {
@@ -38,6 +42,7 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
       body: FutureBuilder(
         future: _fetch(),
         builder: (context, snapshot) {
+          var snapshotData = snapshot.data;
           if (!snapshot.hasData) {
             return Center(
                 child: Text('No data')); /* CircularProgressIndicator() */
@@ -46,56 +51,8 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
             return Column(
               children: [
                 // LISTA publicaciones //
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () => _refresh(),
-                    child: ListView.builder(
-                      itemCount: safeCards.length,
-                      itemBuilder: (context, index) {
-                        if (snapshot.data[index]['usuario_rut'].toString() ==
-                            rut) {
-                          return Column();
-                        } else {
-                          return Slidable(
-                            actionPane: SlidableDrawerActionPane(),
-                            actionExtentRatio: 0.25,
-                            child: ListTile(
-                              leading: Icon(MdiIcons.clipboardText),
-                              title: Text(snapshot.data[index]['descripcion']),
-                              onTap: () => _navegarPublicacion(
-                                  context,
-                                  snapshot.data[index]['id'],
-                                  snapshot.data[index]['usuario_rut']),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-
-                // LISTA publicaciones //
-                // BOTON AGREGAR //
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => _navegarpublicacionesAgregar(context),
-                        child: Text('Agregar Publicación'),
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.white12))),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(120, 139, 255, 1.0)),
-                        ),
-                      )),
-                )
-                // BOTON AGREGAR //
+                _mostrarPublicaciones(safeCards, snapshotData),
+                _botonAgregar()
               ],
             );
           }
@@ -104,6 +61,7 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
     );
   }
 
+  // TRAER DATA //
   Future<Null> _refresh() async {
     await _fetch();
     setState(() {});
@@ -114,6 +72,75 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
     return await provider.publicacionListar();
   }
 
+  // TRAER DATOS DE SHARED PREFERENCES //
+  Future<void> cargarDatosUsuario() async {
+    SharedPreferences sharedPreferencess =
+        await SharedPreferences.getInstance();
+    setState(() {
+      /* listaDatos = sharedPreferencess.getStringList("usuario");
+      print(listaDatos); */
+      rut = sharedPreferencess.getStringList('usuario')[0];
+      email = sharedPreferencess.getStringList('usuario')[1];
+      name = sharedPreferencess.getStringList('usuario')[2];
+      perfil = sharedPreferencess.getStringList('usuario')[4];
+    });
+  }
+
+  // CONSTRUIR PAGE //
+  Widget _mostrarPublicaciones(safeCards, snapshotData) {
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: () => _refresh(),
+        child: ListView.builder(
+          itemCount: safeCards.length,
+          itemBuilder: (context, index) {
+            _comprobarPeticionPublicacion(snapshotData[index]);
+            if (mostrar == false) {
+              return Column();
+            } else {
+              return widget.idPublicacion != snapshotData[index]['id']
+                  ? Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: ListTile(
+                        leading: Icon(MdiIcons.clipboardText),
+                        title: Text(snapshotData[index]['descripcion']),
+                        onTap: () => _navegarPublicacion(
+                            context,
+                            snapshotData[index]['id'],
+                            snapshotData[index]['usuario_rut']),
+                      ),
+                    )
+                  : Column();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _botonAgregar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          height: 40,
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => _navegarpublicacionesAgregar(context),
+            child: Text('Agregar Publicación'),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.white12))),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromRGBO(120, 139, 255, 1.0)),
+            ),
+          )),
+    );
+  }
+
+  // NAVEGADORES //
   void _navegarpublicacionesAgregar(BuildContext context) {
     var route =
         new MaterialPageRoute(builder: (context) => PublicacionesAgregarPage());
@@ -180,17 +207,17 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
     Navigator.push(context, route);
   }
 
-  // TRAER DATOS DE SHARED PREFERENCES //
-  Future<void> cargarDatosUsuario() async {
-    SharedPreferences sharedPreferencess =
-        await SharedPreferences.getInstance();
-    setState(() {
-      /* listaDatos = sharedPreferencess.getStringList("usuario");
-      print(listaDatos); */
-      rut = sharedPreferencess.getStringList('usuario')[0];
-      email = sharedPreferencess.getStringList('usuario')[1];
-      name = sharedPreferencess.getStringList('usuario')[2];
-      perfil = sharedPreferencess.getStringList('usuario')[4];
-    });
+  // SE COMPRUEBA QUE EL USUARIO NO TENGA UNA PETICION CON ESTADO 2 A LA PUBLICACION //
+  _comprobarPeticionPublicacion(index) async {
+    var peticionProvider = PeticionProvider();
+    var peticiones = await peticionProvider.peticionListar();
+    mostrar = true;
+    for (var peticion in peticiones) {
+      if (index['id'] == peticion['publicacion_id']) {
+        if (peticion['estado'] == 3 || peticion['estado'] == 4) {
+          mostrar = false;
+        }
+      }
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -7,6 +9,7 @@ import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_editar_page.dart'
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_agregar_page.dart';
 import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_provider.dart';
+import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ComentarioAlertaListarPage extends StatefulWidget {
@@ -22,11 +25,13 @@ class _ComentarioAlertaListarPageState
     extends State<ComentarioAlertaListarPage> {
   SharedPreferences sharedPreferences;
   String token, rut = '';
-
+  var _fotosUsuario = [];
+  var _usuarios = [];
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    /* _fetchUsuario(); */
   }
 
   Widget build(BuildContext context) {
@@ -67,6 +72,21 @@ class _ComentarioAlertaListarPageState
                             onTap: () {},
                           ),
                           actions: [
+                            Container(
+                                width: 50,
+                                height: 50,
+                                child: CircleAvatar(
+                                    child: ClipOval(
+                                        child:
+                                            /* snapshot.data[index]['foto'] !=
+                                                'xD'
+                                            ? Image(
+                                                image: FileImage(File(snapshot
+                                                    .data[index]['foto'])))
+                                            :  */
+                                            Image(
+                                                image: NetworkImage(
+                                                    'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
                             rut ==
                                     snapshot.data[index]['usuario_rut']
                                         .toString()
@@ -128,6 +148,22 @@ class _ComentarioAlertaListarPageState
   Future<List<dynamic>> _fetch() async {
     var provider = new ComentarioAlertaProvider();
     return await provider.comentarioAlertaListar(widget.id);
+  }
+
+  void _fetchUsuario() async {
+    var provider = new ComentarioAlertaProvider();
+    var comentarios = await provider.comentarioAlertaListar(widget.id);
+    var usuarioProvider = new UsuarioProvider();
+    var usuarios = await usuarioProvider.getUsuarios();
+    // y si un usuario hace más de un comentario?
+    for (var comentario in comentarios) {
+      for (var usuario in usuarios) {
+        if (comentario['usuario_rut'] == usuario['rut']) {
+          // _usuarios.add(usuario['rut']);
+          //_fotosUsuario.add(usuario['foto']);
+        }
+      }
+    }
   }
 
   void _navegarComentariosAgregar(BuildContext context) {

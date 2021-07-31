@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/servicios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,11 +22,14 @@ class _ServiciosAgregarPageState extends State<ServiciosAgregarPage> {
   String email = '';
   String name = '';
   String rut = '';
-
+  bool _validate = false;
+  DateTime _fecha = DateTime.now();
+  DateTime _inicio, _fin;
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    traerFechasPeticion();
   }
 
 // Controllers //
@@ -84,31 +92,25 @@ class _ServiciosAgregarPageState extends State<ServiciosAgregarPage> {
                     ),
                     Divider(),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(17.0),
                       child: TextFormField(
                         controller: fechaCtrl,
+                        onTap: () {
+                          _mostrarFechaInicio(context);
+                        },
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'fecha',
-                            hintText: 'fecha',
-                            suffixIcon: Icon(MdiIcons.calendar)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0)),
+                          labelText: 'Fecha de inicio del cuidado',
+                          hintText: 'Fecha de inicio',
+                          suffixIcon: Icon(Icons.date_range),
+                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                        ),
                       ),
                     ),
                     Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: fotoCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'foto',
-                            hintText: 'foto',
-                            suffixIcon: Icon(MdiIcons.camera)),
-                      ),
-                    ),
-                    Divider(),
+                    _crearCampoFoto(),
+                    _mostrarImagen()
                   ],
                 ),
               ),
@@ -163,16 +165,65 @@ class _ServiciosAgregarPageState extends State<ServiciosAgregarPage> {
         ));
   }
 
+  Future _mostrarFechaInicio(BuildContext context) async {
+    return await showDatePicker(
+            context: context,
+            initialDate: _inicio,
+            firstDate: _inicio,
+            lastDate: _fin)
+        .then((value) => setState(() {
+              if (value != null) {
+                _fecha = value;
+                fechaCtrl.text =
+                    DateFormat('yyyy-MM-dd').format(value).toString();
+              }
+            }));
+  }
+
+  Widget _crearCampoFoto() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: RaisedButton(
+          onPressed: () => tomarFoto(ImageSource.gallery),
+          child: Text('Seleccionar foto'),
+        ));
+  }
+
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
+
+  Widget _mostrarImagen() {
+    return FadeInImage(
+        image: _imagefile == null
+            ? NetworkImage(
+                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+            : FileImage(File(_imagefile.path)),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover);
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      _imagefile = pickedFile;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
+  }
+
   void _servicioAgregar(BuildContext context) {
     if (_formKey.currentState.validate()) {
-      var montoTotal = widget.boleta + int.tryParse(montoCtrl.text);
+      int montoTotal;
+      montoTotal = (widget.boleta + int.tryParse(montoCtrl.text));
       var provider = new ServiciosProvider();
       provider.serviciosAgregar(
           comentarioCtrl.text,
           montoCtrl.text,
           montoTotal.toString(),
           fechaCtrl.text,
-          fotoCtrl.text,
+          foto,
           widget.idPeticion.toString());
       Navigator.pop(context);
     }
@@ -191,5 +242,16 @@ class _ServiciosAgregarPageState extends State<ServiciosAgregarPage> {
       print(listaDatos); */
       name = sharedPreferencess.getStringList('usuario')[2];
     });
+  }
+
+  void traerFechasPeticion() async {
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    for (var peticion in peticiones) {
+      if (peticion['id'] == widget.idPeticion) {
+        _inicio = DateTime.parse(peticion['fecha_inicio']);
+        _fin = DateTime.parse(peticion['fecha_fin']);
+      }
+    }
   }
 }

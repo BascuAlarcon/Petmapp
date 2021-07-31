@@ -1,10 +1,9 @@
 import 'dart:collection';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/pages/peticiones/peticion_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/peticiones/peticion_editar_page.dart';
-import 'package:petmapp_cliente/src/pages/usuario/perfil_usuario_page.dart';
+import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
@@ -21,23 +20,36 @@ class PublicacionMostrarPage extends StatefulWidget {
 }
 
 class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
+  // DATA DEL USUARIO //
   String rut, email, estado, perfil, name, token = '';
   bool habilitado = false;
-  bool peticionExistente = false;
+  bool usuarioHabilitado = true;
+  // DATA DEL HOGAR //
+  int tipoHogar, disponibilidadPatio;
+  String direccion, descripcion, foto;
+
+  // DATA DE LA PUBLICACION //
+  String titulo;
   int idPeticion;
+  bool peticionExistente = false;
+
+  // OTROS //
   int contador = 0;
+  dynamic snapshotData;
+  dynamic snapshotDataUsuario;
   @override
   void initState() {
     super.initState();
     cargarDatosUsuario();
     comprobarExistenciaPeticion();
+    validarUsuario();
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Ver Publicación'),
+          title: titulo == null ? Text('Ver Publicación') : Text(titulo),
           backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
         body: Column(
@@ -47,40 +59,112 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
 
   Widget _dataPublicacion() {
     return Expanded(
+        flex: 2,
         child: Container(
-      width: double.infinity,
-      margin: EdgeInsets.all(10),
-      child: FutureBuilder(
-        future: _fetch(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Text('Loading...');
-          } else {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title:
-                          Text('descripcion: ' + snapshot.data['descripcion']),
-                      subtitle: Text(
-                          'Fecha publicación: ${snapshot.data['created_at']}'),
-                    ),
-                    ListTile(
-                      title:
-                          Text('Precio por día: ${snapshot.data['tarifa']}clp'),
-                    ),
-                    Expanded(child: Divider()),
-                    _botones(snapshot.data['usuario_rut'], snapshot.data['id'])
-                  ],
+          width: double.infinity,
+          margin: EdgeInsets.all(10),
+          child: FutureBuilder(
+            future: _fetch(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Text('Loading...');
+              } else {
+                titulo = snapshot.data['titulo'];
+                snapshotData = snapshot.data;
+                return Card(
+                  child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: _mostrarDataPublicacion(snapshotData)),
+                );
+              }
+            },
+          ),
+        ));
+  }
+
+  _mostrarDataPublicacion(snapshotData) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Fecha publicación: ${snapshotData['created_at'].replaceRange(10, 27, '')}',
+              style: TextStyle(fontStyle: FontStyle.italic),
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Column(
+              children: [
+                Text(
+                  'descripcion',
+                  textAlign: TextAlign.start,
                 ),
-              ),
-            );
-          }
-        },
-      ),
-    ));
+                Text(
+                  tipoHogar.toString(),
+                  textAlign: TextAlign.start,
+                ),
+                Text(
+                  disponibilidadPatio.toString(),
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
+            Container(
+                alignment: Alignment.centerRight,
+                width: 200,
+                height: 200,
+                child: snapshotData['foto'] != 'xD'
+                    ? Image(image: FileImage(File(foto)))
+                    : Image(
+                        image: NetworkImage(
+                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))),
+          ],
+        ),
+        Row(
+          children: [Text('a'), Text('a'), Text('a')],
+        ),
+        /* Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [Text('a')],
+        ),
+        Container(
+          alignment: Alignment.centerRight,
+          child: Text('a'),
+        ),
+        Column(
+          children: [Text('a'), Text('a'), Text('a')],
+        ), */
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              direccion,
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('Descripcion del cuidado: ' + snapshotData['descripcion']),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('Precio por día: ${snapshotData['tarifa']}clp'),
+          ],
+        ),
+        Expanded(child: Divider()),
+        widget.rutUsuario.toString() != rut
+            ? _botones(snapshotData['usuario_rut'], snapshotData['id'])
+            : Text('')
+      ],
+    );
   }
 
   Widget _dataUsuario() {
@@ -92,38 +176,66 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                   if (!snapshot.hasData) {
                     return Text('Loading...');
                   } else {
+                    snapshotDataUsuario = snapshot.data;
                     return Card(
                       child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: ListView(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image(
-                                image: NetworkImage(
-                                    'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                                height: 200,
-                              ),
-                            ),
-                            ListTile(
-                              title: Text('${snapshot.data['name']}'),
-                              subtitle: Text(
-                                  'Usuario creado hace: ${snapshot.data['created_at']}'),
-                            ),
-                            // SI TIENE NOTAS, MUESTRA CUANTAS SON Y EL PROMEDIO, SI NO, MUETRA UN MENSAJE CORRESPONDIENTE
-                            snapshot.data['promedio_evaluaciones'] != null
-                                ? Text('Promedio de notas: ' +
-                                    snapshot.data['promedio_evaluaciones']
-                                        .toString() +
-                                    '\nNúmero de servicios: ' +
-                                    contador.toString())
-                                : Text('Aún no tiene calificaciones'),
-                          ],
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(15),
+                          child: _mostrarDataUsuario(snapshotDataUsuario)),
                     );
                   }
                 })));
+  }
+
+  _mostrarDataUsuario(snapshotData) {
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  width: 150,
+                  height: 150,
+                  child: CircleAvatar(
+                      child: ClipOval(
+                          child: snapshotData['foto'] != 'xD'
+                              ? Image(
+                                  image: FileImage(File(snapshotData['foto'])))
+                              : Image(
+                                  image: NetworkImage(
+                                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
+              Container(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '${snapshotData['name']}',
+                    textAlign: TextAlign.start,
+                  ),
+                  Text('Usuario desde el ' +
+                      '${snapshotData['created_at']}'.replaceRange(10, 27, '')),
+                  Text(snapshotData['fecha_nacimiento'] + ' Años'),
+                ],
+              ))
+            ],
+          ),
+        ),
+
+        // SI TIENE NOTAS, MUESTRA CUANTAS SON Y EL PROMEDIO, SI NO, MUETRA UN MENSAJE CORRESPONDIENTE
+        snapshotData['promedio_evaluaciones'] != null
+            ? Text(
+                'La calificación promedio del usuario es de ' +
+                    snapshotData['promedio_evaluaciones'].toString() +
+                    '/10' +
+                    '\nEste usuario ha participado en ' +
+                    contador.toString() +
+                    ' servicios de cuidado',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              )
+            : Text('Aún no tiene calificaciones'),
+      ],
+    );
   }
 
   Widget _botones(rutUsuarioPerfil, idPublicacion) {
@@ -165,17 +277,35 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
 
   _navegarEditarPeticion(BuildContext context, int idPublicacion) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
-      return PeticionEditarPage(idPeticion: idPeticion);
+      return PeticionEditarPage(
+        idPeticion: idPeticion,
+        idPublicacion: idPublicacion,
+      );
     });
     Navigator.push(context, route);
   }
 
+  // FETCH DATA PUBLICACION
   Future<LinkedHashMap<String, dynamic>> _fetch() async {
     setState(() {
       comprobarDatos();
     });
-    var provider = PublicacionProvider();
-    return await provider.getpublicacion(widget.idPublicacion);
+    var providerPublicacion = PublicacionProvider();
+    var providerHogar = HogarProvider();
+    var publicacion =
+        await providerPublicacion.getpublicacion(widget.idPublicacion);
+    // SE BUSCA LA DATA DEL HOGAR DE LA PUBLICACIÓN //
+    var hogares = await providerHogar.hogarListar();
+    for (var hogar in hogares) {
+      if (hogar['id'] == publicacion['hogar_id']) {
+        tipoHogar = hogar['tipo_hogar'];
+        disponibilidadPatio = hogar['disponibilidad_patio'];
+        direccion = hogar['direccion'];
+        descripcion = hogar['descripcion'];
+        foto = hogar['foto'];
+      }
+    }
+    return publicacion;
   }
 
   // TRAER DATOS DE SHARED PREFERENCES //
@@ -247,6 +377,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
         });
   }
 
+  // FETCH DATA USUARIO
   Future<LinkedHashMap<String, dynamic>> _fetchUsuario() async {
     var provider = UsuarioProvider();
     _contarEvaluaciones(widget.rutUsuario);
@@ -274,5 +405,11 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
       }
     }
     return contador;
+  }
+
+  validarUsuario() {
+    if (widget.rutUsuario.toString() == rut) {
+      usuarioHabilitado = false;
+    }
   }
 }

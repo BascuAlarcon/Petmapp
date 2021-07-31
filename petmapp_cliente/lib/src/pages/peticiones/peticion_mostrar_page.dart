@@ -1,13 +1,17 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/main_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/cuidado_page.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 
 class PeticionMostrarPage extends StatefulWidget {
   final int idPeticion;
   final int rutUsuario;
+
   PeticionMostrarPage({this.idPeticion, this.rutUsuario});
 
   @override
@@ -15,6 +19,7 @@ class PeticionMostrarPage extends StatefulWidget {
 }
 
 class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
+  DateTime _inicio, _fin;
   String fechaInicio = '';
   String fechaFin = '';
   String precioTotal = '';
@@ -45,17 +50,20 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
             if (!snapshot.hasData) {
               return Text('Loading...');
             } else {
+              _inicio = DateTime.parse(snapshot.data['fecha_inicio']);
+              _fin = DateTime.parse(snapshot.data['fecha_fin']);
               return Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
                       Text('Datos de la peticion'),
+                      ListTile(
+                        title: Text(
+                            'Fecha de la petición: ${snapshot.data['fecha_inicio']}'),
+                      ),
                       Expanded(
-                        child: ListTile(
-                          title: Text(
-                              'Fecha de la petición: ${snapshot.data['fecha_inicio']}'),
-                        ),
+                        child: _mostrarMascotas(snapshot.data['mascotas']),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -69,7 +77,7 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                                       snapshot.data['fecha_fin'],
                                     ),
                                 child: Text('Responder Petición'))),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -93,14 +101,18 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                   return Card(
                       child: ListView(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image(
-                          image: NetworkImage(
-                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                      Container(
+                          width: 200,
                           height: 200,
-                        ),
-                      ),
+                          child: CircleAvatar(
+                              child: ClipOval(
+                                  child: snapshot.data['foto'] != 'xD'
+                                      ? Image(
+                                          image: FileImage(
+                                              File(snapshot.data['foto'])))
+                                      : Image(
+                                          image: NetworkImage(
+                                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
                       ListTile(
                         title: Text(snapshot.data['name']),
                         subtitle: Text(
@@ -152,18 +164,42 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
         });
   }
 
+  Widget _mostrarMascotas(List<dynamic> mascotas) {
+    return ListView.separated(
+      itemCount: mascotas.length,
+      separatorBuilder: (context, index) => Divider(),
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(mascotas[index]['nombre']),
+        );
+      },
+    );
+  }
+
   void peticionResponder(String respuesta, fechaInicio, fechaFin) {
     var provider = PeticionProvider();
+    if (respuesta == '2') {
+      borrarOtrasPeticiones();
+    }
     provider.peticionRespuesta(widget.idPeticion, respuesta);
-    Navigator.of(context).pop();
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (BuildContext context) => MainPage()),
+        (Route<dynamic> route) => false);
   }
-}
 
-_navegarPerfilUsuario(BuildContext context, int rut) {
-  MaterialPageRoute route = MaterialPageRoute(builder: (context) {
-    return PeticionMostrarPage(
-      idPeticion: rut,
-    );
-  });
-  Navigator.push(context, route);
+  void borrarOtrasPeticiones() async {
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    for (var peticion in peticiones) {
+      if (peticion['usuario_rut'] == widget.rutUsuario &&
+          peticion['id'].toString() != widget.idPeticion.toString()) {
+        if (DateTime.parse(peticion['fecha_inicio']).compareTo(_inicio) >= 0) {
+          if (DateTime.parse(peticion['fecha_inicio']).compareTo(_fin) <= 0) {
+            provider.peticionesBorrar(peticion['id']);
+            print(peticion);
+          }
+        }
+      }
+    }
+  }
 }

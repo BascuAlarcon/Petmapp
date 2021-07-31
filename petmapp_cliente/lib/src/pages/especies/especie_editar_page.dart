@@ -55,6 +55,9 @@ class _EspecieEditarPageState extends State<EspecieEditarPage> {
                                   if (valor == null || valor.isEmpty) {
                                     return 'Debe agregar una descripcion';
                                   }
+                                  if (valor.length < 3) {
+                                    return 'Nombre muy corto';
+                                  }
                                   return null;
                                 },
                               ),
@@ -74,6 +77,9 @@ class _EspecieEditarPageState extends State<EspecieEditarPage> {
                                 validator: (valor) {
                                   if (valor == null || valor.isEmpty) {
                                     return 'Debe agregar una descripcion';
+                                  }
+                                  if (valor.length < 5) {
+                                    return 'Descripcion muy corta';
                                   }
                                   return null;
                                 },
