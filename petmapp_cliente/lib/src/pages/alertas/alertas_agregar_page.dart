@@ -33,6 +33,7 @@ class _AlertasAgregarPageState extends State<AlertasAgregarPage> {
   TextEditingController latitudCtrl = new TextEditingController();
   TextEditingController longitudCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
+  TextEditingController tituloCtrl = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +53,8 @@ class _AlertasAgregarPageState extends State<AlertasAgregarPage> {
                     _crearAlerta(),
                     Divider(),
                     _crearCampoDescripcion(),
+                    Divider(),
+                    _crearCampoTitulo(),
                     Divider(),
                     _crearCampoDireccion(),
                     Divider(),
@@ -184,6 +187,28 @@ class _AlertasAgregarPageState extends State<AlertasAgregarPage> {
             }));
   }
 
+  Widget _crearCampoTitulo() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+            controller: tituloCtrl,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                labelText: 'Titulo',
+                hintText: 'Titulo de la alerta',
+                suffixIcon: Icon(MdiIcons.tagText)),
+            validator: (valor) {
+              if (valor.isEmpty || valor == null) {
+                return 'Indique un Titulo';
+              }
+              if (valor.length < 5) {
+                return 'El Titulo debe contener al menos 5 cáracteres';
+              }
+              return null;
+            }));
+  }
+
   Widget _crearCampoLatitud() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -285,6 +310,7 @@ class _AlertasAgregarPageState extends State<AlertasAgregarPage> {
     if (_formKey.currentState.validate()) {
       var provider = new AlertaProvider();
       provider.alertaAgregar(
+          tituloCtrl.text,
           rut,
           alerta,
           foto,

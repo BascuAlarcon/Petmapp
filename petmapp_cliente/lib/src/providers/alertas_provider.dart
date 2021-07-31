@@ -17,6 +17,7 @@ class AlertaProvider {
 
 // AGREGAR MASCOTA //
   Future<http.Response> alertaAgregar(
+      String titulo,
       String rut,
       String tipoAlerta,
       dynamic foto,
@@ -30,6 +31,7 @@ class AlertaProvider {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
+          'titulo': titulo,
           'usuario_rut': rut,
           'tipo_alerta': tipoAlerta,
           'foto': foto,

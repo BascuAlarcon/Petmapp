@@ -8,6 +8,7 @@ class UbicacionProvider {
 
 // AGREGAR UBICACION //
   Future<http.Response> ubicacionAgregar(
+      String titulo,
       String tipoUbicacion,
       String foto,
       String descripcion,
@@ -20,6 +21,7 @@ class UbicacionProvider {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
+          'titulo': titulo,
           'tipo_ubicacion': tipoUbicacion,
           'foto': foto,
           'descripcion': descripcion,

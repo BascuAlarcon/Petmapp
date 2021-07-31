@@ -1,11 +1,21 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/address_search.dart';
+import 'package:petmapp_cliente/src/pages/place_service_v1.dart';
 import 'package:petmapp_cliente/src/providers/negocios_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:uuid/uuid.dart';
 
 class NegociosAgregarPage extends StatefulWidget {
   final int idPublicacion;
@@ -23,6 +33,33 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
   var _tipos = <DropdownMenuItem>[];
   var _valorSeleccionado;
 
+  //Cosas que agregué ahora
+  final _destinationController = TextEditingController();
+  String _latitude = '';
+  String _longitud = '';
+
+  @override
+  void dispose() {
+    _destinationController.dispose();
+    super.dispose();
+  }
+
+  _busquedaDireccion() async {
+    final sessionToken = Uuid().v4();
+    final Suggestion result = await showSearch(
+        context: context, delegate: AddressSearch(sessionToken));
+    if (result != null) {
+      final placeDetails = await PlaceApiProvider(sessionToken)
+          .getPlaceDetailFromId(result.placeId);
+      setState(() {
+        _latitude = placeDetails.latitud;
+        _longitud = placeDetails.longitud;
+        _destinationController.text = result.description;
+      });
+    }
+  }
+  /////////////////////////
+
   @override
   void initState() {
     super.initState();
@@ -34,8 +71,6 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController latitudCtrl = new TextEditingController();
-  TextEditingController longitudCtrl = new TextEditingController();
   TextEditingController nombreCtrl = new TextEditingController();
   TextEditingController horarioCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -54,6 +89,30 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
               Expanded(
                 child: ListView(
                   children: [
+                    _mostrarImagen(),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: nombreCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Nombre',
+                            hintText: 'Nombre del negocio',
+                            suffixIcon: Icon(MdiIcons.store)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar el nombre del negocio';
+                          }
+                          if (valor.length < 5) {
+                            return 'Debe ingresar el nombre del negocio';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Divider(),
                     _crearCampoTipo(),
                     Divider(),
                     Padding(
@@ -78,84 +137,23 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        controller: direccionCtrl,
+                        onTap: _busquedaDireccion,
+                        controller: _destinationController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             labelText: 'Direccion',
                             hintText: 'Direccion del negocio',
                             suffixIcon: Icon(MdiIcons.mapMarker)),
-                        validator: (valor) {
-                          if (valor.isEmpty || valor == null) {
-                            return 'Debe ingresar la dirección del negocio';
-                          }
-                          return null;
-                        },
+                        // validator: (valor) {
+                        //   if (valor.isEmpty || valor == null) {
+                        //     return 'Debe ingresar la dirección del negocio';
+                        //   }
+                        //   return null;
+                        // },
                       ),
                     ),
                     Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: longitudCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'longutd',
-                            hintText: 'longutd del negocio',
-                            suffixIcon: Icon(Icons.flag)),
-                        validator: (valor) {
-                          if (valor.isEmpty || valor == null) {
-                            return 'Debe ingresar las coordenadas';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: latitudCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'latitud',
-                            hintText: 'latitudn del negocio',
-                            suffixIcon: Icon(Icons.flag)),
-                        validator: (valor) {
-                          if (valor.isEmpty || valor == null) {
-                            return 'Debe ingresar las coordenadas';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: nombreCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'Nombre',
-                            hintText: 'Nombre del negocio',
-                            suffixIcon: Icon(MdiIcons.store)),
-                        validator: (valor) {
-                          if (valor.isEmpty || valor == null) {
-                            return 'Debe ingresar el nombre del negocio';
-                          }
-                          if (valor.length < 5) {
-                            return 'Debe ingresar el nombre del negocio';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    _crearCampoFoto(),
-                    _mostrarImagen()
                   ],
                 ),
               ),
@@ -210,27 +208,46 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
         ));
   }
 
-  Widget _crearCampoFoto() {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: RaisedButton(
-          onPressed: () => tomarFoto(ImageSource.gallery),
-          child: Text('Seleccionar foto'),
-        ));
-  }
-
   PickedFile _imagefile;
   String foto;
   final ImagePicker _picker = ImagePicker();
 
+  //Se agrandó esto 1
   Widget _mostrarImagen() {
-    return FadeInImage(
-        image: _imagefile == null
-            ? NetworkImage(
-                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
-            : FileImage(File(_imagefile.path)),
-        placeholder: AssetImage('assets/jar-loading.gif'),
-        fit: BoxFit.cover);
+    return Stack(
+      children: [
+        FadeInImage(
+            image: _imagefile == null
+                ? NetworkImage(
+                    'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+                : FileImage(File(_imagefile.path)),
+            placeholder: AssetImage('assets/jar-loading.gif'),
+            fit: BoxFit.cover),
+        IconButton(
+          icon: new Icon(
+            Icons.add_a_photo_rounded,
+            color: Colors.white,
+          ),
+          highlightColor: Colors.pink,
+          onPressed: () {
+            tomarFoto(ImageSource.camera);
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 40),
+          child: IconButton(
+            icon: new Icon(
+              Icons.folder_special_outlined,
+              color: Colors.white,
+            ),
+            highlightColor: Colors.pink,
+            onPressed: () {
+              tomarFoto(ImageSource.gallery);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void tomarFoto(ImageSource source) async {
@@ -250,9 +267,9 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
           negocio,
           foto,
           descripcionCtrl.text,
-          direccionCtrl.text,
-          latitudCtrl.text,
-          longitudCtrl.text,
+          _destinationController.text,
+          _latitude,
+          _longitud,
           nombreCtrl.text); // usamos un controller //
       Navigator.pop(context);
     }

@@ -37,6 +37,7 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
   TextEditingController direccionCtrl = new TextEditingController();
   TextEditingController latitudCtrl = new TextEditingController();
   TextEditingController longitudCtrl = new TextEditingController();
+  TextEditingController tituloCtrl = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +69,25 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
                         validator: (valor) {
                           if (valor.isEmpty || valor == null) {
                             return 'Debe ingresar una descripción';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: tituloCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'titulo',
+                            hintText: 'titulo',
+                            suffixIcon: Icon(MdiIcons.tagText)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar un titulo';
                           }
                           return null;
                         },
@@ -210,6 +230,7 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
     if (_formKey.currentState.validate()) {
       var provider = new UbicacionProvider();
       provider.ubicacionAgregar(
+          tituloCtrl.text,
           ubicacion,
           foto,
           descripcionCtrl.text,

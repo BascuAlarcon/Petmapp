@@ -37,6 +37,7 @@ class AlertaController extends Controller
         $alerta->ultima_actividad = $request->ultima_actividad;
         $alerta->usuario_rut = $request->usuario_rut;
         $alerta->tipo_alerta_id = $request->tipo_alerta;   
+        $alerta->titulo = $request->titulo;
         $alerta->save();
     }
 
@@ -68,6 +69,7 @@ class AlertaController extends Controller
         $alerta->longitud = $request->longitud;
         $alerta->habilitado = $request->habilitado;
         $alerta->ultima_actividad = $request->ultima_actividad;  
+        $alerta->titulo = $request->titulo;
         $alerta->save();
     }
 
