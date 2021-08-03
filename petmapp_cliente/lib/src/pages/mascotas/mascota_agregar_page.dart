@@ -87,6 +87,8 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
                 children: <Widget>[
                   Stack(children: <Widget>[
                     FadeInImage(
+                        width: 400,
+                        height: 300,
                         image: _imagefile == null
                             ? NetworkImage(
                                 'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
@@ -529,7 +531,11 @@ class _MascotasAgregarPageState extends State<MascotasAgregarPage> {
 
   _cargarCondicion() async {
     _condicion.add(DropdownMenuItem(child: Text("Sano"), value: 0));
-    _condicion.add(DropdownMenuItem(child: Text("Con Enfermedad"), value: 1));
+    _condicion.add(DropdownMenuItem(child: Text("Moquillo"), value: 1));
+    _condicion.add(DropdownMenuItem(child: Text("Alergia"), value: 2));
+    _condicion.add(DropdownMenuItem(child: Text("Gripe"), value: 3));
+    _condicion.add(DropdownMenuItem(child: Text("Conjuntivitis"), value: 4));
+    _condicion.add(DropdownMenuItem(child: Text("Epilepsia"), value: 5));
   }
 
   _cargarMicrochip() async {

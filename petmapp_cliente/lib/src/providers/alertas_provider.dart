@@ -61,6 +61,7 @@ class AlertaProvider {
 
   // EDITAR ALERTA //
   Future<http.Response> alertaEditar(
+      String titulo,
       int idAlerta,
       String tipoAlerta,
       String foto,

@@ -19,11 +19,13 @@ class _RegistrarPageState extends State<RegistrarPage> {
   bool submitValid = false;
   bool existenciaRut = false;
   bool existenciaEmail = false;
+  bool numeroValidadorCorrecto = false;
+  int usuarioExistente = 0;
 
   final _formKey = GlobalKey<FormState>();
   final _emailRegex =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-  final _rutRegex = r"^(\d{1,2}(?:\.\d{1,3}){2}-[\dkK])$";
+  final _rutRegex = r"^(\d{1,2}(?:\.\d{3}){2}-[\dkK])$";
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class _RegistrarPageState extends State<RegistrarPage> {
                 //_txtCodigo(),
                 _txtPassword(),
                 _txtPassword2(),
-                _btnRegistrar()
+                _btnRegistrar(),
               ],
             ),
           ),
@@ -96,15 +98,19 @@ class _RegistrarPageState extends State<RegistrarPage> {
           hintStyle: TextStyle(color: Colors.white70),
         ),
         validator: (value) {
-          //_calcularDigitoVerificador(rutCtrl.text);
-          //_comprobarExistenciaRut(rutCtrl.text);
           if (value.isEmpty) {
             return 'Indique Rut';
           }
+          if (existenciaRut) {
+            return 'Rut en uso';
+          }
+          if (numeroValidadorCorrecto == false) {
+            return 'Rut incorrecto';
+          }
           // CALCULO VERIFICADOR //
-          /* if (!RegExp(_rutRegex).hasMatch(value)) {
+          if (!RegExp(_rutRegex).hasMatch(value)) {
             return 'Rut invalido';
-          } */
+          }
           return null;
         },
       ),
@@ -115,8 +121,11 @@ class _RegistrarPageState extends State<RegistrarPage> {
     var provider = UsuarioProvider();
     var usuarios = await provider.getUsuarios();
     for (var usuario in usuarios) {
-      if (usuario['rut'] == rut) {
-        existenciaRut = true;
+      if (usuario['rut'].toString() == rut) {
+        setState(() {
+          existenciaRut = true;
+          _formKey.currentState.validate();
+        });
       }
     }
   }
@@ -141,9 +150,17 @@ class _RegistrarPageState extends State<RegistrarPage> {
     }
     num truncado = (sumaTotal ~/ 11);
     num casi = truncado * 11;
-    num verificador2 = sumaTotal - casi;
-    print(verificador2);
-    if (verificador1 == verificador2) {}
+    num xD = sumaTotal - casi;
+    num verificador2 = 11 - xD;
+    if (verificador1 == verificador2) {
+      setState(() {
+        numeroValidadorCorrecto = true;
+      });
+    } else {
+      setState(() {
+        numeroValidadorCorrecto = false;
+      });
+    }
   }
 
   Widget _txtEmail() {
@@ -170,10 +187,14 @@ class _RegistrarPageState extends State<RegistrarPage> {
           hintStyle: TextStyle(color: Colors.white70),
         ),
         validator: (value) {
-          _comprobarExistenciaEmail(emailCtrl.text);
+          _comprobarExistenciaEmail(emailCtrl.text.trim());
           if (value.isEmpty) {
             return 'Indique Email';
           }
+          if (existenciaEmail) {
+            return 'Email en uso';
+          }
+
           if (!RegExp(_emailRegex).hasMatch(value)) {
             return 'Email Invalido';
           }
@@ -215,7 +236,10 @@ class _RegistrarPageState extends State<RegistrarPage> {
     var usuarios = await provider.getUsuarios();
     for (var usuario in usuarios) {
       if (usuario['email'] == email) {
-        existenciaEmail = true;
+        setState(() {
+          existenciaEmail = true;
+          _formKey.currentState.validate();
+        });
       }
     }
   }
@@ -271,6 +295,9 @@ class _RegistrarPageState extends State<RegistrarPage> {
           if (value.isEmpty) {
             return 'Indique contraseña';
           }
+          if (value.length < 6) {
+            return 'Contraseña muy corta';
+          }
           return null;
         },
       ),
@@ -300,6 +327,9 @@ class _RegistrarPageState extends State<RegistrarPage> {
           if (value != passwordCtrl.text) {
             return 'Contraseñas no coinciden';
           }
+          if (value.length < 6) {
+            return 'Contraseña muy corta';
+          }
           return null;
         },
       ),
@@ -321,14 +351,15 @@ class _RegistrarPageState extends State<RegistrarPage> {
         child: Text('Crear Cuenta',
             style: TextStyle(color: Colors.black, fontFamily: 'Raleway')),
         onPressed: () {
-          if (existenciaEmail == true || existenciaRut == true) {
-            Text('Usuario ya existente');
-          } else {
-            if (_formKey.currentState.validate()) {
-              signUp(rutCtrl.text, emailCtrl.text, passwordCtrl.text,
-                  nombreCtrl.text);
-              Navigator.of(context).pop();
-            }
+          existenciaRut = false;
+          existenciaEmail = false;
+          _calcularDigitoVerificador(rutCtrl.text);
+          _comprobarExistenciaRut(rutCtrl.text);
+          _comprobarExistenciaEmail(emailCtrl.text.trim());
+          if (_formKey.currentState.validate()) {
+            signUp(rutCtrl.text, emailCtrl.text, passwordCtrl.text,
+                nombreCtrl.text);
+            Navigator.of(context).pop();
           }
         },
       ),
@@ -336,6 +367,9 @@ class _RegistrarPageState extends State<RegistrarPage> {
   }
 
   signUp(String rut, String email, String password, String nombre) async {
+    rut = rut.replaceRange(2, 3, "");
+    rut = rut.replaceRange(5, 6, "");
+    rut = rut.replaceRange(8, 9, "");
     var provider = UsuarioProvider();
     return await provider.registrar(rut, email, password, nombre);
   }

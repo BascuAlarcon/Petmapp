@@ -39,6 +39,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
   String name = '';
   String perfil = '';
 
+  bool finalizar = false;
   bool intento = true;
   bool mostrarEvaluacion = false;
   int idPeticion;
@@ -59,6 +60,9 @@ class _CuidadoPageState extends State<CuidadoPage> {
         mostrarEvaluacion = true;
       }
     }
+    if (widget.wnota == 1) {
+      finalizar = true;
+    }
   }
 
   Widget build(BuildContext context) {
@@ -66,7 +70,10 @@ class _CuidadoPageState extends State<CuidadoPage> {
         appBar: AppBar(
           title: Text('Servicio de Cuidado'),
           actions: [
-            widget.wultimoDia || widget.westado == 2 || widget.westado == 5
+            widget.wultimoDia &&
+                    (widget.westado == 2 || widget.westado == 5) &&
+                    (widget.wnota == null || widget.wnota == 11) &&
+                    finalizar == false
                 ? IconButton(
                     icon: Icon(MdiIcons.alert),
                     onPressed: () {
@@ -77,53 +84,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
         ),
         body: Column(
           children: [
-            Expanded(
-              child: FutureBuilder(
-                future: _fetch(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text('Loading...');
-                  } else {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: ListView(
-                          children: [
-                            ListTile(
-                                title: Text(
-                                    'Usuario: ${snapshot.data['usuario_rut']}'),
-                                subtitle: Text(
-                                  'VER PERFIL DEL USUARIO',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                leading: Icon(MdiIcons.account),
-                                tileColor: Colors.blue,
-                                onTap: () => _navegarPerfilUsuario(context)),
-                            //
-                            Divider(color: Colors.black),
-                            ListTile(
-                              title: Text(
-                                  'Fecha de la petición: ${snapshot.data['fecha_inicio']}'),
-                              subtitle: Text(
-                                  'Precio del servicio: ${snapshot.data['boleta']}'),
-                            ),
-                            widget.wtipoUsuario == 1
-                                ? Column()
-                                : buttonServicios(context, snapshot.data['id'],
-                                    snapshot.data['boleta']),
-
-                            mostrarEvaluacion ? buttonEvaluaciones() : Text(''),
-                            widget.wultimoDia == true
-                                ? Text('Es el último día siiiii')
-                                : Text(':v')
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
+            verDataPeticion(),
             Expanded(
               child: FutureBuilder(
                   future: _fetchServicios(),
@@ -147,7 +108,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
                                     child: ListTile(
                                       leading: Icon(MdiIcons.dogService),
                                       title: Text(
-                                          '${snapshot.data[index]['descripcion']}'),
+                                          '${snapshot.data[index]['comentario']}'),
                                       subtitle: Text(
                                           'Costo: ${snapshot.data[index]['monto'].toString()}'),
                                       onTap: () {},
@@ -164,6 +125,49 @@ class _CuidadoPageState extends State<CuidadoPage> {
             )
           ],
         ));
+  }
+
+  Widget verDataPeticion() {
+    return Expanded(
+      child: FutureBuilder(
+        future: _fetch(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Text('Loading...');
+          } else {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ListView(
+                  children: [
+                    ListTile(
+                        title: Text('VER PERFIL DEL USUARIO'),
+                        leading: Icon(MdiIcons.account),
+                        tileColor: Colors.blue,
+                        onTap: () => _navegarPerfilUsuario(context)),
+                    Divider(color: Colors.black),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                            'Fecha de la petición: del ${snapshot.data['fecha_inicio']} al ${snapshot.data['fecha_fin']}'),
+                      ],
+                    ),
+                    Text(
+                        'Precio total del cuidado: ${snapshot.data['boleta']}'),
+                    widget.wtipoUsuario == 1
+                        ? Column()
+                        : buttonServicios(context, snapshot.data['id'],
+                            snapshot.data['boleta']),
+                    mostrarEvaluacion ? buttonEvaluaciones() : Text(''),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
+      ),
+    );
   }
 
   Widget _dialogoFin(context) {
@@ -198,12 +202,24 @@ class _CuidadoPageState extends State<CuidadoPage> {
     var peticion = await provider.getpeticion(widget.widData);
     if (peticion['estado'] == 2) {
       await provider.peticionTerminada(widget.widData.toString(), '5');
+      if (widget.wtipoUsuario == 2) {
+        var providerPublicacion = PublicacionProvider();
+        await providerPublicacion.publicacionComentario(
+            widget.widDataPublicacion, 'Comentario', '1');
+      }
+      setState(() {
+        finalizar = true;
+      });
       Navigator.of(context).pop();
     }
     // AHORA PUEDEN DAR FIN AL SERVICIO //
     if (peticion['estado'] == 5) {
       await provider.peticionTerminada(widget.widData.toString(), '6');
+      if (widget.wtipoUsuario == 1) {
+        await provider.peticionComentario(widget.widData, 'comentario', '1');
+      }
       setState(() {
+        finalizar = true;
         mostrarEvaluacion = true;
       });
       Navigator.of(context).pop();
@@ -303,14 +319,17 @@ class _CuidadoPageState extends State<CuidadoPage> {
   }
 
   buttonServicios(BuildContext context, int id, int boleta) {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
             height: 40,
             width: double.infinity,
             child: ElevatedButton(
                 child: Text('Servicios Adicionales'),
-                onPressed: () => _navegarServicios(context, id, boleta))));
+                onPressed: () => _navegarServicios(context, id, boleta)))
+      ],
+    );
   }
 
   buttonEvaluaciones() {
@@ -371,14 +390,14 @@ class _CuidadoPageState extends State<CuidadoPage> {
     var provider = PublicacionProvider();
     var providerPeticion = PeticionProvider();
     var peticion = await providerPeticion.getpeticion(widget.widData);
-    if (peticion['nota'] == null) {
+    if (peticion['nota'] == null || peticion['nota'] == 1) {
       await providerPeticion.peticionComentario(
           widget.widData, 'Sin comentarios', '11');
     }
     mostrarEvaluacion = false;
-    _finalizarServicio();
-    return await provider.publicacionComentario(widget.widDataPublicacion,
+    await provider.publicacionComentario(widget.widDataPublicacion,
         descripcionCtrl.text, _valorActual.toString());
+    _finalizarServicio();
   }
 
   Future<void> enviarComentariosCuidador() async {
@@ -386,14 +405,15 @@ class _CuidadoPageState extends State<CuidadoPage> {
     var providerPublicacion = PublicacionProvider();
     var publicacion =
         await providerPublicacion.getpublicacion(widget.widDataPublicacion);
-    if (publicacion['nota'] == null) {
+    if (publicacion['nota'] == null || publicacion['nota'] == 1) {
       await providerPublicacion.publicacionComentario(
           widget.widDataPublicacion, 'Sin comentarios', '11');
     }
-    _finalizarServicio();
+
     mostrarEvaluacion = false;
-    return await provider.peticionComentario(
+    await provider.peticionComentario(
         widget.widData, descripcionCtrl.text, _valorActual.toString());
+    _finalizarServicio();
   }
 
   _mostrarConfirmacion(BuildContext context) {

@@ -247,6 +247,8 @@ class _HogaresAgregarPageState extends State<HogaresAgregarPage> {
 
   Widget _mostrarImagen() {
     return FadeInImage(
+        width: 300,
+        height: 300,
         image: _imagefile == null
             ? NetworkImage(
                 'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')

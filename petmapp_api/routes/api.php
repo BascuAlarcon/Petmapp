@@ -63,6 +63,10 @@ Route::post('peticiones/{peticion}/respuesta', 'App\Http\Controllers\API\Peticio
 Route::post('peticiones/{peticion}/monto', 'App\Http\Controllers\API\PeticionController@monto'); 
 Route::post('peticiones/{peticion}/termino', 'App\Http\Controllers\API\PeticionController@termino'); 
  
+// Comentarios //
+Route::apiResource('/comentariosUbicacion', 'App\Http\Controllers\API\ComentarioUbicacionController')->parameters(['comentariosUbicacion'=>'comentarioUbicacion']); 
+Route::get('comentariosUbicacion/{comentarioUbicacion}/usuario', 'App\Http\Controllers\API\ComentarioUbicacionController@usuario'); 
+
 // Editar campo última actividad de tabla Alerta //
 Route::post('alertas/{alerta}/ultima', 'App\Http\Controllers\API\AlertaController@ultima'); 
 Route::get('alertas/{alerta}/comentarios', 'App\Http\Controllers\API\AlertaController@comentarios');
@@ -81,6 +85,7 @@ Route::group([
     Route::get('me/perfil',             [AuthController::class, 'perfil']);
     Route::get('me/hogares',            [AuthController::class, 'hogares']);
     Route::get('me/alertas',            [AuthController::class, 'alertas']);
+    Route::post('me/comprobarPW',            [AuthController::class, 'comprobarPW']);
     // USER CONTROLLER //
     Route::get('usuarios',                      [UserController::class, 'index']);
     Route::get('usuarios/{usuario}',            [UserController::class, 'show']);

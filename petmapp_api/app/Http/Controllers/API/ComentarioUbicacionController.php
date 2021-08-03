@@ -70,5 +70,8 @@ class ComentarioUbicacionController extends Controller
         $comentarioUbicacion->delete();
     }
 
-    
+    public function usuario(ComentarioUbicacion $comentarioUbicacion){ 
+        $comentarioUbicacion->load('usuario');
+        return $comentarioUbicacion;
+    }
 }

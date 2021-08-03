@@ -44,7 +44,10 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text('PETICIONES DE CUIDADO'),
+                      title: Text(
+                        'PETICIONES DE CUIDADO',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     Divider(
                       color: Colors.black,
@@ -87,7 +90,16 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
                     title: Text(
                         'Fecha de inicio: ${peticiones[index]['fecha_inicio']}'),
                     subtitle: Text(
-                        'Rut del usuario que hizo la petición ${peticiones[index]['usuario_rut'].toString()}'),
+                        'Fecha en que termina: ${peticiones[index]['fecha_fin']}'),
+                    /* subtitle: peticiones[index]['rut'].toString().length == 8
+                        ? Text('Rut del usuario que realizo la peticion: ' +
+                            peticiones[index]['usuario_rut']
+                                .toString()
+                                .replaceRange(7, 7, '-'))
+                        : Text('Rut del usuario que realizo la peticion: ' +
+                            peticiones[index]['usuario_rut']
+                                .toString()
+                                .replaceRange(7, 7, '-')), */
                     onTap: () => _navegarPeticion(
                         context,
                         peticiones[index]['id'],

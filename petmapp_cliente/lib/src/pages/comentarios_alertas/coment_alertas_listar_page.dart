@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:petmapp_cliente/src/pages/comentarios_alertas/coment_alertas_agr
 import 'package:petmapp_cliente/src/pages/comentarios_alertas/coment_alertas_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_editar_page.dart';
 import 'package:petmapp_cliente/src/pages/negocios_tipos/tipos_agregar_page.dart';
+import 'package:petmapp_cliente/src/providers/alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
@@ -27,6 +29,8 @@ class _ComentarioAlertaListarPageState
   String token, rut = '';
   var _fotosUsuario = [];
   var _usuarios = [];
+  String foto;
+
   @override
   void initState() {
     super.initState();
@@ -36,14 +40,70 @@ class _ComentarioAlertaListarPageState
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Comentarios'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        backgroundColor: Color.fromRGBO(247, 247, 247, 1.0),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Comentarios Alerta'),
+          backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
+        ),
+        body: Column(
+          children: [_dataAlerta(), _dataComentarios()],
+        ));
+  }
+
+  Widget _dataAlerta() {
+    return Center(
+      child: FutureBuilder(
+        future: _fetchAlerta(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: Text('No data'));
+          } else {
+            foto = snapshot.data['foto'];
+            return Card(
+                child: Column(
+              children: [
+                foto != null
+                    ? Image(image: FileImage(File(foto)))
+                    : Image(
+                        image: NetworkImage(
+                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                        height: 200,
+                      ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 1, right: 3),
+                      child: Text(
+                        snapshot.data['direccion'],
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  title: Text(
+                    snapshot.data['titulo'],
+                    textAlign: TextAlign.center,
+                  ),
+                  subtitle: Text(
+                    snapshot.data['descripcion'],
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ));
+          }
+        },
       ),
-      body: FutureBuilder(
+    );
+  }
+
+  Widget _dataComentarios() {
+    return Expanded(
+      child: FutureBuilder(
         future: _fetch(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -66,27 +126,16 @@ class _ComentarioAlertaListarPageState
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
+                            leading: Icon(MdiIcons.messageReplyTextOutline),
+                            subtitle:
+                                Text(snapshot.data[index]['fecha_emision']),
                             title: Text(
-                                snapshot.data[index]['descripcion'].toString()),
+                                snapshot.data[index]['descripcion'] != null
+                                    ? snapshot.data[index]['descripcion']
+                                    : Text('loading')),
                             onTap: () {},
                           ),
                           actions: [
-                            Container(
-                                width: 50,
-                                height: 50,
-                                child: CircleAvatar(
-                                    child: ClipOval(
-                                        child:
-                                            /* snapshot.data[index]['foto'] !=
-                                                'xD'
-                                            ? Image(
-                                                image: FileImage(File(snapshot
-                                                    .data[index]['foto'])))
-                                            :  */
-                                            Image(
-                                                image: NetworkImage(
-                                                    'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
                             rut ==
                                     snapshot.data[index]['usuario_rut']
                                         .toString()
@@ -118,7 +167,7 @@ class _ComentarioAlertaListarPageState
                   ),
                 ),
 
-                // LISTA comentariosalerta //
+                // LISTA comentariosnegocio //
                 // BOTON AGREGAR //
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -126,10 +175,18 @@ class _ComentarioAlertaListarPageState
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => _navegarComentariosAgregar(
-                                context,
-                              ),
-                          child: Text('Agregar un comentario'))),
+                        onPressed: () => _navegarComentariosAgregar(context),
+                        child: Text('Agregar Comentario'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
                 )
                 // BOTON AGREGAR //
               ],
@@ -138,6 +195,11 @@ class _ComentarioAlertaListarPageState
         },
       ),
     );
+  }
+
+  Future<LinkedHashMap<String, dynamic>> _fetchAlerta() async {
+    var provider = new AlertaProvider();
+    return await provider.getAlerta(widget.id);
   }
 
   Future<Null> _refresh() async {

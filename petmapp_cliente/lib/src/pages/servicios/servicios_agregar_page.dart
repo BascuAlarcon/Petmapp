@@ -76,6 +76,7 @@ class _ServiciosAgregarPageState extends State<ServiciosAgregarPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: montoCtrl,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),

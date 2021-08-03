@@ -5,7 +5,6 @@ import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_editar_page.
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_mostrar_page.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
-import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

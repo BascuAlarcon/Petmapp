@@ -10,8 +10,8 @@ import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MisPublicacionesPage extends StatefulWidget {
-  final int idPublicacion, estado;
-  MisPublicacionesPage({this.estado, this.idPublicacion});
+  final int idPublicacion, estado, idPeticion;
+  MisPublicacionesPage({this.estado, this.idPublicacion, this.idPeticion});
 
   @override
   _MisPublicacionesPageState createState() => _MisPublicacionesPageState();
@@ -26,6 +26,7 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
   void initState() {
     super.initState();
     cargarDatosUsuario();
+    _cargarListaRazas();
   }
 
   Widget build(BuildContext context) {
@@ -55,22 +56,24 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
                       },
                       itemBuilder: (context, index) {
                         _comprobarPeticionPublicacion(snapshotData[index]);
-                        return /* _mostrar == true
-                            ? */
-                            Slidable(
-                          actionPane: SlidableDrawerActionPane(),
-                          actionExtentRatio: 0.25,
-                          child: ListTile(
-                            leading: Icon(MdiIcons.tag),
-                            title: Text(snapshot.data[index]['descripcion']),
-                            onTap: () => _navegarPeticiones(
-                                context, snapshot.data[index]['id']),
-                          ),
-                          actions: [_accionEditar(snapshot.data[index])],
-                          secondaryActions: [
-                            _accionEliminar(snapshot.data[index], index)
-                          ],
-                        );
+                        return widget.estado == 4 &&
+                                widget.idPublicacion ==
+                                    snapshot.data[index]['id']
+                            ? Column()
+                            : Slidable(
+                                actionPane: SlidableDrawerActionPane(),
+                                actionExtentRatio: 0.25,
+                                child: ListTile(
+                                  leading: Icon(MdiIcons.tag),
+                                  title:
+                                      Text(snapshot.data[index]['descripcion']),
+                                  onTap: () => _navegar(snapshot.data[index]),
+                                ),
+                                actions: [_accionEditar(snapshot.data[index])],
+                                secondaryActions: [
+                                  _accionEliminar(snapshot.data[index], index)
+                                ],
+                              );
                         /* : Column(); */
                       },
                     ),
@@ -171,6 +174,15 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
         });
   }
 
+  _navegar(data) {
+    if (widget.estado == null ||
+        widget.estado == 1 ||
+        widget.estado == 3 ||
+        widget.estado == 4) {
+      _navegarPeticiones(context, data['id']);
+    }
+  }
+
   _navegarPeticiones(BuildContext context, int id) {
     MaterialPageRoute route = MaterialPageRoute(builder: (context) {
       return PeticionListarPage(idPublicacion: id);
@@ -204,7 +216,7 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
     if ((widget.estado == 1 ||
             widget.estado == 3 ||
             widget.estado == 4 ||
-            widget.estado == null) ||
+            widget.estado == null) &&
         widget.idPublicacion != data['id']) {
       return IconSlideAction(
         caption: 'Editar',
@@ -218,7 +230,7 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
   }
 
   _accionEliminar(data, index) {
-    if ((widget.estado == 1 || widget.estado == 3 || widget.estado == 4) ||
+    if ((widget.estado == 1 || widget.estado == 3 || widget.estado == 4) &&
         widget.idPublicacion != data['id']) {
       return IconSlideAction(
         caption: 'Borrar',
@@ -228,6 +240,20 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
       );
     } else {
       return Text('No permitido');
+    }
+  }
+
+  int cont = 0;
+  List<dynamic> listaPeticiones = [];
+
+  _cargarListaRazas() async {
+    for (var i = 0; i < 100; i++) {
+      listaPeticiones.add(i);
+    }
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    for (var peticion in peticiones) {
+      listaPeticiones[peticion['id']] = peticion;
     }
   }
 }

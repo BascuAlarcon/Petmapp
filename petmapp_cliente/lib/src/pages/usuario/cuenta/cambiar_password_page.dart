@@ -12,6 +12,8 @@ class CambiarPasswordPage extends StatefulWidget {
 class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
   @override
   final _formKey = GlobalKey<FormState>();
+  bool passwordValida;
+  TextEditingController confirmarCtrl = new TextEditingController();
   TextEditingController passwordCtrl = new TextEditingController();
   TextEditingController password2Ctrl = new TextEditingController();
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 1.0),
       child: TextFormField(
         obscureText: true,
+        controller: confirmarCtrl,
         decoration: InputDecoration(
           hintText: "Ingrese su contraseña actual",
           focusedBorder: OutlineInputBorder(
@@ -56,6 +59,12 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
+        validator: (value) {
+          if (passwordValida == false) {
+            return 'Contraseña incorrecta';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -79,6 +88,9 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
         validator: (value) {
           if (value.isEmpty) {
             return 'Indique contraseña';
+          }
+          if (value.length < 6) {
+            return 'Contraseña muy corta';
           }
           return null;
         },
@@ -106,6 +118,9 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
           if (value != passwordCtrl.text) {
             return 'Contraseñas no coinciden';
           }
+          if (value.length < 6) {
+            return 'Contraseña muy corta';
+          }
           return null;
         },
       ),
@@ -128,6 +143,7 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
         child: Text('Guardar cambios',
             style: TextStyle(color: Colors.white, fontFamily: 'Raleway')),
         onPressed: () {
+          _comprobarExistenciaPW();
           if (_formKey.currentState.validate()) {
             _cambiarContrasena();
             Navigator.of(context).pop();
@@ -135,6 +151,21 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
         },
       ),
     );
+  }
+
+  _comprobarExistenciaPW() async {
+    var provider = UsuarioProvider();
+    var respuesta =
+        await provider.comprobarPW(widget.rut.toString(), confirmarCtrl.text);
+    if (respuesta.statusCode == 200) {
+      setState(() {
+        passwordValida = true;
+      });
+    } else {
+      setState(() {
+        passwordValida = false;
+      });
+    }
   }
 
   _cambiarContrasena() async {

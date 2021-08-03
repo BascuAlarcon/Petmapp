@@ -1,6 +1,8 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:petmapp_cliente/src/providers/especie_provider.dart';
 import 'package:petmapp_cliente/src/providers/mascotas_provider.dart';
 import 'package:petmapp_cliente/src/providers/petmapp_provider.dart';
@@ -23,6 +25,9 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
   TextEditingController fechaNacimientoCtrl = new TextEditingController();
   TextEditingController alimentosCtrl = new TextEditingController();
   TextEditingController personalidadCtrl = new TextEditingController();
+  PickedFile _imagefile;
+  String foto;
+  final ImagePicker _picker = ImagePicker();
   bool _validate = false;
   var raza = '';
   var especie = '';
@@ -84,8 +89,41 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                   //_valorCondicion = snapshot.data['condicion_medica'];
                   _valorMicrochip = snapshot.data['microchip'];
                   _valorSeleccionado2 = snapshot.data['sexo'];
+                  _imagefile = snapshot.data['foto'];
                   // _valorSeleccionado3 = snapshot.data['raza_id'];
                   return Stack(children: <Widget>[
+                    FadeInImage(
+                        width: 400,
+                        height: 300,
+                        image: _imagefile == null
+                            ? NetworkImage(
+                                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+                            : FileImage(File(_imagefile.path)),
+                        placeholder: AssetImage('assets/jar-loading.gif'),
+                        fit: BoxFit.cover),
+                    IconButton(
+                      icon: new Icon(
+                        Icons.add_a_photo_rounded,
+                        color: Colors.white,
+                      ),
+                      highlightColor: Colors.pink,
+                      onPressed: () {
+                        tomarFoto(ImageSource.camera);
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: IconButton(
+                        icon: new Icon(
+                          Icons.folder_special_outlined,
+                          color: Colors.white,
+                        ),
+                        highlightColor: Colors.pink,
+                        onPressed: () {
+                          tomarFoto(ImageSource.gallery);
+                        },
+                      ),
+                    ),
                     Column(
                       children: [
                         Expanded(
@@ -453,6 +491,16 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                 }
               },
             )));
+  }
+
+  void tomarFoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      _imagefile = pickedFile;
+      _imagefile == null ? null : foto = _imagefile.path;
+    });
   }
 
   Future<LinkedHashMap<String, dynamic>> _fetch() async {

@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['index', 'me', 'login','editar' ,'register', 'logout' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'alertas', 'evaluacion']]);
+        $this->middleware('jwt', ['except' => ['index', 'me', 'login','editar' ,'register', 'logout' ,'comprobarPW' ,'perfil', 'mascotas', 'hogares','publicaciones', 'peticiones', 'alertas', 'evaluacion']]);
     }
 
     /**
@@ -44,6 +44,18 @@ class AuthController extends Controller
 
         return $this->respondWithToken($token);
     }
+
+    public function comprobarPW()
+    {
+        $credentials = request(['rut', 'password']);
+
+        if (Auth::attempt($credentials)) {
+            return response()->json([ 'message' => 'Contraseña validada'], 200); 
+        }else{
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Credenciales incorrectas'], 401); 
+        }
+
+     }
 
     public function register(Request $request)
     {

@@ -27,14 +27,15 @@ class PublicacionProvider {
   }
 
   // AGREGAR publicaciones //
-  Future<http.Response> publicacionAgregar(
-      String descripcion, String tarifa, String rut, String hogar) async {
+  Future<http.Response> publicacionAgregar(String titulo, String descripcion,
+      String tarifa, String rut, String hogar) async {
     var urlRequest = apiUrl + 'publicaciones';
     var respuesta = await http.post(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
+          'titulo': titulo,
           'descripcion': descripcion,
           'tarifa': tarifa,
           'usuario_rut': rut,
@@ -44,14 +45,15 @@ class PublicacionProvider {
   }
 
   // EDITAR publicaciones //
-  Future<http.Response> publicacionEditar(
-      int idpublicacion, String descripcion, String tarifa) async {
+  Future<http.Response> publicacionEditar(String titulo, int idpublicacion,
+      String descripcion, String tarifa) async {
     var urlRequest = apiUrl + 'publicaciones/$idpublicacion';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
+          'titulo': titulo,
           'descripcion': descripcion,
           'tarifa': tarifa,
         }));

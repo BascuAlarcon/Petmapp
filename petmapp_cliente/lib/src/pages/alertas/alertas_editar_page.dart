@@ -24,6 +24,7 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
   TextEditingController direccionCtrl = new TextEditingController();
   TextEditingController latitudCtrl = new TextEditingController();
   TextEditingController longitudCtrl = new TextEditingController();
+  TextEditingController tituloCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
                   direccionCtrl.text = snapshot.data['direccion'];
                   latitudCtrl.text = snapshot.data['latitud'];
                   longitudCtrl.text = snapshot.data['longitud'];
+                  tituloCtrl.text = snapshot.data['titulo'];
                   return Column(
                     children: [
                       Expanded(
@@ -63,6 +65,8 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
                             _crearAlerta(),
                             Divider(),
                             _crearCampoDescripcion(),
+                            Divider(),
+                            _crearCampoTitulo(),
                             Divider(),
                             _crearCampoDireccion(),
                             Divider(),
@@ -140,6 +144,7 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
     if (_formKey.currentState.validate()) {
       var provider = new AlertaProvider();
       provider.alertaEditar(
+          tituloCtrl.text,
           widget.idalerta,
           tipoAlertaCtrl.text,
           fotoCtrl.text,
@@ -191,6 +196,28 @@ class _AlertaEditarPageState extends State<AlertaEditarPage> {
             child: Text(tipo['nombre']), value: tipo['tipo_alerta']));
       });
     });
+  }
+
+  Widget _crearCampoTitulo() {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+            controller: tituloCtrl,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                labelText: 'Titulo',
+                hintText: 'Titulo de la alerta',
+                suffixIcon: Icon(MdiIcons.tagText)),
+            validator: (valor) {
+              if (valor.isEmpty || valor == null) {
+                return 'Indique un Titulo';
+              }
+              if (valor.length < 5) {
+                return 'El Titulo debe contener al menos 5 cáracteres';
+              }
+              return null;
+            }));
   }
 
   Widget _crearCampoDescripcion() {

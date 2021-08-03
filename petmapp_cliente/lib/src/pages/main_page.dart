@@ -12,8 +12,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/pages/comentarios_alertas/coment_alertas_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/especies/especie_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/place_service_v1.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_listar_page.dart';
+import 'package:petmapp_cliente/src/pages/publicaciones/publicacion_mostrar_page.dart';
 import 'package:petmapp_cliente/src/pages/razas/raza_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/ubicaciones/ubicaciones_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuenta/usuario_mi_perfil_page.dart';
@@ -24,18 +26,25 @@ import 'package:petmapp_cliente/src/pages/usuario/usuarios_listar_page.dart';
 import 'package:petmapp_cliente/src/providers/alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/hogar_provider.dart';
+import 'package:petmapp_cliente/src/providers/negocios_provider.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/tipos_alerta_provider.dart';
+import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 // import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
+import 'package:uuid/uuid.dart';
 
+import 'address_search.dart';
 import 'alertas/alertas_listar_page.dart';
 import 'comentarios_alertas/coment_alertas_editar_page.dart';
+import 'comentarios_alertas/coment_alertas_listar_page.dart';
+import 'comentarios_negocios/coment_negocios_listar_page.dart';
+import 'comentarios_ubicaciones/coment_ubicaciones_listar_page.dart';
 import 'negocios/negocios_listar_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -97,6 +106,31 @@ class _MainPageState extends State<MainPage> {
   var nota;
   var idHogar;
   var mascotas;
+// Busqueda de direccion
+  final _destinationController = TextEditingController();
+  String _latitude = '';
+  String _longitud = '';
+
+  @override
+  void dispose() {
+    _destinationController.dispose();
+    super.dispose();
+  }
+
+  _busquedaDireccion() async {
+    final sessionToken = Uuid().v4();
+    final Suggestion result = await showSearch(
+        context: context, delegate: AddressSearch(sessionToken));
+    if (result != null) {
+      final placeDetails = await PlaceApiProvider(sessionToken)
+          .getPlaceDetailFromId(result.placeId);
+      setState(() {
+        _latitude = placeDetails.latitud;
+        _longitud = placeDetails.longitud;
+        _destinationController.text = result.description;
+      });
+    }
+  }
 
 //
   bool servicioFinalizado;
@@ -145,6 +179,8 @@ class _MainPageState extends State<MainPage> {
     cargarDatosUsuario();
     publicacionListarr(context);
     alertasListar(context);
+    UbicacionesListar(context);
+    NegociosListar(context);
     checkLoginStatus();
     _cargarTiposAlertas();
     /* setCustomMarker(); */
@@ -221,7 +257,7 @@ class _MainPageState extends State<MainPage> {
               _controller.complete(controller);
               locatePosition();
             },
-            onTap: _handletap,
+            /* onTap: _handletap, */
           ),
 
           /// DRAWER ///
@@ -302,6 +338,24 @@ class _MainPageState extends State<MainPage> {
                           onTap: () => _navegarNegocios(context),
                         )
                       : Text(''),
+                  perfil == "1"
+                      ? ListTile(
+                          trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                          title: Text('Ubicaciones',
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Raleway')),
+                          onTap: () => _navegarUbicaciones(context),
+                        )
+                      : Text(''),
+                  perfil == "1"
+                      ? ListTile(
+                          trailing: Icon(Icons.keyboard_arrow_right_outlined),
+                          title: Text('Alertas',
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Raleway')),
+                          onTap: () => _navegarAlertas(context),
+                        )
+                      : Text(''),
                 ],
               ),
             ),
@@ -367,11 +421,14 @@ class _MainPageState extends State<MainPage> {
   void _publicacionAgregar(BuildContext context) {
     var provider = new PublicacionProvider();
     provider.publicacionAgregar(
-      tituloCtrl.text,
-      descripcionCtrl.text,
-      tarifaCtrl.text,
-      rut,
-    ); // usamos un controller //
+        tituloCtrl.text,
+        descripcionCtrl.text,
+        tarifaCtrl.text,
+        rut,
+        _valorSeleccionado.toString()); // usamos un controller //
+    setState(() {
+      publicacionListarr(context);
+    });
     panelController.hide();
     // Navigator.pop(context);
   }
@@ -379,14 +436,18 @@ class _MainPageState extends State<MainPage> {
   void _AlertasAgregar(BuildContext context) {
     var provider = new AlertaProvider();
     provider.alertaAgregar(
-        tituloAlertCtrl.text,
-        rut,
-        _alertaSeleccionado.toString(),
-        foto,
-        descripcionAlertCtrl.text,
-        direccionAlertCtrl.text,
-        latitudeAlertCtrl.text,
-        longitudeAlertCtrl.text);
+      tituloAlertCtrl.text,
+      rut,
+      _alertaSeleccionado.toString(),
+      foto,
+      descripcionAlertCtrl.text,
+      _destinationController.text,
+      _latitude,
+      _longitud,
+    );
+    setState(() {
+      alertasListar(context);
+    });
     panelController.hide();
   }
 
@@ -405,7 +466,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  _handletap(LatLng tappedPoint) {
+  /* _handletap(LatLng tappedPoint) {
     // var alex = tituloCtrl.text.split("(");
     // var alex2 = alex[1].split(")");
     // tituloCtrl.text = alex2[0];
@@ -461,7 +522,7 @@ class _MainPageState extends State<MainPage> {
       }
       //addingMarker = [];
     });
-  }
+  } */
 
   Future<Address> convertirCoordenadasADireccion(
       Coordinates coordinates) async {
@@ -937,7 +998,8 @@ class _MainPageState extends State<MainPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  controller: direccionAlertCtrl,
+                  controller: _destinationController,
+                  onTap: _busquedaDireccion,
                   decoration: InputDecoration(
                       labelText: 'Dirección',
                       hintText: 'Tarifa',
@@ -1041,11 +1103,14 @@ class _MainPageState extends State<MainPage> {
     var listaPublicaciones = await provider.publicacionListar();
 
     mostrarMarcadorPublicacion(BuildContext context, String titulo,
-        String descripcion, String tarifa) {
+        String descripcion, String tarifa, String idPublicacion) {
       // set up the button
       Widget okButton = FlatButton(
         child: Text("Solicitar"),
-        onPressed: () {},
+        onPressed: () {
+          _navegarPublicacion(
+              context, int.parse(idPublicacion), int.parse(rut));
+        },
       );
 
       // set up the AlertDialog
@@ -1114,7 +1179,8 @@ class _MainPageState extends State<MainPage> {
                     context,
                     listaPublicaciones[i]["titulo"],
                     listaPublicaciones[i]["descripcion"],
-                    listaPublicaciones[i]["tarifa"].toString());
+                    listaPublicaciones[i]["tarifa"].toString(),
+                    listaPublicaciones[i]["id"].toString());
               },
               // icon: mapMarker,
               position: LatLng(double.parse(hogar['latitud']),
@@ -1134,8 +1200,10 @@ class _MainPageState extends State<MainPage> {
         String descripcion, String idAlerta) {
       // set up the button
       Widget okButton = FlatButton(
-        child: Text("Publicar"),
-        onPressed: () {},
+        child: Text("Ver"),
+        onPressed: () {
+          _navegarComentariosAlerta(context, int.parse(idAlerta));
+        },
       );
 
       // set up the AlertDialog
@@ -1147,7 +1215,104 @@ class _MainPageState extends State<MainPage> {
             var height = MediaQuery.of(context).size.height;
             var width = MediaQuery.of(context).size.width;
             return Container(
-              height: height - 450,
+              height: height - 610,
+              width: width - 100,
+              child: Column(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            height: 150.0,
+                            width: 300.0,
+                            child: Carousel(
+                              images: [
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
+                              ],
+                            )),
+                        Text(descripcion),
+                        Divider(),
+                        // Container(
+                        //   child: SingleChildScrollView(
+                        //       child: Column(
+                        //           children: itemComentarios.map((comentario) {
+                        //     return Text(comentario);
+                        //   }).toList())),
+                        // )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        actions: [
+          okButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
+    var alertas = await provider.alertaListar();
+    for (int i = 0; i < alertas.length; i++) {
+      allMarkers.add(
+        Marker(
+          // markerId: MarkerId(alertas[i]["descripcion"]),
+          markerId: MarkerId(globalIdMarker.toString()),
+
+          draggable: false,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueMagenta),
+          onTap: () {
+            idAlertaSeleccionado = alertas[i]["id"].toString();
+            mostrarMarcadorAlerta(context, alertas[i]["titulo"],
+                alertas[i]["descripcion"], idAlertaSeleccionado);
+          },
+          // icon: mapMarker,
+          position: LatLng(double.parse(alertas[i]['latitud']),
+              double.parse(alertas[i]['longitud'])),
+        ),
+      );
+      globalIdMarker++;
+    }
+  }
+
+  //Mostrar Marcadores Ubicaciones
+  Future<List<dynamic>> UbicacionesListar(context) async {
+    var provider = new UbicacionProvider();
+    mostrarMarcadorUbicacion(BuildContext context, String titulo,
+        String descripcion, String idAlerta) {
+      // set up the button
+      Widget okButton = FlatButton(
+        child: Text("Comentarios"),
+        onPressed: () {
+          _navegarComentariosUbicacion(context, int.parse(idAlerta));
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Center(child: Text(titulo)),
+        content: Builder(
+          builder: (context) {
+            // Get available height and width of the build area of this widget. Make a choice depending on the size.
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
+            return Container(
+              height: height - 610,
               width: width - 100,
               child: Column(
                 children: [
@@ -1185,7 +1350,7 @@ class _MainPageState extends State<MainPage> {
           },
         ),
         actions: [
-          // okButton,
+          okButton,
         ],
       );
 
@@ -1198,7 +1363,7 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    var alertas = await provider.alertaListar();
+    var alertas = await provider.ubicacionListar();
     for (int i = 0; i < alertas.length; i++) {
       allMarkers.add(
         Marker(
@@ -1206,11 +1371,107 @@ class _MainPageState extends State<MainPage> {
           markerId: MarkerId(globalIdMarker.toString()),
 
           draggable: false,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueMagenta),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           onTap: () {
             idAlertaSeleccionado = alertas[i]["id"].toString();
-            mostrarMarcadorAlerta(context, alertas[i]["titulo"],
+            mostrarMarcadorUbicacion(context, alertas[i]["titulo"],
+                alertas[i]["descripcion"], idAlertaSeleccionado);
+          },
+          // icon: mapMarker,
+          position: LatLng(double.parse(alertas[i]['latitud']),
+              double.parse(alertas[i]['longitud'])),
+        ),
+      );
+      globalIdMarker++;
+    }
+  }
+
+  //Mostrar Marcadores Negocios
+  Future<List<dynamic>> NegociosListar(context) async {
+    var provider = new NegocioProvider();
+    mostrarMarcadorNegocio(BuildContext context, String titulo,
+        String descripcion, String idAlerta) {
+      // set up the button
+      Widget okButton = FlatButton(
+        child: Text("Comentar"),
+        onPressed: () {
+          _navegarComentariosNegocio(context, int.parse(idAlerta));
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Center(child: Text(titulo)),
+        content: Builder(
+          builder: (context) {
+            // Get available height and width of the build area of this widget. Make a choice depending on the size.
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
+            return Container(
+              height: height - 610,
+              width: width - 100,
+              child: Column(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            height: 150.0,
+                            width: 300.0,
+                            child: Carousel(
+                              images: [
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
+                                NetworkImage(
+                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
+                              ],
+                            )),
+                        Text(descripcion),
+                        Divider(),
+                        Container(
+                          child: SingleChildScrollView(
+                              child: Column(
+                                  children: itemComentarios.map((comentario) {
+                            return Text(comentario);
+                          }).toList())),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        actions: [
+          okButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
+    var alertas = await provider.negocioListar();
+    for (int i = 0; i < alertas.length; i++) {
+      allMarkers.add(
+        Marker(
+          // markerId: MarkerId(alertas[i]["descripcion"]),
+          markerId: MarkerId(globalIdMarker.toString()),
+
+          draggable: false,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          onTap: () {
+            idAlertaSeleccionado = alertas[i]["id"].toString();
+            mostrarMarcadorNegocio(context, alertas[i]["nombre"],
                 alertas[i]["descripcion"], idAlertaSeleccionado);
           },
           // icon: mapMarker,
@@ -1397,6 +1658,41 @@ class _MainPageState extends State<MainPage> {
         }
       }
     }
+  }
+
+  // Comentarios
+  _navegarComentariosAlerta(BuildContext context, int id) {
+    MaterialPageRoute route = MaterialPageRoute(builder: (context) {
+      return ComentarioAlertaListarPage(
+        id: id,
+      );
+    });
+    Navigator.push(context, route);
+  }
+
+  _navegarComentariosUbicacion(BuildContext context, int id) {
+    MaterialPageRoute route = MaterialPageRoute(builder: (context) {
+      return ComentarioUbicacionListarPage(
+        id: id,
+      );
+    });
+    Navigator.push(context, route);
+  }
+
+  _navegarComentariosNegocio(BuildContext context, int id) {
+    var route = new MaterialPageRoute(
+        builder: (context) => ComentarioNegocioListarPage(id: id));
+    Navigator.push(context, route);
+  }
+
+  _navegarPublicacion(BuildContext context, int id, int rut) {
+    MaterialPageRoute route = MaterialPageRoute(builder: (context) {
+      return PublicacionMostrarPage(
+        idPublicacion: id,
+        rutUsuario: rut,
+      );
+    });
+    Navigator.push(context, route);
   }
 }
 

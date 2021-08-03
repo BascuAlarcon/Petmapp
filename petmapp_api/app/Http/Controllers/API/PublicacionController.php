@@ -32,6 +32,7 @@ class PublicacionController extends Controller
         $publicacion->tarifa = $request->tarifa;
         $publicacion->usuario_rut = $request->usuario_rut;
         $publicacion->hogar_id = $request->hogar_id; 
+        $publicacion->titulo = $request->titulo; 
         $publicacion->save();
     }
 
@@ -57,7 +58,7 @@ class PublicacionController extends Controller
     {
         $publicacion->descripcion = $request->descripcion;
         $publicacion->tarifa = $request->tarifa; 
-        $publicacion->hogar_id = $request->hogar_id;
+        $publicacion->titulo = $request->titulo;  
         $publicacion->save();
     }
 

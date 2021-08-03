@@ -105,9 +105,6 @@ class _NegociosAgregarPageState extends State<NegociosAgregarPage> {
                           if (valor.isEmpty || valor == null) {
                             return 'Debe ingresar el nombre del negocio';
                           }
-                          if (valor.length < 5) {
-                            return 'Debe ingresar el nombre del negocio';
-                          }
                           return null;
                         },
                       ),

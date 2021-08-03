@@ -59,7 +59,7 @@ class _HogarListarPageState extends State<HogarListarPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
-                            leading: Icon(MdiIcons.soccer),
+                            leading: Icon(MdiIcons.home),
                             title: Text(snapshot.data[index]['descripcion']),
                             onTap: () => _navegarHogarMostrar(
                                     context, snapshot.data[index]['id'])(

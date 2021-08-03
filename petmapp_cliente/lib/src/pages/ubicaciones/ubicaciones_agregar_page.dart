@@ -1,11 +1,15 @@
+// import 'dart:html';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/place_service_v1.dart';
+import 'package:petmapp_cliente/src/pages/address_search.dart';
+import 'package:petmapp_cliente/src/pages/place_service_v1.dart';
 import 'package:petmapp_cliente/src/providers/tipos_ubicacion_provider.dart';
 import 'package:petmapp_cliente/src/providers/ubicaciones_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class UbicacionesAgregarPage extends StatefulWidget {
   final int idPublicacion;
@@ -22,6 +26,34 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
   String ubicacion = '';
   var _tipos = <DropdownMenuItem>[];
   var _valorSeleccionado;
+
+  //Cosas que agregué ahora
+  final _destinationController = TextEditingController();
+  String _latitude = '';
+  String _longitud = '';
+
+  @override
+  void dispose() {
+    _destinationController.dispose();
+    super.dispose();
+  }
+
+  _busquedaDireccion() async {
+    final sessionToken = Uuid().v4();
+    final Suggestion result = await showSearch(
+        context: context, delegate: AddressSearch(sessionToken));
+    if (result != null) {
+      final placeDetails = await PlaceApiProvider(sessionToken)
+          .getPlaceDetailFromId(result.placeId);
+      setState(() {
+        _latitude = placeDetails.latitud;
+        _longitud = placeDetails.longitud;
+        _destinationController.text = result.description;
+      });
+    }
+  }
+  /////////////////////////
+
   @override
   void initState() {
     super.initState();
@@ -31,13 +63,12 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
 
   final _formKey = GlobalKey<FormState>();
 // Controllers //
+  TextEditingController TituloCtrl = new TextEditingController();
   TextEditingController tipoAlertaCtrl = new TextEditingController();
   TextEditingController fotoCtrl = new TextEditingController();
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController direccionCtrl = new TextEditingController();
-  TextEditingController latitudCtrl = new TextEditingController();
-  TextEditingController longitudCtrl = new TextEditingController();
-  TextEditingController tituloCtrl = new TextEditingController();
+  TextEditingController localizacionCtrl = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +85,27 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
               Expanded(
                 child: ListView(
                   children: [
+                    _mostrarImagen(),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: TituloCtrl,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            labelText: 'Título',
+                            hintText: 'Título',
+                            suffixIcon: Icon(MdiIcons.tagText)),
+                        validator: (valor) {
+                          if (valor.isEmpty || valor == null) {
+                            return 'Debe ingresar un titulo';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    Divider(),
                     _crearCampoTipo(),
                     Divider(),
                     Padding(
@@ -78,26 +130,8 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        controller: tituloCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'titulo',
-                            hintText: 'titulo',
-                            suffixIcon: Icon(MdiIcons.tagText)),
-                        validator: (valor) {
-                          if (valor.isEmpty || valor == null) {
-                            return 'Debe ingresar un titulo';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: direccionCtrl,
+                        onTap: _busquedaDireccion,
+                        controller: _destinationController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
@@ -113,34 +147,6 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
                       ),
                     ),
                     Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: latitudCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'latitud',
-                            hintText: 'latitud',
-                            suffixIcon: Icon(Icons.flag)),
-                      ),
-                    ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        controller: longitudCtrl,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            labelText: 'longitud',
-                            hintText: 'longitud',
-                            suffixIcon: Icon(Icons.flag)),
-                      ),
-                    ),
-                    Divider(),
-                    _crearCampoFoto(),
-                    _mostrarImagen()
                   ],
                 ),
               ),
@@ -193,27 +199,45 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
         ));
   }
 
-  Widget _crearCampoFoto() {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: RaisedButton(
-          onPressed: () => tomarFoto(ImageSource.gallery),
-          child: Text('Seleccionar foto'),
-        ));
-  }
-
   PickedFile _imagefile;
   String foto;
   final ImagePicker _picker = ImagePicker();
 
   Widget _mostrarImagen() {
-    return FadeInImage(
-        image: _imagefile == null
-            ? NetworkImage(
-                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
-            : FileImage(File(_imagefile.path)),
-        placeholder: AssetImage('assets/jar-loading.gif'),
-        fit: BoxFit.cover);
+    return Stack(
+      children: [
+        FadeInImage(
+            image: _imagefile == null
+                ? NetworkImage(
+                    'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
+                : FileImage(File(_imagefile.path)),
+            placeholder: AssetImage('assets/jar-loading.gif'),
+            fit: BoxFit.cover),
+        IconButton(
+          icon: new Icon(
+            Icons.add_a_photo_rounded,
+            color: Colors.white,
+          ),
+          highlightColor: Colors.pink,
+          onPressed: () {
+            tomarFoto(ImageSource.camera);
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 40),
+          child: IconButton(
+            icon: new Icon(
+              Icons.folder_special_outlined,
+              color: Colors.white,
+            ),
+            highlightColor: Colors.pink,
+            onPressed: () {
+              tomarFoto(ImageSource.gallery);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void tomarFoto(ImageSource source) async {
@@ -230,13 +254,14 @@ class _UbicacionesAgregarPageState extends State<UbicacionesAgregarPage> {
     if (_formKey.currentState.validate()) {
       var provider = new UbicacionProvider();
       provider.ubicacionAgregar(
-          tituloCtrl.text,
-          ubicacion,
-          foto,
-          descripcionCtrl.text,
-          direccionCtrl.text,
-          latitudCtrl.text,
-          longitudCtrl.text); // usamos un controller //
+        TituloCtrl.text,
+        ubicacion,
+        foto,
+        descripcionCtrl.text,
+        _destinationController.text,
+        _latitude,
+        _longitud,
+      ); // usamos un controller //
       Navigator.pop(context);
     }
   }

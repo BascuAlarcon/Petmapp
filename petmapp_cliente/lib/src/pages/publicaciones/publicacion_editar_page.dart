@@ -16,6 +16,7 @@ class _PublicacionEditarPageState extends State<PublicacionEditarPage> {
 // Controllers //
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController tarifaCtrl = new TextEditingController();
+  TextEditingController tituloCtrl = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -38,11 +39,32 @@ class _PublicacionEditarPageState extends State<PublicacionEditarPage> {
                   descripcionCtrl.text =
                       snapshot.data['descripcion'].toString();
                   tarifaCtrl.text = snapshot.data['tarifa'].toString();
+                  tituloCtrl.text = snapshot.data['titulo'].toString();
                   return Column(
                     children: [
                       Expanded(
                         child: ListView(
                           children: [
+                            Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(
+                                    controller: tituloCtrl,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        labelText: 'Titulo',
+                                        hintText: 'Titulo de la publicacion',
+                                        suffixIcon: Icon(MdiIcons.tagText)),
+                                    validator: (valor) {
+                                      if (valor.isEmpty || valor == null) {
+                                        return 'Indique un Titulo';
+                                      }
+                                      if (valor.length < 5) {
+                                        return 'El Titulo debe contener al menos 5 cáracteres';
+                                      }
+                                      return null;
+                                    })),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextFormField(
@@ -154,6 +176,7 @@ class _PublicacionEditarPageState extends State<PublicacionEditarPage> {
     if (_formKey.currentState.validate()) {
       var provider = new PublicacionProvider();
       provider.publicacionEditar(
+        tituloCtrl.text,
         widget.idpublicacion,
         descripcionCtrl.text,
         tarifaCtrl.text,

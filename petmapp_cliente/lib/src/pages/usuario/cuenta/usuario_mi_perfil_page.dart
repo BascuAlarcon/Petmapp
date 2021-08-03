@@ -63,7 +63,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Mi Perfilardo',
+          title: Text('Mi Perfil',
               style: TextStyle(color: Colors.white, fontFamily: 'Raleway')),
           backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
           centerTitle: true,
@@ -100,17 +100,16 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                     child: Column(
                       children: [
                         Container(
-                            width: 200,
-                            height: 200,
-                            child: CircleAvatar(
-                                child: ClipOval(
-                                    child: snapshot.data['foto'] != 'xD'
-                                        ? Image(
-                                            image: FileImage(
-                                                File(snapshot.data['foto'])))
-                                        : Image(
-                                            image: NetworkImage(
-                                                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
+                            width: 300,
+                            height: 300,
+                            child: ClipOval(
+                                child: snapshot.data['foto'] != 'xD'
+                                    ? Image(
+                                        image: FileImage(
+                                            File(snapshot.data['foto'])))
+                                    : Image(
+                                        image: NetworkImage(
+                                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg')))),
                         ListTile(
                           title: Center(
                               child: Text(
@@ -200,7 +199,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                           ),
                         ),
                         Divider(color: Colors.black),
-                        Text('Rut: ${snapshot.data['rut']}'),
+                        /* Text('Rut: ${snapshot.data['rut'].toString()}'),
                         snapshot.data['fecha_nacimiento'] != null
                             ? Text('Edad: $edadd')
                             : Text(''),
@@ -213,6 +212,11 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                             ? Text(
                                 'Numero telefonico: ${snapshot.data['numero_telefonico']}')
                             : Text(''),
+                        snapshot.data['promedio_evaluaciones'] != null
+                            ? Text('Su promedio de notas es: ' +
+                                snapshot.data['promedio_evaluaciones']
+                                    .toString())
+                            : Text('Aún no tiene ninguna nota'), */
                         Expanded(child: Divider()),
                         Padding(
                             padding: const EdgeInsets.all(2.0),
@@ -241,15 +245,6 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                                     child: Text('Hogares'),
                                     onPressed: () =>
                                         _navegarListarHogares(context)))),
-                        Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
-                                height: 40,
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                    child: Text('Mis Peticiones'),
-                                    onPressed: () =>
-                                        _navegarListarPeticiones(context)))),
                       ],
                     ),
                   ),
@@ -320,9 +315,9 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
   void _navegarMisPublicaciones(BuildContext context) {
     var route = new MaterialPageRoute(
         builder: (context) => MisPublicacionesPage(
-              estado: widget.westado,
-              idPublicacion: widget.widDataPublicacion,
-            ));
+            estado: widget.westado,
+            idPublicacion: widget.widDataPublicacion,
+            idPeticion: widget.widDataPeticion));
     Navigator.push(context, route);
   }
 

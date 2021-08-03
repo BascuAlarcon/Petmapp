@@ -287,6 +287,8 @@ class _UsuarioEditarPageState extends State<UsuarioEditarPage> {
 
   Widget _mostrarImagen(foto) {
     return FadeInImage(
+        width: 100,
+        height: 300,
         image: caso == 0
             ? FileImage(File(foto))
             : FileImage(File(_imagefile.path)),
@@ -376,7 +378,7 @@ class _UsuarioEditarPageState extends State<UsuarioEditarPage> {
   }
 
   _cargarSexo() async {
-    _sexo.add(DropdownMenuItem(child: Text("Superior"), value: 0));
-    _sexo.add(DropdownMenuItem(child: Text("Inferior"), value: 1));
+    _sexo.add(DropdownMenuItem(child: Text("Masculino"), value: 0));
+    _sexo.add(DropdownMenuItem(child: Text("Femenino"), value: 1));
   }
 }

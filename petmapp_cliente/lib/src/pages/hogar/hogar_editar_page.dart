@@ -281,6 +281,8 @@ class _HogarEditarPageState extends State<HogarEditarPage> {
 
   Widget _mostrarImagen(foto) {
     return FadeInImage(
+        width: 300,
+        height: 300,
         image: caso == 0
             ? FileImage(File(foto))
             : FileImage(File(_imagefile.path)),

@@ -245,4 +245,14 @@ class UsuarioProvider {
         body: jsonEncode(<String, String>{'perfil_id': perfilId}));
     return respuesta;
   }
+
+  Future<http.Response> comprobarPW(String rut, String password) async {
+    var urlRequest = apiUrl + 'auth/me/comprobarPW/';
+    var respuesta = await http.post(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(<String, String>{'rut': rut, 'password': password}));
+    return respuesta;
+  }
 }

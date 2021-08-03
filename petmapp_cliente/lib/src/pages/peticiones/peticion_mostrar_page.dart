@@ -2,16 +2,18 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:petmapp_cliente/src/pages/main_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuidado_page.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
+import 'package:petmapp_cliente/src/providers/razas_provider.dart';
 import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 
 class PeticionMostrarPage extends StatefulWidget {
   final int idPeticion;
   final int rutUsuario;
-
+  var data;
   PeticionMostrarPage({this.idPeticion, this.rutUsuario});
 
   @override
@@ -23,7 +25,13 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
   String fechaInicio = '';
   String fechaFin = '';
   String precioTotal = '';
+
   @override
+  void initState() {
+    super.initState();
+    _cargarListaRazas();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -41,6 +49,7 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
 
   Widget _datosPeticion() {
     return Expanded(
+      flex: 2,
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.all(10),
@@ -50,6 +59,7 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
             if (!snapshot.hasData) {
               return Text('Loading...');
             } else {
+              var data = snapshot.data;
               _inicio = DateTime.parse(snapshot.data['fecha_inicio']);
               _fin = DateTime.parse(snapshot.data['fecha_fin']);
               return Card(
@@ -57,11 +67,14 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     children: [
-                      Text('Datos de la peticion'),
                       ListTile(
                         title: Text(
-                            'Fecha de la petición: ${snapshot.data['fecha_inicio']}'),
+                            'Fecha en que inicia el cuidado: ${snapshot.data['fecha_inicio']} '),
+                        subtitle: Text(
+                            '    Fecha en que finaliza el cuidado: ${snapshot.data['fecha_fin']}'),
                       ),
+                      Text('Monto a pagar: ' +
+                          snapshot.data['precio_total'].toString()),
                       Expanded(
                         child: _mostrarMascotas(snapshot.data['mascotas']),
                       ),
@@ -90,38 +103,54 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
   }
 
   Widget _datosUsuario() {
-    return Expanded(
+    return Center(
       child: Container(
           child: FutureBuilder(
-              future: _fetchUsuario(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Text('loading...');
-                } else {
-                  return Card(
-                      child: ListView(
-                    children: [
-                      Container(
-                          width: 200,
-                          height: 200,
-                          child: CircleAvatar(
-                              child: ClipOval(
-                                  child: snapshot.data['foto'] != 'xD'
-                                      ? Image(
-                                          image: FileImage(
-                                              File(snapshot.data['foto'])))
-                                      : Image(
-                                          image: NetworkImage(
-                                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
-                      ListTile(
-                        title: Text(snapshot.data['name']),
-                        subtitle: Text(
-                            'Mostrar número de notas, promedio notas, datos, etc...'),
-                      )
-                    ],
-                  ));
-                }
-              })),
+        future: _fetchUsuario(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Text('loading...');
+          } else {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    width: 200,
+                    height: 200,
+                    child: CircleAvatar(
+                        child: ClipOval(
+                            child: snapshot.data['foto'] != 'xD'
+                                ? Image(
+                                    image:
+                                        FileImage(File(snapshot.data['foto'])))
+                                : Image(
+                                    image: NetworkImage(
+                                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        snapshot.data['sexo'] == 0
+                            ? Text((snapshot.data['name'] + ', Hombre'))
+                            : Text((snapshot.data['name'] + ', Mujer')),
+                        Text('Fecha de nacimiento: ' +
+                            snapshot.data['fecha_nacimiento']),
+                        snapshot.data['promedio_evaluaciones'] == null
+                            ? Text(
+                                'Promedio de evaluaciones: Aún sin evaluaciones')
+                            : Text('Promedio de evaluaciones: ' +
+                                snapshot.data['promedio_evaluaciones']
+                                    .toString()),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            );
+          }
+        },
+      )),
     );
   }
 
@@ -169,11 +198,61 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
       itemCount: mascotas.length,
       separatorBuilder: (context, index) => Divider(),
       itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(mascotas[index]['nombre']),
+        return Wrap(
+          children: [
+            Image(
+                height: 200,
+                width: 500,
+                image: FileImage(File(mascotas[index]['foto']))),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  razasLista[mascotas[index]['raza_id']]['especie_id'] == 1
+                      ? Text(
+                          '  ' +
+                              mascotas[index]['nombre'] +
+                              ', Perro ' +
+                              razasLista[mascotas[index]['raza_id']]['nombre'],
+                          textAlign: TextAlign.center,
+                        )
+                      : Text(
+                          '  ' +
+                              mascotas[index]['nombre'] +
+                              ', Gato ' +
+                              razasLista[mascotas[index]['raza_id']]['nombre'],
+                          textAlign: TextAlign.center,
+                        ),
+                  Text('Alimentos: ' + mascotas[index]['alimentos']),
+                  Text('Personalidad: ' + mascotas[index]['personalidad']),
+                  mascotas[index]['condicion_medica'] == 0
+                      ? Text('Sano')
+                      : Text('Enfermo'),
+                  mascotas[index]['estirilizacion'] == 0
+                      ? Text('Esta estirilizado')
+                      : Text('No esta esterilizado'),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
+  }
+
+  int cont = 0;
+  List<dynamic> razasLista = [];
+
+  _cargarListaRazas() async {
+    for (var i = 0; i < 100; i++) {
+      razasLista.add(i);
+    }
+    var provider = RazasProvider();
+    var razas = await provider.getRazas();
+    for (var raza in razas) {
+      razasLista[raza['id']] = raza;
+    }
   }
 
   void peticionResponder(String respuesta, fechaInicio, fechaFin) {

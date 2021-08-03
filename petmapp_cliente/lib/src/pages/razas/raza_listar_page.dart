@@ -51,8 +51,7 @@ class _RazaListarPageState extends State<RazaListarPage> {
                                 ? Icon(MdiIcons.dog)
                                 : Icon(MdiIcons.cat),
                             title: Text(snapshot.data[index]['nombre']),
-                            onTap: () => _navegarMascotas(
-                                context, snapshot.data[index]['id']),
+                            onTap: () {},
                           ),
                           actions: [
                             IconSlideAction(

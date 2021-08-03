@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -25,7 +26,7 @@ class _ComentarioUbicacionListarPageState
   SharedPreferences sharedPreferences;
   String token, rut = '';
   String nombre;
-
+  String foto;
   @override
   void initState() {
     super.initState();
@@ -41,133 +42,154 @@ class _ComentarioUbicacionListarPageState
           backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
         body: Column(
-          children: [
-            Center(
-              child: FutureBuilder(
-                future: _fetchUbicacion(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: Text('No data'));
-                  } else {
-                    return Card(
-                        child: Column(
-                      children: [
-                        Image(
-                          image: NetworkImage(
-                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                          height: 200,
-                        ),
-                        ListTile(
-                          title: Text(snapshot.data['descripcion']),
-                          subtitle: Text(snapshot.data['direccion']),
-                        )
-                      ],
-                    ));
-                  }
-                },
-              ),
-            ),
-            Expanded(
-              child: FutureBuilder(
-                future: _fetch(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: Text('No data'));
-                  } else {
-                    List<dynamic> safeCards = snapshot.data;
-                    return Column(
-                      children: [
-                        // LISTA COMENTARIOS//
-                        Expanded(
-                          child: RefreshIndicator(
-                            onRefresh: () => _refresh(),
-                            child: ListView.separated(
-                              itemCount: safeCards.length,
-                              separatorBuilder: (context, index) {
-                                return Divider();
-                              },
-                              itemBuilder: (context, index) {
-                                _mostrarNombre(
-                                    snapshot.data[index]['usuario_rut']);
-                                return Slidable(
-                                  actionPane: SlidableDrawerActionPane(),
-                                  actionExtentRatio: 0.25,
-                                  child: ListTile(
-                                    leading: Icon(MdiIcons.tag),
-                                    subtitle: Text(nombre),
-                                    title: Text(snapshot.data[index]
-                                            ['descripcion']
-                                        .toString()),
-                                    onTap: () {},
-                                  ),
-                                  actions: [
-                                    rut ==
-                                            snapshot.data[index]['usuario_rut']
-                                                .toString()
-                                        ? IconSlideAction(
-                                            caption: 'Editar',
-                                            color: Colors.yellow,
-                                            icon: MdiIcons.pencil,
-                                            onTap: () =>
-                                                _navegarcomentariosEditar(
-                                                    context,
-                                                    snapshot.data[index]['id']),
-                                          )
-                                        : Text(''),
-                                  ],
-                                  secondaryActions: [
-                                    rut ==
-                                            snapshot.data[index]['usuario_rut']
-                                                .toString()
-                                        ? IconSlideAction(
-                                            caption: 'Borrar',
-                                            color: Colors.red,
-                                            icon: MdiIcons.trashCan,
-                                            onTap: () => _mostrarConfirmacion(
-                                                context, snapshot.data, index),
-                                          )
-                                        : Text(''),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-
-                        // LISTA comentariosnegocio //
-                        // BOTON AGREGAR //
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              height: 40,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () =>
-                                    _navegarComentariosAgregar(context),
-                                child: Text('Agregar Comentario'),
-                                style: ButtonStyle(
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(18.0),
-                                          side: BorderSide(
-                                              color: Colors.white12))),
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Color.fromRGBO(120, 139, 255, 1.0)),
-                                ),
-                              )),
-                        )
-                        // BOTON AGREGAR //
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
+          children: [_dataUbicacion(), _dataComentarios()],
         ));
+  }
+
+  Widget _dataUbicacion() {
+    return Center(
+      child: FutureBuilder(
+        future: _fetchUbicacion(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: Text('No data'));
+          } else {
+            foto = snapshot.data['foto'];
+            return Card(
+                child: Column(
+              children: [
+                foto != null
+                    ? Image(image: FileImage(File(foto)))
+                    : Image(
+                        image: NetworkImage(
+                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                        height: 200,
+                      ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 1, right: 3),
+                      child: Text(
+                        snapshot.data['direccion'],
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  title: Text(
+                    snapshot.data['titulo'],
+                    textAlign: TextAlign.center,
+                  ),
+                  subtitle: Text(
+                    snapshot.data['descripcion'],
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ));
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _dataComentarios() {
+    return Expanded(
+      child: FutureBuilder(
+        future: _fetch(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: Text('No data'));
+          } else {
+            List<dynamic> safeCards = snapshot.data;
+            return Column(
+              children: [
+                // LISTA COMENTARIOS//
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () => _refresh(),
+                    child: ListView.separated(
+                      itemCount: safeCards.length,
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                      itemBuilder: (context, index) {
+                        return Slidable(
+                          actionPane: SlidableDrawerActionPane(),
+                          actionExtentRatio: 0.25,
+                          child: ListTile(
+                            leading: Icon(MdiIcons.messageReplyTextOutline),
+                            subtitle:
+                                Text(snapshot.data[index]['fecha_emision']),
+                            title: Text(
+                                snapshot.data[index]['descripcion'] != null
+                                    ? snapshot.data[index]['descripcion']
+                                    : Text('loading')),
+                            onTap: () {},
+                          ),
+                          actions: [
+                            rut ==
+                                    snapshot.data[index]['usuario_rut']
+                                        .toString()
+                                ? IconSlideAction(
+                                    caption: 'Editar',
+                                    color: Colors.yellow,
+                                    icon: MdiIcons.pencil,
+                                    onTap: () => _navegarcomentariosEditar(
+                                        context, snapshot.data[index]['id']),
+                                  )
+                                : Text(''),
+                          ],
+                          secondaryActions: [
+                            rut ==
+                                    snapshot.data[index]['usuario_rut']
+                                        .toString()
+                                ? IconSlideAction(
+                                    caption: 'Borrar',
+                                    color: Colors.red,
+                                    icon: MdiIcons.trashCan,
+                                    onTap: () => _mostrarConfirmacion(
+                                        context, snapshot.data, index),
+                                  )
+                                : Text(''),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                // LISTA comentariosnegocio //
+                // BOTON AGREGAR //
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      height: 40,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _navegarComentariosAgregar(context),
+                        child: Text('Agregar Comentario'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white12))),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(120, 139, 255, 1.0)),
+                        ),
+                      )),
+                )
+                // BOTON AGREGAR //
+              ],
+            );
+          }
+        },
+      ),
+    );
   }
 
   Future<Null> _refresh() async {
@@ -189,8 +211,7 @@ class _ComentarioUbicacionListarPageState
     var route = new MaterialPageRoute(
         builder: (context) => ComentariosUbicacionAgregarPage(id: widget.id));
     Navigator.push(context, route).then((value) {
-      setState(
-          () {}); // cuando se devuelva el navigator con un pop, que resfresque //
+      setState(() {});
     });
   }
 

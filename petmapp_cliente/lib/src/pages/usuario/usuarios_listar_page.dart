@@ -51,15 +51,15 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
               children: [
                 crearBuscador(),
                 Expanded(
-                    child: ListView.builder(
-                  itemCount: usuarios.length,
-                  itemBuilder: (context, index) {
-                    final usuario = usuarios[index];
-                    return construirUsuario(usuario);
-                  },
-                )
+                  child: ListView.builder(
+                    itemCount: usuarios.length,
+                    itemBuilder: (context, index) {
+                      final usuario = usuarios[index];
+                      return construirUsuario(usuario);
+                    },
+                  ),
 
-                    /* FutureBuilder(
+                  /* FutureBuilder(
               future: _fetch(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -116,7 +116,7 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
                 }
               },
             ), */
-                    ),
+                ),
               ],
             ),
     );
@@ -139,36 +139,6 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
     Navigator.push(context, route).then((value) {
       setState(() {});
     });
-  }
-
-  //    ELIMINAR UN USUARIO     //
-  // MUCHO OJO CON NO DEJAR LA CAGA //
-  void _usuarioBorrar(int rut) async {
-    // ELIMINAR EL USUARIO //
-    var userProvider = new UsuarioProvider();
-    await userProvider.usuarioBorrar(rut);
-    // ELIMINAR PUBLICACIONES DEL USUARIO //
-    var publicacionProvider = new PublicacionProvider();
-    var publicaciones = await publicacionProvider.publicacionListar();
-    for (var publicacion in publicaciones) {
-      if (publicacion['usuario_rut'] == rut) {
-        await publicacionProvider.publicacionesBorrar(publicacion['id']);
-      }
-    }
-    // ELIMINAR PETICIONES DEL USUARIO //
-    var peticionProvider = new PeticionProvider();
-    var peticiones = await peticionProvider.peticionListar();
-    for (var peticion in peticiones) {
-      if (peticion['usuario_rut'] == rut) {
-        await peticionProvider.peticionesBorrar(peticion['id']);
-      }
-    }
-    setState(() {
-      init();
-    });
-    // ELIMINAR COMENTARIOS //
-    // ELIMINAR ALERTAS //
-    // NO ELIMINAR NADA MÁS EN CASO DE QUE VUELVA //
   }
 
   _mostrarConfirmacion(BuildContext context, int rut) {
@@ -244,5 +214,85 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
             onTap: () => _mostrarConfirmacion(context, usuario.rut)),
       ],
     );
+  }
+
+  void _usuarioBorrar(int rut) async {
+    _buscarPeticion(rut);
+  }
+
+  _buscarPeticion(rut) async {
+    var provider = PeticionProvider();
+    var peticiones = await provider.peticionListar();
+    var providerPublicacion = PublicacionProvider();
+    var publicaciones = await providerPublicacion.publicacionListar();
+    bool confirmarBorrado = true;
+
+    for (var peticion in peticiones) {
+      if (peticion['estado'] == 2 ||
+          peticion['estado'] == 5 ||
+          peticion['estado'] == 6 ||
+          peticion['estado'] == 7) {
+        if (peticion['usuario_rut'].toString() == rut.toString()) {
+          confirmarBorrado = false;
+        }
+        for (var publicacion in publicaciones) {
+          if (publicacion['usuario_rut'].toString() == rut.toString() &&
+              publicacion['id'] == peticion['publicacion_id']) {
+            confirmarBorrado = false;
+          }
+        }
+      }
+    }
+
+    if (confirmarBorrado == true) {
+      _borrar(rut);
+    } else {
+      snackBar();
+    }
+  }
+
+  snackBar() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: Text('No se pudo eliminar al usuario'),
+            children: [
+              ListTile(
+                title: Text('El usuario esta actualmente en un servicio'),
+              ),
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Acceptar'))
+            ],
+          );
+        });
+  }
+
+  _borrar(rut) async {
+    print('Se borrará el usuario: ' + rut.toString());
+    var userProvider = new UsuarioProvider();
+    await userProvider.usuarioBorrar(rut);
+    // ELIMINAR PUBLICACIONES DEL USUARIO //
+    var publicacionProvider = new PublicacionProvider();
+    var publicaciones = await publicacionProvider.publicacionListar();
+    for (var publicacion in publicaciones) {
+      if (publicacion['usuario_rut'] == rut) {
+        await publicacionProvider.publicacionesBorrar(publicacion['id']);
+      }
+    }
+    // ELIMINAR PETICIONES DEL USUARIO //
+    var peticionProvider = new PeticionProvider();
+    var peticiones = await peticionProvider.peticionListar();
+    for (var peticion in peticiones) {
+      if (peticion['usuario_rut'] == rut) {
+        await peticionProvider.peticionesBorrar(peticion['id']);
+      }
+    }
+    setState(() {
+      init();
+    });
+    // ELIMINAR COMENTARIOS //
+    // ELIMINAR ALERTAS //
   }
 }

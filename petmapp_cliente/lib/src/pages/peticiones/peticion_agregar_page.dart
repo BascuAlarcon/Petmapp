@@ -181,6 +181,7 @@ class _PeticionesAgregarPageState extends State<PeticionesAgregarPage> {
     calcularPrecio();
     if (_formKey.currentState.validate()) {
       var provider = new PeticionProvider();
+      print(precioTotal);
       provider.peticionAgregar(
           descripcionCtrl.text,
           fechaInicioCtrl.text,

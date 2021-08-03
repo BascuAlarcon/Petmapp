@@ -32,7 +32,7 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
 // Controllers //
   TextEditingController descripcionCtrl = new TextEditingController();
   TextEditingController tarifaCtrl = new TextEditingController();
-
+  TextEditingController tituloCtrl = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +48,26 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
               Expanded(
                 child: ListView(
                   children: [
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                            controller: tituloCtrl,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                labelText: 'Titulo',
+                                hintText: 'Titulo de la publicacion',
+                                suffixIcon: Icon(MdiIcons.tagText)),
+                            validator: (valor) {
+                              if (valor.isEmpty || valor == null) {
+                                return 'Indique un Titulo';
+                              }
+                              if (valor.length < 5) {
+                                return 'El Titulo debe contener al menos 5 cáracteres';
+                              }
+                              return null;
+                            })),
+                    Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
@@ -119,6 +139,7 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
                             child: Text(
                               'Debe al menos ingresar un hogar para usar este servicio :)',
                               style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
                             ),
                           )
                         : Text(':)')
@@ -179,8 +200,8 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
   void _publicacionAgregar(BuildContext context) {
     if (_formKey.currentState.validate()) {
       var provider = new PublicacionProvider();
-      provider.publicacionAgregar(descripcionCtrl.text, tarifaCtrl.text, rut,
-          _hogar); // usamos un controller //
+      provider.publicacionAgregar(tituloCtrl.text, descripcionCtrl.text,
+          tarifaCtrl.text, rut, _hogar); // usamos un controller //
       Navigator.pop(context);
     }
   }

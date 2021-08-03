@@ -49,7 +49,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: titulo == null ? Text('Ver Publicación') : Text(titulo),
+          title: Text('Ver Publicación'),
           backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
         ),
         body: Column(
@@ -96,23 +96,9 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
           ],
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                Text(
-                  'descripcion',
-                  textAlign: TextAlign.start,
-                ),
-                Text(
-                  tipoHogar.toString(),
-                  textAlign: TextAlign.start,
-                ),
-                Text(
-                  disponibilidadPatio.toString(),
-                  textAlign: TextAlign.start,
-                ),
-              ],
-            ),
             Container(
                 alignment: Alignment.centerRight,
                 width: 200,
@@ -122,41 +108,35 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                     : Image(
                         image: NetworkImage(
                             'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))),
-          ],
-        ),
-        Row(
-          children: [Text('a'), Text('a'), Text('a')],
-        ),
-        /* Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [Text('a')],
-        ),
-        Container(
-          alignment: Alignment.centerRight,
-          child: Text('a'),
-        ),
-        Column(
-          children: [Text('a'), Text('a'), Text('a')],
-        ), */
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              direccion,
-              textAlign: TextAlign.end,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('Descripcion del cuidado: ' + snapshotData['descripcion']),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  tipoHogar == 0
+                      ? Text('- El hogar es una casa')
+                      : Text('- El hogar es un departamento'),
+                  disponibilidadPatio == 0
+                      ? Text('- Cuenta con patio')
+                      : Text('- No cuenta con patio'),
+                  Text(snapshotData['descripcion']),
+                  Container(
+                    child: Text(descripcion),
+                  )
+                  // PONER LA DATA DE LA PUBLICACIÓN
+                ],
+              ),
+            )
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('Precio por día: ${snapshotData['tarifa']}clp'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(direccion),
+            )
           ],
         ),
         Expanded(child: Divider()),
@@ -215,7 +195,15 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                   ),
                   Text('Usuario desde el ' +
                       '${snapshotData['created_at']}'.replaceRange(10, 27, '')),
-                  Text(snapshotData['fecha_nacimiento'] + ' Años'),
+                  Text('Nacio el: ' +
+                      snapshotData['fecha_nacimiento'].toString()),
+                  snapshotData['rut'].toString().length == 8
+                      ? Text(snapshotData['rut']
+                          .toString()
+                          .replaceRange(7, 7, '-'))
+                      : Text(snapshotData['rut']
+                          .toString()
+                          .replaceRange(8, 8, '-'))
                 ],
               ))
             ],
@@ -362,7 +350,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
           return AlertDialog(
             title: Text('Es necesario completar los siguientes datos: '),
             content: Text(
-                'Para poder hacer una petición, es necesario que usted agrege una mascota \nEsta información la puede completar en su perfil'),
+                'Para poder hacer una petición, es necesario que usted agrege una mascota \n\nEsta información la puede completar en su perfil'),
             actions: [
               MaterialButton(
                   child: Text('Acceptar',
