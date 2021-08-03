@@ -131,35 +131,70 @@ class _RegistrarPageState extends State<RegistrarPage> {
   }
 
   _calcularDigitoVerificador(String rut) {
-    var digitoVerificador = rut.replaceRange(0, 11, "");
-    var verificador1 = int.tryParse(digitoVerificador);
-    rut = rut.replaceRange(2, 3, "");
-    rut = rut.replaceRange(5, 6, "");
-    rut = rut.replaceRange(8, 10, "");
-    var digitoRut = rut.trim().split("");
-    int sumaTotal = 0;
-    int contador = 7;
-    for (var multiplicador = 2; contador >= 0;) {
-      sumaTotal = sumaTotal + (int.parse(digitoRut[contador]) * multiplicador);
-      if (multiplicador == 7) {
-        multiplicador = 2;
-      } else {
-        multiplicador++;
+    if (rut.length == 12) {
+      var digitoVerificador = rut.replaceRange(0, 11, "");
+      var verificador1 = int.tryParse(digitoVerificador);
+      rut = rut.replaceRange(2, 3, "");
+      rut = rut.replaceRange(5, 6, "");
+      rut = rut.replaceRange(8, 10, "");
+      var digitoRut = rut.trim().split("");
+      int sumaTotal = 0;
+      int contador = 7;
+      for (var multiplicador = 2; contador >= 0;) {
+        sumaTotal =
+            sumaTotal + (int.parse(digitoRut[contador]) * multiplicador);
+        if (multiplicador == 7) {
+          multiplicador = 2;
+        } else {
+          multiplicador++;
+        }
+        contador--;
       }
-      contador--;
-    }
-    num truncado = (sumaTotal ~/ 11);
-    num casi = truncado * 11;
-    num xD = sumaTotal - casi;
-    num verificador2 = 11 - xD;
-    if (verificador1 == verificador2) {
-      setState(() {
-        numeroValidadorCorrecto = true;
-      });
+      num truncado = (sumaTotal ~/ 11);
+      num casi = truncado * 11;
+      num xD = sumaTotal - casi;
+      num verificador2 = 11 - xD;
+      if (verificador1 == verificador2) {
+        setState(() {
+          numeroValidadorCorrecto = true;
+        });
+      } else {
+        setState(() {
+          numeroValidadorCorrecto = false;
+        });
+      }
     } else {
-      setState(() {
-        numeroValidadorCorrecto = false;
-      });
+      var digitoVerificador = rut.replaceRange(0, 10, "");
+      var verificador1 = int.tryParse(digitoVerificador);
+      rut = rut.replaceRange(1, 2, "");
+      rut = rut.replaceRange(4, 5, "");
+      rut = rut.replaceRange(7, 9, "");
+      var digitoRut = rut.trim().split("");
+      int sumaTotal = 0;
+      int contador = 6;
+      for (var multiplicador = 2; contador >= 0;) {
+        sumaTotal =
+            sumaTotal + (int.parse(digitoRut[contador]) * multiplicador);
+        if (multiplicador == 7) {
+          multiplicador = 2;
+        } else {
+          multiplicador++;
+        }
+        contador--;
+      }
+      num truncado = (sumaTotal ~/ 11);
+      num casi = truncado * 11;
+      num xD = sumaTotal - casi;
+      num verificador2 = 11 - xD;
+      if (verificador1 == verificador2) {
+        setState(() {
+          numeroValidadorCorrecto = true;
+        });
+      } else {
+        setState(() {
+          numeroValidadorCorrecto = false;
+        });
+      }
     }
   }
 

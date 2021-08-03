@@ -203,7 +203,9 @@ class _UsuarioListarPageState extends State<UsuarioListarPage> {
       child: ListTile(
         leading: Icon(MdiIcons.account),
         title: Text(usuario.correo),
-        subtitle: Text('Promedio notas: ' + usuario.promedio.toString()),
+        subtitle: usuario.promedio != null
+            ? Text('Promedio notas: ' + usuario.promedio.toString())
+            : Text('Sin calificaciones'),
         onTap: () {},
       ),
       secondaryActions: [

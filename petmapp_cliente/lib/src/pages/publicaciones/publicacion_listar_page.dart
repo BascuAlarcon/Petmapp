@@ -94,24 +94,20 @@ class _PublicacionListarPageState extends State<PublicacionListarPage> {
           itemCount: safeCards.length,
           itemBuilder: (context, index) {
             _comprobarPeticionPublicacion(snapshotData[index]);
-            if (mostrar == false) {
-              return Column();
-            } else {
-              return widget.idPublicacion != snapshotData[index]['id']
-                  ? Slidable(
-                      actionPane: SlidableDrawerActionPane(),
-                      actionExtentRatio: 0.25,
-                      child: ListTile(
-                        leading: Icon(MdiIcons.clipboardText),
-                        title: Text(snapshotData[index]['descripcion']),
-                        onTap: () => _navegarPublicacion(
-                            context,
-                            snapshotData[index]['id'],
-                            snapshotData[index]['usuario_rut']),
-                      ),
-                    )
-                  : Column();
-            }
+            return snapshotData[index]['comentario'] == null
+                ? Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    actionExtentRatio: 0.25,
+                    child: ListTile(
+                      leading: Icon(MdiIcons.clipboardText),
+                      title: Text(snapshotData[index]['descripcion']),
+                      onTap: () => _navegarPublicacion(
+                          context,
+                          snapshotData[index]['id'],
+                          snapshotData[index]['usuario_rut']),
+                    ),
+                  )
+                : Column();
           },
         ),
       ),

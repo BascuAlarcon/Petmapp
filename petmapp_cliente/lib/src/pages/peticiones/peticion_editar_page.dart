@@ -305,7 +305,7 @@ class _PeticionEditarPageState extends State<PeticionEditarPage> {
     _fechaInicio = DateTime.parse(fechaInicioCtrl.text);
     _fechaFin = DateTime.parse(fechaFinCtrl.text);
     final dias = daysBetween(_fechaInicio, _fechaFin);
-    precioTotal = dias * tarifa;
+    precioTotal = (dias + 1) * tarifa;
   }
 
   void _buscarTarifa() async {

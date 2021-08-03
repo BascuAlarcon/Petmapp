@@ -70,6 +70,7 @@ class MascotaController extends Controller
         $mascota->alimentos = $request->alimentos; 
         $mascota->personalidad = $request->personalidad; 
         $mascota->raza_id = $request->raza_id;
+        $mascota->foto = $request->foto;
         $mascota->save();
     }
 

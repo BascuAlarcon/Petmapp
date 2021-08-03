@@ -89,41 +89,9 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                   //_valorCondicion = snapshot.data['condicion_medica'];
                   _valorMicrochip = snapshot.data['microchip'];
                   _valorSeleccionado2 = snapshot.data['sexo'];
-                  _imagefile = snapshot.data['foto'];
+                  // _imagefile = snapshot.data['foto'];
                   // _valorSeleccionado3 = snapshot.data['raza_id'];
                   return Stack(children: <Widget>[
-                    FadeInImage(
-                        width: 400,
-                        height: 300,
-                        image: _imagefile == null
-                            ? NetworkImage(
-                                'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif')
-                            : FileImage(File(_imagefile.path)),
-                        placeholder: AssetImage('assets/jar-loading.gif'),
-                        fit: BoxFit.cover),
-                    IconButton(
-                      icon: new Icon(
-                        Icons.add_a_photo_rounded,
-                        color: Colors.white,
-                      ),
-                      highlightColor: Colors.pink,
-                      onPressed: () {
-                        tomarFoto(ImageSource.camera);
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        icon: new Icon(
-                          Icons.folder_special_outlined,
-                          color: Colors.white,
-                        ),
-                        highlightColor: Colors.pink,
-                        onPressed: () {
-                          tomarFoto(ImageSource.gallery);
-                        },
-                      ),
-                    ),
                     Column(
                       children: [
                         Expanded(
@@ -131,12 +99,38 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                             children: <Widget>[
                               Stack(children: <Widget>[
                                 FadeInImage(
-                                    image: NetworkImage(
-                                        'https://cdn.dribbble.com/users/1030477/screenshots/4704756/dog_allied.gif'),
+                                    width: 400,
+                                    height: 300,
+                                    image: _imagefile == null
+                                        ? FileImage(File(snapshot.data['foto']))
+                                        : FileImage(File(_imagefile.path)),
                                     placeholder:
                                         AssetImage('assets/jar-loading.gif'),
                                     fit: BoxFit.cover),
                                 // Botón Agregar Foto
+                                IconButton(
+                                  icon: new Icon(
+                                    Icons.add_a_photo_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  highlightColor: Colors.pink,
+                                  onPressed: () {
+                                    tomarFoto(ImageSource.camera);
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 40),
+                                  child: IconButton(
+                                    icon: new Icon(
+                                      Icons.folder_special_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    highlightColor: Colors.pink,
+                                    onPressed: () {
+                                      tomarFoto(ImageSource.gallery);
+                                    },
+                                  ),
+                                ),
                               ]),
                               Card(
                                 shape: RoundedRectangleBorder(
@@ -462,7 +456,7 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                         )
                       ],
                     ),
-                    Positioned(
+                    /* Positioned(
                       right: 10.0,
                       top: 260.0, // or whatever
                       child: Container(
@@ -486,7 +480,7 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
                           ),
                         ),
                       ),
-                    ),
+                    ), */
                   ]);
                 }
               },
@@ -527,7 +521,8 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
             alimentosCtrl.text.trim(),
             personalidadCtrl.text.trim(),
             sexo,
-            raza);
+            raza,
+            foto);
         Navigator.pop(context);
       }
     }
@@ -549,7 +544,11 @@ class _MascotasEditarPageState extends State<MascotasEditarPage> {
 
   _cargarCondicion() async {
     _condicion.add(DropdownMenuItem(child: Text("Sano"), value: 0));
-    _condicion.add(DropdownMenuItem(child: Text("Con Enfermedad"), value: 1));
+    _condicion.add(DropdownMenuItem(child: Text("Moquillo"), value: 1));
+    _condicion.add(DropdownMenuItem(child: Text("Alergia"), value: 2));
+    _condicion.add(DropdownMenuItem(child: Text("Gripe"), value: 3));
+    _condicion.add(DropdownMenuItem(child: Text("Conjuntivitis"), value: 4));
+    _condicion.add(DropdownMenuItem(child: Text("Epilepsia"), value: 5));
   }
 
   _cargarMicrochip() async {

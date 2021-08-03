@@ -8,6 +8,8 @@ import 'package:petmapp_cliente/src/pages/peticiones/peticion_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuenta/cambiar_password_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuenta/mis_publicaciones_usuario_listar.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuenta/usuario_editar_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/evaluaciones_usuario_page.dart';
+import 'package:petmapp_cliente/src/pages/usuario/sharedPreferences.dart';
 import 'package:petmapp_cliente/src/pages/usuario/usuario_login_page.dart';
 import 'package:petmapp_cliente/src/providers/alertas_provider.dart';
 import 'package:petmapp_cliente/src/providers/comentarios_alertas_provider.dart';
@@ -245,6 +247,15 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                                     child: Text('Hogares'),
                                     onPressed: () =>
                                         _navegarListarHogares(context)))),
+                        /* Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Container(
+                                height: 40,
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                    child: Text('Evaluaciones'),
+                                    onPressed: () =>
+                                        _navegarEvaluaciones(context)))), */
                       ],
                     ),
                   ),
@@ -344,6 +355,12 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
     Navigator.push(context, route);
   }
 
+  void _navegarEvaluaciones(BuildContext context) {
+    var route = new MaterialPageRoute(
+        builder: (context) => EvaluacionesUsuarioPage(rut: widget.rutUsuario));
+    Navigator.push(context, route);
+  }
+
   void _navegarListarPeticiones(BuildContext context) {
     var route =
         new MaterialPageRoute(builder: (context) => MisPeticionesPage());
@@ -399,7 +416,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                         onPressed: () => _navegarCambiarPW(context),
                       ),
                     ),
-                    Container(
+                    /*  Container(
                       padding: const EdgeInsets.all(4.0),
                       height: 45,
                       width: 200,
@@ -416,7 +433,7 @@ class _UsuarioPerfilPageState extends State<UsuarioPerfilPage> {
                         ),
                         onPressed: () => _alertaDeshabilitar(),
                       ),
-                    ),
+                    ), */
                   ],
                 ),
               )

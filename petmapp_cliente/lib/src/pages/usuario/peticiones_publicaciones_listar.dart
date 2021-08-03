@@ -24,11 +24,9 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetmApp'),
-        leading: Container(
-            child: ElevatedButton(
-                child: Icon(MdiIcons.arrowBottomLeft),
-                onPressed: () => Navigator.pop(context))),
+        centerTitle: true,
+        title: Text('Peticiones de mi cuidado'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -45,7 +43,7 @@ class _PeticionListarPageState extends State<PeticionListarPage> {
                   children: [
                     ListTile(
                       title: Text(
-                        'PETICIONES DE CUIDADO',
+                        'Lista de Peticiones',
                         textAlign: TextAlign.center,
                       ),
                     ),

@@ -99,7 +99,7 @@ class _PublicacionesAgregarPageState extends State<PublicacionesAgregarPage> {
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             labelText: 'Tarifa',
-                            hintText: 'Tarifa',
+                            hintText: 'Tarifa diaria por mascota',
                             suffixIcon: Icon(MdiIcons.currencyUsd)),
                         validator: (valor) {
                           if (valor.isEmpty || valor == null) {

@@ -75,7 +75,8 @@ class _MainPageState extends State<MainPage> {
   var _hogares = <DropdownMenuItem>[];
   var _valorSeleccionado;
   var _hogar = '';
-
+// VARIABLES PARA COMPROBAR SI EL USUARIO TIENE SUS DATOS LLENOS //
+  bool tieneData = false;
   //Variable seleccion de menú
   var selectHome = true;
   var selectAlerta = false;
@@ -183,6 +184,7 @@ class _MainPageState extends State<MainPage> {
     NegociosListar(context);
     checkLoginStatus();
     _cargarTiposAlertas();
+    _traerData();
     /* setCustomMarker(); */
     /* allMarkers.add(Marker(
         markerId: MarkerId('myMarker'),
@@ -268,11 +270,19 @@ class _MainPageState extends State<MainPage> {
             child: Drawer(
               child: new ListView(
                 children: <Widget>[
-                  new UserAccountsDrawerHeader(
-                    accountName: new Text(perfil),
-                    accountEmail: new Text(name),
+                  DrawerHeader(
+                    child: Text(name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 40.0)),
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                'https://www.google.com/images/branding/googlelogo/1x/googlelogo_white_background_color_272x92dp.png'),
+                            fit: BoxFit.cover)),
                   ),
-                  new Divider(),
                   // ListTile(
                   //     trailing: Icon(Icons.keyboard_arrow_right_outlined),
                   //     title: Text('Mi Perfil',
@@ -664,40 +674,6 @@ class _MainPageState extends State<MainPage> {
   //   _cargarHogares();
   // }
 
-  _mostrarAviso(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Es necesario completar los siguientes datos: '),
-            content: Text(
-                'Hogares \n Información personal \n\n Porfavor, complete los datos restantes en su perfil'),
-            actions: [
-              MaterialButton(
-                  child: Text('Acceptar',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                      )),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
-  }
-
-  Future<void> comprobarDatos() async {
-    var provider = UsuarioProvider();
-    var usuario = await provider.mostrarUsuario(int.tryParse(rut));
-    if (usuario['fechaNacimiento'] != null ||
-        usuario['sexo'] != null ||
-        usuario['numero_telefonico'] != null) {
-      habilitado = true;
-    } else {
-      habilitado = false;
-    }
-  }
-
   Widget getSlider(int index) {
     print("hola" + index.toString());
     if (index == 0) {
@@ -950,7 +926,7 @@ class _MainPageState extends State<MainPage> {
                 child: FadeInImage(
                     image: _imagefile == null
                         ? NetworkImage(
-                            'https://danbooru.donmai.us/data/sample/9e/66/__azura_cecillia_and_miyu_ottavia_nijisanji_and_2_more_drawn_by_angon623__sample-9e66517bd366863d5d1a5dc2dbd33b91.jpg')
+                            'https://images-ext-1.discordapp.net/external/GFUjMerViZeRxWNCcm4zo6R5wODEkPQSXrkdzmLECAM/https/www.zooplus.es/magazine/wp-content/uploads/2020/03/las-mejores-fotos-de-perros-768x512.jpeg?width=747&height=498')
                         : FileImage(File(_imagefile.path)),
                     placeholder: AssetImage('assets/jar-loading.gif'),
                     fit: BoxFit.cover),
@@ -1103,7 +1079,7 @@ class _MainPageState extends State<MainPage> {
     var listaPublicaciones = await provider.publicacionListar();
 
     mostrarMarcadorPublicacion(BuildContext context, String titulo,
-        String descripcion, String tarifa, String idPublicacion) {
+        String descripcion, String tarifa, String idPublicacion, dynamic foto) {
       // set up the button
       Widget okButton = FlatButton(
         child: Text("Solicitar"),
@@ -1129,18 +1105,10 @@ class _MainPageState extends State<MainPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                        height: 150.0,
-                        width: 300.0,
-                        child: Carousel(
-                          images: [
-                            NetworkImage(
-                                'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
-                            NetworkImage(
-                                'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
-                            NetworkImage(
-                                'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
-                          ],
-                        )),
+                      height: 150.0,
+                      width: 300.0,
+                      child: Image(image: FileImage(File(foto))),
+                    ),
                     Text("\$" + tarifa),
                     Divider(),
                     Text(descripcion),
@@ -1180,7 +1148,8 @@ class _MainPageState extends State<MainPage> {
                     listaPublicaciones[i]["titulo"],
                     listaPublicaciones[i]["descripcion"],
                     listaPublicaciones[i]["tarifa"].toString(),
-                    listaPublicaciones[i]["id"].toString());
+                    listaPublicaciones[i]["id"].toString(),
+                    hogar["foto"]);
               },
               // icon: mapMarker,
               position: LatLng(double.parse(hogar['latitud']),
@@ -1197,7 +1166,7 @@ class _MainPageState extends State<MainPage> {
   Future<List<dynamic>> alertasListar(context) async {
     var provider = new AlertaProvider();
     mostrarMarcadorAlerta(BuildContext context, String titulo,
-        String descripcion, String idAlerta) {
+        String descripcion, String idAlerta, dynamic foto) {
       // set up the button
       Widget okButton = FlatButton(
         child: Text("Ver"),
@@ -1223,18 +1192,10 @@ class _MainPageState extends State<MainPage> {
                     child: Column(
                       children: [
                         SizedBox(
-                            height: 150.0,
-                            width: 300.0,
-                            child: Carousel(
-                              images: [
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
-                              ],
-                            )),
+                          height: 150.0,
+                          width: 300.0,
+                          child: Image(image: FileImage(File(foto))),
+                        ),
                         Text(descripcion),
                         Divider(),
                         // Container(
@@ -1278,8 +1239,13 @@ class _MainPageState extends State<MainPage> {
               BitmapDescriptor.hueMagenta),
           onTap: () {
             idAlertaSeleccionado = alertas[i]["id"].toString();
-            mostrarMarcadorAlerta(context, alertas[i]["titulo"],
-                alertas[i]["descripcion"], idAlertaSeleccionado);
+            mostrarMarcadorAlerta(
+              context,
+              alertas[i]["titulo"],
+              alertas[i]["descripcion"],
+              idAlertaSeleccionado,
+              alertas[i]["foto"],
+            );
           },
           // icon: mapMarker,
           position: LatLng(double.parse(alertas[i]['latitud']),
@@ -1294,7 +1260,7 @@ class _MainPageState extends State<MainPage> {
   Future<List<dynamic>> UbicacionesListar(context) async {
     var provider = new UbicacionProvider();
     mostrarMarcadorUbicacion(BuildContext context, String titulo,
-        String descripcion, String idAlerta) {
+        String descripcion, String idAlerta, dynamic foto) {
       // set up the button
       Widget okButton = FlatButton(
         child: Text("Comentarios"),
@@ -1320,18 +1286,10 @@ class _MainPageState extends State<MainPage> {
                     child: Column(
                       children: [
                         SizedBox(
-                            height: 150.0,
-                            width: 300.0,
-                            child: Carousel(
-                              images: [
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
-                                NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
-                              ],
-                            )),
+                          height: 150.0,
+                          width: 300.0,
+                          child: Image(image: FileImage(File(foto))),
+                        ),
                         Text(descripcion),
                         Divider(),
                         Container(
@@ -1363,8 +1321,8 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    var alertas = await provider.ubicacionListar();
-    for (int i = 0; i < alertas.length; i++) {
+    var ubicaciones = await provider.ubicacionListar();
+    for (int i = 0; i < ubicaciones.length; i++) {
       allMarkers.add(
         Marker(
           // markerId: MarkerId(alertas[i]["descripcion"]),
@@ -1374,13 +1332,17 @@ class _MainPageState extends State<MainPage> {
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           onTap: () {
-            idAlertaSeleccionado = alertas[i]["id"].toString();
-            mostrarMarcadorUbicacion(context, alertas[i]["titulo"],
-                alertas[i]["descripcion"], idAlertaSeleccionado);
+            idAlertaSeleccionado = ubicaciones[i]["id"].toString();
+            mostrarMarcadorUbicacion(
+                context,
+                ubicaciones[i]["titulo"],
+                ubicaciones[i]["descripcion"],
+                idAlertaSeleccionado,
+                ubicaciones[i]["foto"]);
           },
           // icon: mapMarker,
-          position: LatLng(double.parse(alertas[i]['latitud']),
-              double.parse(alertas[i]['longitud'])),
+          position: LatLng(double.parse(ubicaciones[i]['latitud']),
+              double.parse(ubicaciones[i]['longitud'])),
         ),
       );
       globalIdMarker++;
@@ -1422,11 +1384,11 @@ class _MainPageState extends State<MainPage> {
                             child: Carousel(
                               images: [
                                 NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/9b/b3/__kiryu_coco_and_akai_haato_hololive_drawn_by_kaniq__sample-9bb34caaf59fab94d2e75d02c87aac02.jpg'),
+                                    'https://s3-eu-west-1.amazonaws.com/rankia/images/valoraciones/0025/0432/pasos-seguro-hogar.jpg?1476443105'),
                                 NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg'),
+                                    'https://s3-eu-west-1.amazonaws.com/rankia/images/valoraciones/0025/0432/pasos-seguro-hogar.jpg?1476443105'),
                                 NetworkImage(
-                                    'https://danbooru.donmai.us/data/sample/1b/dd/__kiryu_coco_hololive_drawn_by_sakuramochi_sakura_frappe__sample-1bdd038c296ec71644b980458071a57b.jpg')
+                                    'https://s3-eu-west-1.amazonaws.com/rankia/images/valoraciones/0025/0432/pasos-seguro-hogar.jpg?1476443105')
                               ],
                             )),
                         Text(descripcion),
@@ -1512,7 +1474,11 @@ class _MainPageState extends State<MainPage> {
         builder: (context) => PublicacionListarPage(
               idPublicacion: idDataPublicacion,
             ));
-    Navigator.push(context, route);
+    if (tieneData) {
+      Navigator.push(context, route);
+    } else {
+      _mostrarAviso(context);
+    }
   }
 
 // 622
@@ -1533,7 +1499,7 @@ class _MainPageState extends State<MainPage> {
             ));
     Navigator.push(context, route).then((value) {
       setState(() {
-        comprobarDatos();
+        _comprobarDatosUsuario();
         _traerData();
       });
     });
@@ -1570,6 +1536,7 @@ class _MainPageState extends State<MainPage> {
     }
 
     _cargarHogares();
+    _comprobarDatosUsuario();
   }
 
 // 702
@@ -1581,64 +1548,76 @@ class _MainPageState extends State<MainPage> {
 
     var condicional = 0;
     for (var peticion in peticiones) {
-      // AGREGAR OTRA VALIDACION: QUE PETICION['FECHA_INICIO'] == HOY //
       if (peticion['estado'] == 2 ||
           peticion['estado'] == 5 ||
           peticion['estado'] == 6 ||
           peticion['estado'] == 7) {
-        condicional = 1;
-        // buscamos si es el dueño
+        DateTime fechaInicio = DateTime.tryParse(peticion['fecha_inicio']);
         DateTime today = DateTime.now();
         DateTime fechaFin = DateTime.tryParse(peticion['fecha_fin']);
-        if (peticion['estado'] == 7 && fechaFin.compareTo(today) < 0) {
-          provider.peticionTerminada(peticion['id'].toString(), '4');
+        if (peticion['estado'] == 7 && fechaFin.isBefore(today) == true) {
+          // provider.peticionTerminada(peticion['id'].toString(), '4');
         }
-        if (peticion['usuario_rut'].toString() == rut) {
-          servicioFinalizado = false;
-          tipoUsuario = 1;
-          idData = peticion['id'];
-          nota = peticion['nota'];
-          estadoPeticion = peticion['estado'];
-          var peticionMascota = await provider.mascotasPeticion(peticion['id']);
-          mascotas = peticionMascota['mascotas'];
-          for (var publicacion in publicaciones) {
-            if (publicacion['id'] == peticion['publicacion_id']) {
-              rutOtro = publicacion['usuario_rut'];
-              idDataPublicacion = publicacion['id'];
-              idHogar = publicacion['hogar_id'];
-              DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
-              var today = DateTime.now();
-              if (fechaFin.compareTo(today) < 0) {
-                _ultimoDia = true;
+        if (fechaInicio.compareTo(today) < 0) {
+          condicional = 1;
+
+          if (peticion['usuario_rut'].toString() == rut) {
+            setState(() {
+              servicioFinalizado = false;
+            });
+            tipoUsuario = 1;
+            DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
+            var today = DateTime.now();
+            if (fechaFin.compareTo(today) < 0) {
+              _ultimoDia = true;
+            }
+            idData = peticion['id'];
+            nota = peticion['nota'];
+            estadoPeticion = peticion['estado'];
+            var peticionMascota =
+                await provider.mascotasPeticion(peticion['id']);
+            mascotas = peticionMascota['mascotas'];
+            for (var publicacion in publicaciones) {
+              if (publicacion['id'] == peticion['publicacion_id']) {
+                rutOtro = publicacion['usuario_rut'];
+                idDataPublicacion = publicacion['id'];
+                idHogar = publicacion['hogar_id'];
+                DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
+                var today = DateTime.now();
+                if (fechaFin.compareTo(today) > 0) {
+                  _ultimoDia = true;
+                }
               }
             }
           }
-        }
-        // buscamos si es el cuidador
-        for (var publicacion in publicaciones) {
-          if (publicacion['usuario_rut'].toString() == rut &&
-              publicacion['id'] == peticion['publicacion_id']) {
-            tipoUsuario = 2;
-            servicioFinalizado = false;
-            for (var peticion in peticiones) {
-              if (publicacion['id'] == peticion['publicacion_id']) {
-                if (peticion['estado'] == 2 ||
-                    peticion['estado'] == 5 ||
-                    peticion['estado'] == 6 ||
-                    peticion['estado'] == 7) {
-                  idDataPublicacion = publicacion['id'];
-                  idHogar = publicacion['hogar_id'];
-                  rutOtro = peticion['usuario_rut'];
-                  idData = peticion['id'];
-                  var peticionMascota =
-                      await provider.mascotasPeticion(peticion['id']);
-                  mascotas = peticionMascota['mascotas'];
-                  estadoPeticion = peticion['estado'];
-                  nota = publicacion['nota'];
-                  DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
-                  var today = DateTime.now();
-                  if (fechaFin.compareTo(today) < 0) {
-                    _ultimoDia = true;
+          // buscamos si es el cuidador
+          for (var publicacion in publicaciones) {
+            if (publicacion['usuario_rut'].toString() == rut &&
+                publicacion['id'] == peticion['publicacion_id']) {
+              tipoUsuario = 2;
+              setState(() {
+                servicioFinalizado = false;
+              });
+              for (var peticion in peticiones) {
+                if (publicacion['id'] == peticion['publicacion_id']) {
+                  if (peticion['estado'] == 2 ||
+                      peticion['estado'] == 5 ||
+                      peticion['estado'] == 6 ||
+                      peticion['estado'] == 7) {
+                    idDataPublicacion = publicacion['id'];
+                    idHogar = publicacion['hogar_id'];
+                    rutOtro = peticion['usuario_rut'];
+                    idData = peticion['id'];
+                    var peticionMascota =
+                        await provider.mascotasPeticion(peticion['id']);
+                    mascotas = peticionMascota['mascotas'];
+                    estadoPeticion = peticion['estado'];
+                    nota = publicacion['nota'];
+                    DateTime fechaFin = DateTime.parse(peticion['fecha_fin']);
+                    var today = DateTime.now();
+                    if (fechaFin.compareTo(today) < 0) {
+                      _ultimoDia = true;
+                    }
                   }
                 }
               }
@@ -1646,7 +1625,12 @@ class _MainPageState extends State<MainPage> {
           }
         }
       } else {
-        if (condicional == 0) {
+        if (condicional == 0 && peticion['estado'] == 4) {
+          estadoPeticion = peticion['estado'];
+          idDataPublicacion = peticion['publicacion_id'];
+          idData = peticion['id'];
+        }
+        if (condicional == 0 && peticion['estado'] != 4) {
           tipoUsuario = null;
           idData = null;
           idDataPublicacion = null;
@@ -1655,8 +1639,28 @@ class _MainPageState extends State<MainPage> {
           estadoPeticion = null;
           nota = null;
           mascotas = null;
+          setState(() {
+            servicioFinalizado = true;
+          });
         }
       }
+    }
+  }
+
+  _comprobarDatosUsuario() async {
+    var provider = UsuarioProvider();
+    var usuario = await provider.mostrarUsuario(int.tryParse(rut));
+    var fechaNacimiento = usuario['fecha_nacimiento'];
+    var fotoUsuario = usuario['foto'];
+    var sexo = usuario['sexo'];
+    var numero = usuario['numero_telefonico'];
+    if (fechaNacimiento != null &&
+        fotoUsuario != null &&
+        sexo != null &&
+        numero != null) {
+      setState(() {
+        tieneData = true;
+      });
     }
   }
 
@@ -1693,6 +1697,28 @@ class _MainPageState extends State<MainPage> {
       );
     });
     Navigator.push(context, route);
+  }
+
+  _mostrarAviso(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Debe completar su información personal: '),
+            content: Text(
+                'Es necesario que complete su información personal en su perfil para continuar.'),
+            actions: [
+              MaterialButton(
+                  child: Text('Acceptar',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                      )),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        });
   }
 }
 

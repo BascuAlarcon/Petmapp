@@ -32,7 +32,9 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Mis Publicaciones'),
+        backgroundColor: Color.fromRGBO(120, 139, 255, 1.0),
       ),
       body: FutureBuilder(
         future: _fetch(),
@@ -88,6 +90,15 @@ class _MisPublicacionesPageState extends State<MisPublicacionesPage> {
                       height: 40,
                       width: double.infinity,
                       child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromRGBO(120, 139, 255, 1.0)),
+                          ),
                           onPressed: () =>
                               _navegarpublicacionesAgregar(context),
                           child: Text('Agregar'))),

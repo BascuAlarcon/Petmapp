@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:petmapp_cliente/src/pages/peticiones/peticion_agregar_page.dart';
 import 'package:petmapp_cliente/src/pages/servicios/servicios_listar_page.dart';
 import 'package:petmapp_cliente/src/pages/usuario/cuidado_perfil_page.dart';
 import 'package:petmapp_cliente/src/providers/peticiones_provider.dart';
 import 'package:petmapp_cliente/src/providers/publicaciones_provider.dart';
 import 'package:petmapp_cliente/src/providers/servicios_provider.dart';
+import 'package:petmapp_cliente/src/providers/usuarios_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CuidadoPage extends StatefulWidget {
@@ -205,7 +207,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
       if (widget.wtipoUsuario == 2) {
         var providerPublicacion = PublicacionProvider();
         await providerPublicacion.publicacionComentario(
-            widget.widDataPublicacion, 'Comentario', '1');
+            widget.widDataPublicacion, 'Sinco', '1');
       }
       setState(() {
         finalizar = true;
@@ -216,7 +218,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
     if (peticion['estado'] == 5) {
       await provider.peticionTerminada(widget.widData.toString(), '6');
       if (widget.wtipoUsuario == 1) {
-        await provider.peticionComentario(widget.widData, 'comentario', '1');
+        await provider.peticionComentario(widget.widData, 'Sinco', '1');
       }
       setState(() {
         finalizar = true;
@@ -363,29 +365,6 @@ class _CuidadoPageState extends State<CuidadoPage> {
     Navigator.push(context, route);
   }
 
-  _contarEvaluaciones() async {
-    var publicacionProvider = PublicacionProvider();
-    var publicaciones = await publicacionProvider.publicacionListar();
-    for (var publicacion in publicaciones) {
-      if (publicacion['usuario_rut'] == rut) {
-        if (publicacion['nota'] != null) {
-          contador++;
-        }
-      }
-    }
-    // AÚN NO ESTAN LOS CAMPOS DE NOTA Y COMENTARIO EN LA BD //
-    var peticionProvider = PeticionProvider();
-    var peticiones = await peticionProvider.peticionListar();
-    for (var peticion in peticiones) {
-      if (peticion['usuario_rut'] == rut) {
-        if (peticion['nota'] != null) {
-          contador++;
-        }
-      }
-    }
-    return contador;
-  }
-
   Future<void> enviarComentariosDuenio() async {
     var provider = PublicacionProvider();
     var providerPeticion = PeticionProvider();
@@ -395,8 +374,8 @@ class _CuidadoPageState extends State<CuidadoPage> {
           widget.widData, 'Sin comentarios', '11');
     }
     mostrarEvaluacion = false;
-    await provider.publicacionComentario(widget.widDataPublicacion,
-        descripcionCtrl.text, _valorActual.toString());
+    await provider.publicacionComentario(
+        widget.widDataPublicacion, descripcionCtrl.text, notaCtrl.text);
     _finalizarServicio();
   }
 
@@ -412,7 +391,7 @@ class _CuidadoPageState extends State<CuidadoPage> {
 
     mostrarEvaluacion = false;
     await provider.peticionComentario(
-        widget.widData, descripcionCtrl.text, _valorActual.toString());
+        widget.widData, descripcionCtrl.text, notaCtrl.text);
     _finalizarServicio();
   }
 
@@ -438,19 +417,18 @@ class _CuidadoPageState extends State<CuidadoPage> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Slider(
-                    value: _valorActual,
-                    min: 0,
-                    max: 10,
-                    divisions: 10,
-                    label: _valorActual.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _valorActual = value;
-                      });
-                    },
-                  )),
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: notaCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0)),
+                      labelText: 'Nota',
+                      hintText: 'Añada una nota a su comentario',
+                      suffixIcon: Icon(MdiIcons.accountBox)),
+                ),
+              ),
               MaterialButton(
                   child: Text('Volver',
                       style: TextStyle(
@@ -462,6 +440,8 @@ class _CuidadoPageState extends State<CuidadoPage> {
               ElevatedButton(
                 child: Text('Enviar :)'),
                 onPressed: () {
+                  _calcularPromedioNotas(
+                      widget.wrutUsuario, int.tryParse(notaCtrl.text));
                   widget.wtipoUsuario == 1
                       ? enviarComentariosDuenio()
                       : enviarComentariosCuidador();
@@ -471,5 +451,36 @@ class _CuidadoPageState extends State<CuidadoPage> {
             ],
           );
         });
+  }
+
+  _calcularPromedioNotas(int rut, int nota) async {
+    var usuarioProvider = UsuarioProvider();
+    var peticionProvider = PeticionProvider();
+    var publicacionProvider = PublicacionProvider();
+    var usuario = await usuarioProvider.mostrarUsuario(rut);
+    var publicaciones = await publicacionProvider.publicacionListar();
+    var peticiones = await peticionProvider.peticionListar();
+    int cantidadTotales = 0;
+    int sumaNotas = 0;
+    for (var peticion in peticiones) {
+      if (peticion['usuario_rut'] == rut && peticion['estado'] == 4) {
+        cantidadTotales++;
+        sumaNotas = sumaNotas + peticion['nota'];
+      }
+    }
+    for (var publicacion in publicaciones) {
+      if (publicacion['usuario_rut'] == rut) {
+        for (var peticion in peticiones) {
+          if (peticion['usuario_rut'] == rut && peticion['estado'] == 4) {
+            cantidadTotales++;
+            sumaNotas = sumaNotas + publicacion['nota'];
+          }
+        }
+      }
+    }
+    cantidadTotales++;
+    sumaNotas = sumaNotas + nota;
+    var promedioUsuario = sumaNotas / cantidadTotales;
+    await usuarioProvider.promedio(rut.toString(), promedioUsuario.toString());
   }
 }

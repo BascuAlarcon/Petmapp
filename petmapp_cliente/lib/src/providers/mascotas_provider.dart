@@ -64,7 +64,8 @@ class MascotaProvider {
       String alimentos,
       String personalidad,
       String sexo,
-      String raza) async {
+      String raza,
+      String foto) async {
     var urlRequest = apiUrl + 'mascotas/$raza';
     var respuesta = await http.put(Uri.parse(urlRequest),
         headers: <String, String>{
@@ -80,6 +81,7 @@ class MascotaProvider {
           'alimentos': alimentos,
           'personalidad': personalidad,
           'raza_id': raza,
+          'foto': foto
         }));
     return respuesta;
   }

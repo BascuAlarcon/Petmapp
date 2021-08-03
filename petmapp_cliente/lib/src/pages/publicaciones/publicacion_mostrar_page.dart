@@ -62,7 +62,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
         flex: 2,
         child: Container(
           width: double.infinity,
-          margin: EdgeInsets.all(10),
+          // margin: EdgeInsets.all(10),
           child: FutureBuilder(
             future: _fetch(),
             builder: (context, snapshot) {
@@ -73,7 +73,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                 snapshotData = snapshot.data;
                 return Card(
                   child: Padding(
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(8),
                       child: _mostrarDataPublicacion(snapshotData)),
                 );
               }
@@ -85,59 +85,49 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
   _mostrarDataPublicacion(snapshotData) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              'Fecha publicación: ${snapshotData['created_at'].replaceRange(10, 27, '')}',
-              style: TextStyle(fontStyle: FontStyle.italic),
-              textAlign: TextAlign.end,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                alignment: Alignment.centerRight,
-                width: 200,
-                height: 200,
-                child: snapshotData['foto'] != 'xD'
-                    ? Image(image: FileImage(File(foto)))
-                    : Image(
-                        image: NetworkImage(
-                            'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  tipoHogar == 0
-                      ? Text('- El hogar es una casa')
-                      : Text('- El hogar es un departamento'),
-                  disponibilidadPatio == 0
-                      ? Text('- Cuenta con patio')
-                      : Text('- No cuenta con patio'),
-                  Text(snapshotData['descripcion']),
-                  Container(
-                    child: Text(descripcion),
-                  )
-                  // PONER LA DATA DE LA PUBLICACIÓN
-                ],
+        Container(
+          child: Column(
+            children: [
+              Text(
+                'Fecha publicación: ${snapshotData['created_at'].replaceRange(10, 27, '')}',
+                style: TextStyle(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.end,
               ),
-            )
-          ],
+              Text(
+                direccion,
+                style: TextStyle(fontStyle: FontStyle.italic),
+                textAlign: TextAlign.end,
+              )
+            ],
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(direccion),
-            )
-          ],
+        Container(
+            width: 400,
+            height: 200,
+            child: snapshotData['foto'] != 'xD'
+                ? Image(image: FileImage(File(foto)))
+                : Image(
+                    image: NetworkImage(
+                        'https://i.pinimg.com/originals/3d/1e/7f/3d1e7faa1e6f2252b03d75516321a278.jpg'))),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              tipoHogar == 0
+                  ? Text('- El hogar es una casa')
+                  : Text('- El hogar es un departamento'),
+              disponibilidadPatio == 0
+                  ? Text('- Cuenta con patio')
+                  : Text('- No cuenta con patio'),
+              Text(snapshotData['descripcion']),
+              Container(
+                child: Text(descripcion),
+              )
+              // PONER LA DATA DE LA PUBLICACIÓN
+            ],
+          ),
         ),
         Expanded(child: Divider()),
         widget.rutUsuario.toString() != rut
@@ -159,7 +149,7 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                     snapshotDataUsuario = snapshot.data;
                     return Card(
                       child: Padding(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(8),
                           child: _mostrarDataUsuario(snapshotDataUsuario)),
                     );
                   }
@@ -171,40 +161,46 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                  width: 150,
-                  height: 150,
-                  child: CircleAvatar(
-                      child: ClipOval(
-                          child: snapshotData['foto'] != 'xD'
-                              ? Image(
-                                  image: FileImage(File(snapshotData['foto'])))
-                              : Image(
-                                  image: NetworkImage(
-                                      'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
-              Container(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '${snapshotData['name']}',
-                    textAlign: TextAlign.start,
-                  ),
-                  Text('Usuario desde el ' +
-                      '${snapshotData['created_at']}'.replaceRange(10, 27, '')),
-                  Text('Nacio el: ' +
-                      snapshotData['fecha_nacimiento'].toString()),
-                  snapshotData['rut'].toString().length == 8
-                      ? Text(snapshotData['rut']
-                          .toString()
-                          .replaceRange(7, 7, '-'))
-                      : Text(snapshotData['rut']
-                          .toString()
-                          .replaceRange(8, 8, '-'))
-                ],
+              Center(
+                child: Container(
+                    width: 120,
+                    height: 120,
+                    child: CircleAvatar(
+                        child: ClipOval(
+                            child: snapshotData['foto'] != 'xD'
+                                ? Image(
+                                    image:
+                                        FileImage(File(snapshotData['foto'])))
+                                : Image(
+                                    image: NetworkImage(
+                                        'https://i.pinimg.com/originals/3d/1e/7f/3d1e7faa1e6f2252b03d75516321a278.jpg'))))),
+              ),
+              ListTile(
+                  title: Center(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${snapshotData['name']}',
+                      textAlign: TextAlign.start,
+                    ),
+                    Text('Usuario desde el ' +
+                        '${snapshotData['created_at']}'
+                            .replaceRange(10, 27, '')),
+                    Text('Nacio el: ' +
+                        snapshotData['fecha_nacimiento'].toString()),
+                    snapshotData['rut'].toString().length == 8
+                        ? Text(snapshotData['rut']
+                            .toString()
+                            .replaceRange(7, 7, '-'))
+                        : Text(snapshotData['rut']
+                            .toString()
+                            .replaceRange(8, 8, '-'))
+                  ],
+                ),
               ))
             ],
           ),
@@ -246,6 +242,15 @@ class _PublicacionMostrarPageState extends State<PublicacionMostrarPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                       child: Text('Agregar peticion'),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.white12))),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromRGBO(120, 139, 255, 1.0)),
+                      ),
                       onPressed: () => habilitado == true
                           ? _navegarAgregarPeticion(context, idPublicacion)
                           : _mostrarAviso(context))))

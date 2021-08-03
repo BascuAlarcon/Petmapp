@@ -52,7 +52,6 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
       flex: 2,
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.all(10),
         child: FutureBuilder(
           future: _fetch(),
           builder: (context, snapshot) {
@@ -63,6 +62,10 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
               _inicio = DateTime.parse(snapshot.data['fecha_inicio']);
               _fin = DateTime.parse(snapshot.data['fecha_fin']);
               return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                margin: EdgeInsets.all(15),
+                elevation: 10,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
@@ -84,6 +87,18 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
                             height: 40,
                             width: double.infinity,
                             child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white12))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Color.fromRGBO(120, 139, 255, 1.0)),
+                                ),
                                 onPressed: () => _mostrarConfirmacion(
                                       context,
                                       snapshot.data['fecha_inicio'],
@@ -103,54 +118,72 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
   }
 
   Widget _datosUsuario() {
-    return Center(
-      child: Container(
-          child: FutureBuilder(
-        future: _fetchUsuario(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Text('loading...');
-          } else {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    width: 200,
-                    height: 200,
-                    child: CircleAvatar(
-                        child: ClipOval(
-                            child: snapshot.data['foto'] != 'xD'
-                                ? Image(
-                                    image:
-                                        FileImage(File(snapshot.data['foto'])))
-                                : Image(
-                                    image: NetworkImage(
-                                        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'))))),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        snapshot.data['sexo'] == 0
-                            ? Text((snapshot.data['name'] + ', Hombre'))
-                            : Text((snapshot.data['name'] + ', Mujer')),
-                        Text('Fecha de nacimiento: ' +
-                            snapshot.data['fecha_nacimiento']),
-                        snapshot.data['promedio_evaluaciones'] == null
-                            ? Text(
-                                'Promedio de evaluaciones: Aún sin evaluaciones')
-                            : Text('Promedio de evaluaciones: ' +
-                                snapshot.data['promedio_evaluaciones']
-                                    .toString()),
-                      ],
+    return Expanded(
+      child: Center(
+        child: Container(
+            child: FutureBuilder(
+          future: _fetchUsuario(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('loading...');
+            } else {
+              return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                margin: EdgeInsets.all(15),
+                elevation: 10,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Container(
+                                width: 120,
+                                height: 120,
+                                child: CircleAvatar(
+                                    child: ClipOval(
+                                        child: snapshot.data['foto'] != 'xD'
+                                            ? Image(
+                                                image: FileImage(File(
+                                                    snapshot.data['foto'])))
+                                            : Image(
+                                                image: NetworkImage(
+                                                    'https://i.pinimg.com/originals/3d/1e/7f/3d1e7faa1e6f2252b03d75516321a278.jpg'))))),
+                          ),
+                          ListTile(
+                            title: Center(
+                              child: Column(
+                                children: [
+                                  snapshot.data['sexo'] == 0
+                                      ? Text(
+                                          (snapshot.data['name'] + ', Hombre'))
+                                      : Text(
+                                          (snapshot.data['name'] + ', Mujer')),
+                                  Text('Fecha de nacimiento: ' +
+                                      snapshot.data['fecha_nacimiento']),
+                                  snapshot.data['promedio_evaluaciones'] == null
+                                      ? Text('Puntaje: Sin puntaje')
+                                      : Text('Puntaje: ' +
+                                          snapshot.data['promedio_evaluaciones']
+                                              .toString()),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
-            );
-          }
-        },
-      )),
+                  ]),
+                ),
+              );
+            }
+          },
+        )),
+      ),
     );
   }
 
@@ -198,11 +231,11 @@ class _PeticionMostrarPageState extends State<PeticionMostrarPage> {
       itemCount: mascotas.length,
       separatorBuilder: (context, index) => Divider(),
       itemBuilder: (context, index) {
-        return Wrap(
+        return Column(
           children: [
             Image(
-                height: 200,
-                width: 500,
+                height: 160,
+                width: 800,
                 image: FileImage(File(mascotas[index]['foto']))),
             Padding(
               padding: const EdgeInsets.all(8.0),

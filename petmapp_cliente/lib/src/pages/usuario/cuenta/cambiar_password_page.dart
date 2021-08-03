@@ -158,13 +158,17 @@ class _CambiarPasswordPageState extends State<CambiarPasswordPage> {
     var respuesta =
         await provider.comprobarPW(widget.rut.toString(), confirmarCtrl.text);
     if (respuesta.statusCode == 200) {
-      setState(() {
-        passwordValida = true;
-      });
+      if (this.mounted) {
+        setState(() {
+          passwordValida = true;
+        });
+      }
     } else {
-      setState(() {
-        passwordValida = false;
-      });
+      if (this.mounted) {
+        setState(() {
+          passwordValida = false;
+        });
+      }
     }
   }
 

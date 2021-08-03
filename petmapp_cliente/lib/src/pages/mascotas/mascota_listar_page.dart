@@ -102,6 +102,8 @@ class _MascotaListarPageState extends State<MascotaListarPage> {
                                       children: <Widget>[
                                         // Usamos el widget Image para mostrar una imagen
                                         FadeInImage(
+                                          width: 400,
+                                          height: 400,
                                           image: snapshot.data[index]['foto'] ==
                                                   null
                                               ? NetworkImage(

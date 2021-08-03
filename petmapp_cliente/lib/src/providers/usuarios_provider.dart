@@ -255,4 +255,16 @@ class UsuarioProvider {
         body: jsonEncode(<String, String>{'rut': rut, 'password': password}));
     return respuesta;
   }
+
+  Future<http.Response> promedio(String rut, String promedioEvaluacion) async {
+    var rutEdit = int.tryParse(rut);
+    var urlRequest = apiUrl + 'auth/usuarios/$rutEdit/evaluacion';
+    var respuesta = await http.put(Uri.parse(urlRequest),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(
+            <String, String>{'promedio_evaluaciones': promedioEvaluacion}));
+    return respuesta;
+  }
 }
